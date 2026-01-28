@@ -4,10 +4,25 @@
   <body>
     {% include header.html %}
 
-    <main class="container">
-      {{ content }}
-    </main>
 
+<main class="container">
+          {% include featured.html %}
+          {% include  cards.html %}
+
+      
+      <div class="row g-5">
+        <div class="col-md-8">
+          <h3 class="pb-4 mb-4 fst-italic border-bottom">From the Firehose</h3>
+
+          {{ content }}
+          
+         
+        </div>
+            {% include sidebar.html %}
+
+      </div>
+    </main>
+  
     {% include footer.html %}
     {% include scripts.html %}
   </body>

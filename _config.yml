@@ -1,7 +1,10 @@
-title: Large
+title: Бюро прикладных данных
 description: Bootstrap blog on Jekyll
 baseurl: ""
 url: ""
 
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
+
+exclude:
+  - Dockerfile
