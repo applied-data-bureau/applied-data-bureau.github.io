@@ -1,0 +1,8 @@
+lang: rs
+title: "Biro za primenjene podatke"
+content_dir: content/rs
+
+collections:
+  posts:
+    output: true
+    source: content/rs/_posts

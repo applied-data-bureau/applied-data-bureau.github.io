@@ -1,0 +1,8 @@
+theme: null
+markdown: kramdown
+plugins: []
+
+permalink: /:year/:month/:day/:title/
+
+exclude:
+  - Dockerfile

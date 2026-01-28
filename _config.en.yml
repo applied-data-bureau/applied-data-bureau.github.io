@@ -1,0 +1,8 @@
+lang: en
+title: "Applied Data Bureau"
+content_dir: content/en
+
+collections:
+  posts:
+    output: true
+    source: content/en/_posts
