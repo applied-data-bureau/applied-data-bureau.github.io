@@ -3,9 +3,12 @@ layout: default
 title: Home
 ---
 
+          <h2 class="pb-4 mb-4 fst-italic border-bottom">Блог, последние публикации</h2> 
+
+
   {% for post in site.posts %}
            <article class="blog-post">
-            <h2 class="display-5 link-body-emphasis mb-1">{{ post.title  }}</h2>
+            <h3 class=" link-body-emphasis mb-1">{{ post.title  }}</h3>
             <p class="blog-post-meta">
               {{ post.date | date: "%b %d" }}
             </p>
