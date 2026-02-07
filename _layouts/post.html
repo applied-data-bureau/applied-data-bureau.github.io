@@ -1,13 +1,17 @@
 ---
 layout: default
 ---
-           <article class="blog-post">
-            <h2 class="display-5 link-body-emphasis mb-1">{{ page.title }}</h2>
-            <p class="blog-post-meta">
-              {{ page.date | date: "%B %d, %Y" }}
-            </p>
+<article class="blog-post">
+<h2 class="display-5 link-body-emphasis mb-1">{{ page.title }}</h2>
+
+{% unless page.type == "kwork" %}
+  <p class="blog-post-meta">
+    {{ page.date | date: "%B %d, %Y" }}
+  </p>
+{% endunless %}
+
 {{ content }}
-          </article>
+</article>
  
 
 

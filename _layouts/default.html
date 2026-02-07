@@ -1,28 +1,19 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-  {% include head.html %}
-  <body>
-    {% include header.html %}
-
-
+{% include head.html %}
+<body>
+{% include header.html %}
 <main class="container">
-          {% include featured.html %}
-          {% include  cards.html %}
-
-      
-      <div class="row g-5">
-        <div class="col-md-8">
-
-          {{ content }}
-          
-         
-        </div>
-            {% include sidebar.html %}
-
-      </div>
-    </main>
-  
-    {% include footer.html %}
-    {% include scripts.html %}
-  </body>
+  {% include featured.html %}
+  {% include  cards.html %}
+  <div class="row g-5">
+    <div class="col-md-8">
+      {{ content }}
+    </div>
+    {% include sidebar.html %}
+  </div>
+</main>
+{% include footer.html %}
+{% include scripts.html %}
+</body>
 </html>
