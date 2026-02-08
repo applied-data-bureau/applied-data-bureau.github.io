@@ -12,8 +12,12 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0)
     eventmachine (1.2.7)
+    ffi (1.17.3-x86_64-darwin)
     ffi (1.17.3-x86_64-linux-musl)
     forwardable-extended (2.6.0)
+    google-protobuf (4.33.5-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
     google-protobuf (4.33.5-x86_64-linux-musl)
       bigdecimal
       rake (>= 13)
@@ -74,6 +78,7 @@ GEM
     webrick (1.9.2)
 
 PLATFORMS
+  x86_64-darwin
   x86_64-linux-musl
 
 DEPENDENCIES
