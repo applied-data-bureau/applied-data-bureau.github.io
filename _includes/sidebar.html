@@ -13,7 +13,13 @@
             </div>
 -->
             <div>
-              <h4 class="fst-italic">Дополнительные услуги</h4>
+              <h4 class="fst-italic">
+{% if site.lang == "ru" %}Дополнительные услуги{% endif %}
+{% if site.lang == "rs" %}Dodatne usluge{% endif %}
+{% if site.lang == "en" %}EN:Дополнительные услуги{% endif %}
+                  
+                
+                </h4>
               <ul class="list-unstyled">
                 <li>
                   <a
@@ -79,7 +85,11 @@
             </div>
             
             <div class="p-4">
-              <h4 class="fst-italic">Последние публикации</h4>
+              <h4 class="fst-italic">
+{% if site.lang == "ru" %}Последние публикации{% endif %}
+{% if site.lang == "rs" %}Najnovije objave{% endif %}
+{% if site.lang == "en" %}EN:Последние публикации{% endif %}
+                </h4>
               <ol class="list-unstyled mb-0">
 
 {% for post in site.posts limit:7 %}

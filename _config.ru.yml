@@ -1,8 +1,5 @@
 lang: ru
 title: "Бюро прикладных данных"
-content_dir: content/ru
 
-collections:
-  posts:
-    output: true
-    source: content/ru/_posts
+exclude:
+  - _posts/rs

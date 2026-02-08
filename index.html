@@ -3,8 +3,16 @@ layout: default
 title: Home
 ---
 
-<h2 class="pb-4 mb-4 fst-italic border-bottom">Блог, последние публикации</h2> 
+<h2 class="pb-4 mb-4 fst-italic border-bottom">
+{% if site.lang == "ru" %}Блог, последние публикации{% endif %}
+{% if site.lang == "rs" %}Blog, najnovije objave{% endif %}
+{% if site.lang == "en" %}EN:Блог, последние публикации{% endif %}
+  
+  
 
+</h2> 
+
+{% assign posts = site.posts | where: "lang", site.lang %}
 {% for post in site.posts %}
   <article class="blog-post">
     <h3 class=" link-body-emphasis mb-1"><a href="{{ post.url }}" >{{ post.title  }}</a></h3>
