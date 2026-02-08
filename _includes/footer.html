@@ -5,6 +5,10 @@
   </p>
   -->
   <p class="mb-0">
-    <a href="#">Наверх</a>
+    <a href="#">
+{% if site.lang == "ru" %}Наверх{% endif %}
+{% if site.lang == "rs" %}Na vrh{% endif %}
+{% if site.lang == "en" %}To top{% endif %}   
+      </a>
   </p>
 </footer>
