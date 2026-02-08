@@ -7,7 +7,7 @@ title: Home
 
 {% for post in site.posts %}
   <article class="blog-post">
-    <h3 class=" link-body-emphasis mb-1"><a href="{{ post.url }}" class="stretched-link">{{ post.title  }}</a></h3>
+    <h3 class=" link-body-emphasis mb-1"><a href="{{ post.url }}" >{{ post.title  }}</a></h3>
 
     {% unless post.type == "kwork" %}
       <p class="blog-post-meta">
