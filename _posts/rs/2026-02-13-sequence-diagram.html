@@ -1,0 +1,79 @@
+---
+layout: post
+title: Sequence dijagrami kao kod
+excerpt: Sequence dijagrami kao kod omogućavaju praćenje promena i kontrolu verzionisanja; pored toga, na osnovu postojećeg koda lako se prave naredni dijagrami.
+---
+
+<p>U svetu razvoja softvera, naročito u višekomandnim projektima, efikasna komunikacija između timova igra ključnu ulogu u uspehu projekta. Jedan od alata koji može značajno da olakša ovaj proces jesu sequence dijagrami.</p>
+
+<p>Na ruskoj Vikipediji nazivaju se <a href="https://ru.wikipedia.org/wiki/Диаграмма_последовательности">dijagrami sekvence</a>.</p>
+
+<h2>Zašto su sequence dijagrami uopšte potrebni?</h2>
+
+<p>Sequence dijagrami su grafički prikaz interakcije različitih komponenti ili učesnika sistema kroz vreme. Pomažu programerima da vizualizuju redosled poziva metoda ili funkcija tokom izvršavanja određene funkcionalnosti. To ne samo da olakšava razumevanje rada sistema, već pomaže i da se uoče potencijalni problemi ili neoptimalni tokovi.</p>
+
+<h2>Zašto je praktičnije pisati ih kao kod?</h2>
+
+<p>U početku sam takve dijagrame crtao u draw.io. To je generalno bilo prilično zamorno.</p>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.th.png" class="img-fluid" alt="SSO diagram u draw.io"></a></p>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.drawio">sso_diagram.drawio</a></p>
+
+<p>Zatim sam otkrio PlantUML. Napisati prvi dijagram pomoću teksta bilo je takođe naporno, baš kao i crtanje u draw.io. Ali kada je došlo vreme za izmene i izradu sličnih dijagrama, tada su se u potpunosti pokazale prednosti dijagrama u formi koda, a ne slika.</p>
+
+<dl>
+<dt>Jasnoća i preciznost</dt>
+<dd>Korišćenje PlantUML-a za pisanje sequence dijagrama u formi koda obezbeđuje visoku jasnoću i preciznost opisa interakcije između komponenti. PlantUML kod je formalizovan i strog, što smanjuje dvosmislenosti i pogrešna tumačenja.</dd>
+
+<dt>Integracija sa dokumentacijom</dt>
+<dd>Sequence dijagrami napravljeni u PlantUML-u lako se ugrađuju u projektnu dokumentaciju, na primer u Confluence. To omogućava jednostavan pristup vizuelnom prikazu arhitekture i interakcije komponenti za sve učesnike projekta.</dd>
+
+<dt>Verzionisanje izmena</dt>
+<dd>PlantUML omogućava praćenje izmena u dijagramima i kontrolu verzionisanja. To je korisno pri radu u Confluence-u jer omogućava čuvanje istorije i brzo vraćanje prethodnih verzija kada je potrebno.</dd>
+
+<dt>Lakoća izmena i izrade narednih dijagrama</dt>
+<dd>Pošto su sequence dijagrami u PlantUML-u predstavljeni kao kod, izmene su jednostavne i brze. Pored toga, na osnovu postojećeg koda lako je praviti naredne dijagrame, što štedi vreme i povećava efikasnost tima.</dd>
+</dl>
+
+<p>Kao minus kodiranja dijagrama izdvojio bih uglavnom manju fleksibilnost stilova prikaza.</p>
+
+<h2>PlantUML</h2>
+
+<p>Dijagram možete početi da kodirate/crtate direktno u pregledaču:</p>
+<p><a href="https://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000">https://www.plantuml.com/plantuml/uml/SyfFKj...</a></p>
+
+<p>Ako sadržaj dijagrama sadrži poverljive podatke, PlantUML se može pokrenuti lokalno kroz Docker, pa će isti interfejs biti dostupan lokalno i bez interneta.</p>
+
+<p><a href="https://hub.docker.com/r/plantuml/plantuml-server">https://hub.docker.com/r/plantuml/plantuml-server</a></p>
+
+<h2>Numeracija zahteva</h2>
+
+<p>Dijagrami su potrebni da bi se, s jedne strane, isprojektovalo i usaglasilo tehničko rešenje između timova, a s druge strane da se u radu sistema, u slučaju problema, brže pronađe uzrok i problem usmeri pravom timu.</p>
+
+<p>U oba scenarija mnogo pomaže numeracija zahteva na dijagramu. Ako su zahtevi numerisani, u komunikaciji se često koristi format: „zahtev 11 šalje te i te podatke servisu vašeg tima, a u odgovoru 12 stižu neočekivani podaci“. To pomaže da se izbegnu komplikovane i duge formulacije.</p>
+
+<h2>Primer dijagrama za Single Sign-On</h2>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.th.png" class="img-fluid" alt="SSO sequence dijagram"></a></p>
+
+<pre><code>@startuml
+participant Customer
+participant Browser
+participant App1
+participant App2
+
+Customer -> Browser : A1. Go to App1
+Browser -> App1 : A2. GET index
+App1 -> Browser : A3. index
+Customer -> Browser : A4. Click Login
+Browser -> App2 : A5. GET authorization.oauth2
+App2 --> Browser : A9. 302 Redirect + auth code
+Browser -> App1 : A10. redirect uri + auth hash
+App1 -> App2 : A11. Request access token
+App2 -> App1 : A12. Access Token + User_Info
+App1 -> Browser : A13. Logged in content
+Browser -> Customer : A14. Logged in content
+@enduml</code></pre>
+
+<p>Link ka punoj verziji ovog dijagrama na PlantUML serveru: <a href="http://www.plantuml.com/plantuml/uml/fLLjRzis4FxENt50FsH3DSzwaVE2ecYiD5s002kIz7F1I2URi4rw9DMc6_RVnnTPanWcCp0746BnUUwUEpvt_g0qbRhRRGbvf_IFBRudAocwFVn5m7nk6SU7DQit79M2T7XNYQsGyAPexD_mzju6SAY_YNcuGByXRL36mqM9xtxjTH2rONnF9Ts1mZywv3MQC9TIYkzz-hdxaCjQ2xaKqkIP7joo5ctuLyzelR52UTEVNxiF-KobPZNRKwuZzF7n4H6k1TTJ_b8ynSBQr_5mzkXP6Dld_RzfeEgK5ZkKu493Ef-SBatdr72OpU5DsxPPNKz0b_jzsYDoWsXgV6nFGqJM8mg3m0pRXeQ8l4UKDiPva-5vY2XwnC8Whalx5oBA7d4w1mEfFXPN2m3Y_UbrVlB_TdgDt32fPe8J84CRVda_57q1b-aCFWdGmd49hJNxHZKU4EI0D2GBi8pCC3u-0ECDFWq4JxUF87u-wv4DJh4l2IfcK6tDDC2jM34U2CWielG2gAbGIFQdAt0cxDSi0HlrvkeYACTI2R7F8DjYvlD0A-JkHKsd1nJZ5kTR6fDsDeFFlzy_HD0-zpJi-SpOAOCxR9Z4MiDRLnFKea4IwtmwzvNB0w6Jx2loPYyO7zXhgjOaQBLzZcMcvjRlxFfG6cXTsxsZnGOvFFuO1V6Qn_dDrLzw-8E5cvHVZCIlDwPE4hlyD7UDMs43Z9kwk4QkGoTCIkqlmBEB69kOWWz-zygiXcFzlanxUtbMp6EfXNcJn_eOnCkFCT2ocFbySHU5oSlUHN5AJCMYZn-soxgY4cB34BuplVQWc-ROArYUXd63QuYNMusNIbXXRW733c6QqIrykRk1dvp0cwi4zbGfeBo1BUMhZguGt0yUQfJgvycLvCG-Wh6gyc2il8ui0OKQbAPw5D0UdenadCJ6kYgEtZYnEQ_AGD1uKcFTMHmxvhxyaT3JOQxzGAluH0-PpWu3dHXUAr6j4sCFFzsAHBjx_hoxDKfD6OShgYbKo6rV6zmRoOolG73leLQAtH0y2Uy_i6GUDgQmkUq237bZLa68VOQIq_H_EI9YY3HxrH5RXlm_F97cnvl2rruSwmhVX8dSydXV-6IBrumHt5KsILWwlZ7YlQWtg2yCRV9hCRcmaaWkD8BuXj9_Tn5Mg9NXUQq9mISj3Kj1P_ZZLPYGMg89fO1Pqt6wzVlfIHE30RrcdaFUzcjK2wSX0TP2WotZsDX5vaIurACcf6UcXiurmNca2-ik-xg3YpsV-GZFTcOo6OhHKlEZuUxWnBdn1EYZw7JWmsdsueMTNMNpbmGGCexHqmdvO3Hrkot0Fm00">http://www.plantuml.com/plantuml/uml/fLLjRz...</a>.</p>
