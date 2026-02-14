@@ -1,0 +1,25 @@
+---
+layout: post
+title: "Landing Page Layout for the “Purga” Boat"
+type: post
+excerpt: "One-page layout implementation from a fixed design, plus JavaScript pluralization logic for correct dynamic hour labels."
+---
+
+<p>The task was to build a one-page site from a provided design with a lead form.</p>
+
+<p>Resulting layout: <a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-07-13-purga/purga-ru-layout.html">demo page</a>.</p>
+
+<p style="text-align: center"><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-07-13-purga/purga-ru-layout.html"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-07-13-purga/screen.th.jpg" class="img-fluid" alt="Purga layout"></a></p>
+
+<p>An additional quality improvement was added even though it was not required: correct plural forms for dynamic hour values (to avoid grammatically wrong labels).</p>
+
+<pre><code class="javascript">function plural(n, form1, form2, form5) {
+  n = Math.abs(n) % 100;
+  var n1 = n % 10;
+  if (n > 10 && n < 20) return form5;
+  if (n1 > 1 && n1 < 5) return form2;
+  if (n1 == 1) return form1;
+  return form5;
+}</code></pre>
+
+<p>I also used <a href="https://github.com/firstopinion/formatter.js">formatter.js</a> for input formatting in the form fields.</p>

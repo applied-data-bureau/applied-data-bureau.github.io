@@ -1,0 +1,272 @@
+---
+layout: post
+title: "«Водяные знаки» для изображений интернет-магазина"
+type: post
+excerpt: "Так или иначе требования бизнеса диктовали, что нужно использовать водяные знаки. Хотя есть вот альтернативная позиция. Тем не менее мне бы хотелось здесь поговорить о технической реализации, а не обсуждать этическую сторону."
+---
+
+<p>Так или иначе требования бизнеса диктовали, что нужно использовать водяные знаки.
+	Хотя есть вот <a href="http://artgorbunov.ru/bb/soviet/20130617/">альтернативная позиция</a>.
+	Тем не менее мне бы хотелось здесь поговорить о технической реализации, а не обсуждать этическую сторону.</p>
+	
+<h3>Исходные требования</h3>
+
+<p>1. Максимально усложнить стороннее использование.
+<br>2. Видимость водяного знака на белом фоне, на чёрном фоне (и на любых других).
+<br>3. Если на изображении есть текст, водяные знаки не должны сильно мешать его восприятию.
+<br>4. Решение без фотошопа и оконного интерфейса; возможность обрабатывать много изображений (сотни тысяч).</p>
+
+<h3>Тип «водяного знака»</h3>
+<p>Использовать полупрозрачную надпись оказалось плохим решением. Если говорить про полупрозрачную
+	надпись белого цвета, то она не будет читаться на белом изображении. Аналогично с другими цветами.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/bilberry-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/bilberry-en.jpg"></p> -->
+<p>Неплохим решением оказалось добавить к белой полупрозрачной надписи чёрную полупрозрачную тень.
+	В результате получается вариант, который будет одинаково хорошо восприниматься независимо от цвета фона изображения.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry-en.jpg"></p> -->
+<p>Текст тоже воспринимается. Чтобы читалось проще можно попробовать подобрать лучшее соотношение прозрачности надписи и её тени.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/georgia-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/georgia-en.jpg"></p> -->
+
+<p>Вроде бы всё хорошо, но остаётся проблема с защищённостью (к слову о том, как убрать водяной знак). Как правило водяной знак
+	в этом случае одинаковый и расположен в одном и том же месте изображения. Чаще в центре. Нужно аккуратно размыть область
+	с водяным знаком и наложить поверх новый.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry2-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry2-en.jpg"></p> -->
+
+<p>Чтобы исключить подобное стороннее использование, замостим водяным знаком всё изображение. Первый элемент расположим в центре, а остальные — вокруг него.
+	Если надпись повернуть, всё становится аккуратнее.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orange-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orange-en.jpg"></p> -->
+
+<div style="border: dashed 1px #009; padding: 16px; padding-bottom: 0; margin-bottom: 2em; color: #009;">
+	<p style="margin-bottom: 4px;">Автор картинок с ягодами и апельсином — <a style="color: #009;" href="https://vk.com/nordling"><span class="icon-vk-com"></span>Кирилл Краснов</a>.</p>
+	<p style="margin-bottom: 16px;">Если что, вот тут они продаются: <a style="color: #009;" href="http://www.shutterstock.com/cat.mhtml?gallery_id=419308">http://www.shutterstock.com/cat.mhtml?gallery_id=419308</a>.</p>
+</div>
+
+
+
+<h3>Реализация</h3>
+<p>Для реализации использовался пакет ImageMagick.</p>
+
+<p>Помимо наложения водяного знака требовалось ещё генерировать и сами водяные знаки, так как магазинов было много.</p>
+<p>Чтобы сделать код нагляднее, из него выкинуты проверки на исключительные ситуации, а также обёртки повторяющихся частей в функции
+	в функции.</p>
+
+<pre><code>#!/usr/bin/perl -w
+
+use strict;
+use Image::Magick;
+
+die `pod2text $0` unless @ARGV;
+
+# Создаём холст с прозрачным фоном
+my $image = Image::Magick->new(size=>'1000x70');
+$image->ReadImage('canvas:transparent');
+
+# Наносим надпись (из параметра к вызванному скрипту) чёрным цветом с прозрачностью 30%
+$image->Annotate(
+	text      => $ARGV[0], 
+	geometry  => "+50+50",
+	pen       => $image->QueryColorname('rgba(0,0,0,0.3)'),
+	font      => 'Bookman-Demi',        
+	pointsize => 40,
+	kerning   => 3,
+);
+
+# Размываем полученное изображение
+$image->Blur(
+	radius  => 0,
+	sigma   => 6,
+	channel => 'RGBA'
+);
+
+# Создаём ещё один холст с прозрачным фоном
+my $mask = Image::Magick->new(size=>'1000x70');
+$mask->ReadImage('canvas:transparent');
+
+# Наносим надпись (из параметра к вызванному скрипту) чёрным цветом, непрозрачную
+$mask->Annotate(
+	text      => $ARGV[0], 
+	geometry  => "+50+50",
+	pen       =>  $image->QueryColorname('rgba(255,255,255,1)'),
+	font      => 'Bookman-Demi',        
+	pointsize => 40,
+	kerning   => 3,
+);
+
+# Из первого холста вырезаем непосредственно надпись по маске второго холста
+# Таким образом на первом холсте останется чёрная полупрозрачная тень, но без самой надписи
+$image->Composite(
+	image   => $mask,
+	mask    => $mask,
+	compose => 'Clear',
+);
+
+# Пишем надпись белым цветом с прозрачностью 30%
+$image->Annotate(
+	text      => $ARGV[0], 
+	geometry  => "+50+50",
+	pen       => $image->QueryColorname('rgba(255,255,255,0.3)'),
+	font      => 'Bookman-Demi',        
+	pointsize => 40,
+	kerning   => 3,
+);
+
+# Обрезаем, всё что не используется
+$image->Trim();
+
+# Поворачиваем надпись на 45&deg; против часовой стрелки
+$image->Rotate(
+	degrees    => -45,
+	background => 'transparent',
+);
+
+# Сохраняем результат в [png-]файл
+if ($ARGV[1]) {
+	$image->Write("$ARGV[1]");
+}
+else {
+	$image->Write("$ARGV[0].png");
+}
+
+=head1 NAME
+  Генерация водяного знака
+  Результат - png - будет выгружен в файл с текстом параметра
+=head1 SYNOPSYS
+  gen-watermark.pl
+    запуск без параметров: выведется справка
+  gen-watermark.pl <Параметры>
+  Параметры:
+    текст водяного знака
+	файл выходной картинки (если не указан, то выведется в текущую папку с названием 1 параметра)
+=head1 DESCRIPTION
+  Генерация водяного знака
+=head1 AUTHOR
+  Stas Raskumandrin, stas@raskumandrin.ru, http://stas.raskumandrin.ru/watermarks
+=cut</code></pre>
+
+<p>Все вышеприведённые действия достаточно легко можно сделать и без использования перла, только с применением интерфейса
+	командной строки ImageMagick. Но в данном случае ещё были требования по реализации дополнительной логики.</p>
+
+<p>Теперь код наложения водяного знака. Опять же все проверки исключительных ситуаций убраны в угоду наглядности реализации.</p>
+
+<pre><code>#!/usr/bin/perl -w
+
+use strict;
+use Image::Magick;
+use POSIX qw/ceil/;
+
+die `pod2text $0` unless @ARGV;
+
+# фоновая картинка
+my $image = Image::Magick->new;
+$image->Read("jpg:$ARGV[0]");
+
+# Получаем высоту и ширину исходного изображения
+my ($image_height, $image_width) = $image->Get('base-rows', 'base-columns');
+
+# Читаем водяной знак
+my $watermark = Image::Magick->new;	
+$watermark->Read("png:$ARGV[1]");
+
+# Получаем высоту и ширину накладываемого водяного знака
+my ($watermark_height, $watermark_width) = $watermark->Get('base-rows', 'base-columns');
+
+# Исходное изображение (или одно его измерение) может оказаться меньше водяного знака
+# Создадим отдельный холст, на который всё бы влезло
+
+# Определим высоту и ширину холста
+my $canvas_height = ( $image_height > $watermark_height ? $image_height : $watermark_height );
+my $canvas_width = ( $image_width > $watermark_width ? $image_width : $watermark_width );
+
+my $canvas = Image::Magick->new;
+$canvas->Set(size => "${canvas_width}x${canvas_height}");
+$canvas->Read('NULL:');	
+
+# Слой с логотипами
+my $tiled_layer = Image::Magick->new;
+$tiled_layer->Set(size => "${canvas_width}x${canvas_height}");
+$tiled_layer->Read('NULL:');		
+
+# Количество строк и столбцов в сетке логотипов
+my $tile_columns = ceil($image_width / $watermark_width);
+my $tile_rows = ceil($image_height / $watermark_height);
+
+# Привести к нечётному в большую сторону
+$tile_columns++ if $tile_columns % 2 == 0;	
+   $tile_rows++ if $tile_rows % 2 == 0;	
+
+# Номер строки и столбца центрального логотипа
+my $center_col = ceil($tile_columns / 2);
+my $center_row = ceil($tile_rows / 2);
+
+# Координата верхнего левого угла центрального логотипа (точка отсчёта)	
+my $center_x = ($image_width - $watermark_width) * 0.5;
+my $center_y = ($image_height - $watermark_height) * 0.5;
+
+# Замощение
+for my $col(1 .. $tile_columns) {
+	for my $row (1 .. $tile_rows) {
+		# посчитать координаты верхнего левого угла очередной ячейки
+		my $x = $center_x + ($col - $center_col) * $watermark_width;
+		my $y = $center_y + ($row - $center_row) * $watermark_height;
+		# нанести логотип в указанные координаты
+		$tiled_layer->Composite(
+			image   => $watermark,
+			compose => 'over',
+			x       => $x,
+			y       => $y,
+			gravity => 'NorthWest',
+		);
+	}
+}
+
+# Нанести на канвас слой с исходным изображением
+$canvas->Composite(
+	image    => $image, 
+	compose  => 'over',
+	gravity  => 'center',
+);
+
+# Нанести слой логотипов поверх
+$canvas->Composite(
+	image   => $tiled_layer,
+	compose => 'over',
+	);
+
+# обрезать полученное изображение до размеров фонового изображения
+$canvas->Crop(		
+	x      => ($canvas_width - $image_width) * 0.5,
+	y      => ($canvas_height - $image_height) * 0.5, 
+	width  => $image_width, 
+	height => $image_height,
+);
+
+# Установим качество для jpg-сжатия
+$canvas->Set(quality => 88);
+
+# Сохраним результат в файл
+$canvas->Write("jpg:$ARGV[2]");
+
+=head1 NAME
+  Накладывание водяного знака
+=head1 SYNOPSYS
+  watermark.pl
+    запуск без параметров: выведется справка
+  watermark.pl <Параметры>
+  Параметры:
+    исходная картинка
+    водяной знак
+    картинка-результат
+=head1 DESCRIPTION
+  Накладывание водяного знака
+=head1 AUTHOR
+  Stas Raskumandrin, stas@raskumandrin.ru, http://stas.raskumandrin.ru/watermarks
+=cut</code></pre>
+
+
+<p>Результат работы этих скриптов выгляди так.</p>
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orng-ru.jpg"></p>
+<!-- <p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orng-en.jpg"></p> -->

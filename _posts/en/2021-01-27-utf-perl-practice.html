@@ -1,0 +1,50 @@
+---
+layout: post
+title: "UTF Perl Practice / How to Use UTF-8 in Perl"
+type: post
+excerpt: "Practical notes on Unicode in Perl: terminology, UTF flag behavior, Encode vs utf8::* APIs, and common data-flow mistakes."
+---
+
+<p>This post preserves and updates a valuable long-form Unicode article for Perl developers:</p>
+
+<p><a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">archived source</a>.</p>
+
+<h2>Why this still matters</h2>
+
+<p>Even today, UTF-related bugs are common in legacy scripts and integrations: double-encoding, mojibake, and wide-character warnings.</p>
+
+<h2>Core Terms</h2>
+
+<ul>
+<li><b>Unicode</b>: character standard</li>
+<li><b>UCS</b>: ISO/IEC 10646 set, aligned with Unicode</li>
+<li><b>UTF-8/16/32</b>: transformation formats for encoding code points</li>
+</ul>
+
+<h2>Practical Perl Model</h2>
+
+<p>In real systems, the safest rule is:</p>
+
+<ul>
+<li>decode external bytes at input boundaries</li>
+<li>work with characters internally</li>
+<li>encode at output boundaries</li>
+</ul>
+
+<p>The post discusses how Perl's UTF flag affects operations and why blindly toggling it leads to corrupted data representations.</p>
+
+<h2>Useful APIs</h2>
+
+<p>The article compares two toolsets:</p>
+
+<ul>
+<li><code>utf8::*</code> helpers for UTF-8 byte/flag transformations</li>
+<li><code>Encode::*</code> for explicit charset conversion pipelines</li>
+</ul>
+
+<pre><code>perldoc perluniintro
+perldoc perlunicode
+perldoc Encode
+perldoc encoding</code></pre>
+
+<p>There is also a practical section on transliteration (<code>Text::Unidecode</code>) and normalization in mixed-encoding environments (including koi8-r).</p>

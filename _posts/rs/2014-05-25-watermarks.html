@@ -1,0 +1,41 @@
+---
+layout: post
+title: "Vodeni žigovi za slike internet prodavnice"
+type: post
+excerpt: "Tehnička realizacija generisanja i popločanog nanošenja vodenih žigova u Perl/ImageMagick okruženju za velike kataloge slika."
+---
+
+<p>Poslovni zahtev je nalagao korišćenje vidljivih vodenih žigova na fotografijama proizvoda. Fokus ovog teksta je tehnička realizacija.</p>
+
+<h3>Početni zahtevi</h3>
+
+<p>1. Otežati neovlašćeno korišćenje slika.<br>
+2. Obezbediti vidljivost žiga i na svetloj i na tamnoj pozadini.<br>
+3. Sačuvati čitljivost teksta na slici.<br>
+4. Omogućiti batch obradu bez ručnog rada u grafičkim alatima.</p>
+
+<h3>Dizajn vodenog žiga</h3>
+
+<p>Jedan poluprovidan natpis nije bio dovoljan: svetao natpis nestaje na svetlom, taman na tamnom delu slike.</p>
+
+<p>Bolji rezultat je dao natpis sa senkom, jer ostaje čitljiviji na različitim pozadinama.</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry-ru.jpg" class="img-fluid" alt="Primer kontrasta"></p>
+
+<p>Radi zaštite je uvedeno popločano (tiled) prekrivanje cele slike, umesto jednog centralnog žiga.</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orange-ru.jpg" class="img-fluid" alt="Popločani žig"></p>
+
+<h3>Implementacija</h3>
+
+<p>Rešenje je implementirano u Perl-u uz ImageMagick: jedan skript pravi žig, drugi ga serijski nanosi na ulazne slike.</p>
+
+<pre><code>use Image::Magick;
+# transparentni canvas, render teksta, blur/rotate,
+# popločavanje sloja žiga, kompozicija sa izvornom slikom,
+# crop na originalne dimenzije, JPEG export sa zadatim kvalitetom
+</code></pre>
+
+<p>Konačni rezultat:</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orng-ru.jpg" class="img-fluid" alt="Konačan rezultat"></p>
