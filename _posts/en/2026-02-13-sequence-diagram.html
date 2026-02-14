@@ -1,0 +1,79 @@
+---
+layout: post
+title: Sequence diagrams as code
+excerpt: Sequence diagrams as code make it easier to track changes and control versioning; they also let you quickly create new diagrams from existing code.
+---
+
+<p>In software development, especially in multi-team projects, effective cross-team communication is critical for project success. One tool that can significantly improve this communication is sequence diagrams.</p>
+
+<p>In English, they are usually called <a href="https://en.wikipedia.org/wiki/Sequence_diagram">sequence diagrams</a>.</p>
+
+<h2>Why are sequence diagrams needed?</h2>
+
+<p>Sequence diagrams are visual representations of interactions between system components or actors over time. They help engineers see the order of method or function calls during execution of a specific workflow. This improves system understanding and helps detect potential issues or non-optimal flows.</p>
+
+<h2>Why is writing them as code more practical?</h2>
+
+<p>At first, I used to draw such diagrams in draw.io. Overall, it was quite time-consuming.</p>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.th.png" class="img-fluid" alt="SSO diagram in draw.io"></a></p>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.drawio">sso_diagram.drawio</a></p>
+
+<p>Then I discovered PlantUML. Creating the first diagram in text was also labor-intensive, just like drawing in draw.io. But once I started making edits and producing similar diagrams, the advantages of code-based diagrams over image-based diagrams became obvious.</p>
+
+<dl>
+<dt>Clarity and precision</dt>
+<dd>Using PlantUML to write sequence diagrams as code provides clear and precise interaction descriptions. PlantUML syntax is formalized and strict, reducing ambiguity and misinterpretation.</dd>
+
+<dt>Documentation integration</dt>
+<dd>PlantUML sequence diagrams are easy to embed into project documentation, such as Confluence. This gives all project participants convenient access to architecture and interaction visuals.</dd>
+
+<dt>Change versioning</dt>
+<dd>PlantUML makes it easy to track diagram changes and manage version history. This is especially useful in Confluence-based workflows, where you may need to restore previous versions quickly.</dd>
+
+<dt>Easy edits and follow-up diagrams</dt>
+<dd>Because PlantUML sequence diagrams are code, updates are fast and straightforward. Existing code can also be reused to build new diagrams, saving time and improving team efficiency.</dd>
+</dl>
+
+<p>A downside of coding diagrams is somewhat limited styling flexibility.</p>
+
+<h2>PlantUML</h2>
+
+<p>You can start coding/drawing a diagram directly in the browser:</p>
+<p><a href="https://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000">https://www.plantuml.com/plantuml/uml/SyfFKj...</a></p>
+
+<p>If diagram content is sensitive, you can run PlantUML locally with Docker. The same browser interface will then be available locally without internet access.</p>
+
+<p><a href="https://hub.docker.com/r/plantuml/plantuml-server">https://hub.docker.com/r/plantuml/plantuml-server</a></p>
+
+<h2>Request numbering</h2>
+
+<p>Diagrams serve two goals: first, to design and agree on technical solutions across teams; second, to troubleshoot running systems faster and route incidents to the right team.</p>
+
+<p>For both cases, request numbering on the diagram helps a lot. When requests are numbered, teams can communicate in a concise format like: "request 11 sends these fields to your service, and response 12 returns unexpected data." This avoids long, confusing explanations.</p>
+
+<h2>Single Sign-On diagram example</h2>
+
+<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.th.png" class="img-fluid" alt="SSO sequence diagram"></a></p>
+
+<pre><code>@startuml
+participant Customer
+participant Browser
+participant App1
+participant App2
+
+Customer -> Browser : A1. Go to App1
+Browser -> App1 : A2. GET index
+App1 -> Browser : A3. index
+Customer -> Browser : A4. Click Login
+Browser -> App2 : A5. GET authorization.oauth2
+App2 --> Browser : A9. 302 Redirect + auth code
+Browser -> App1 : A10. redirect uri + auth hash
+App1 -> App2 : A11. Request access token
+App2 -> App1 : A12. Access Token + User_Info
+App1 -> Browser : A13. Logged in content
+Browser -> Customer : A14. Logged in content
+@enduml</code></pre>
+
+<p>Link to the full version of this diagram on the PlantUML server: <a href="http://www.plantuml.com/plantuml/uml/fLLjRzis4FxENt50FsH3DSzwaVE2ecYiD5s002kIz7F1I2URi4rw9DMc6_RVnnTPanWcCp0746BnUUwUEpvt_g0qbRhRRGbvf_IFBRudAocwFVn5m7nk6SU7DQit79M2T7XNYQsGyAPexD_mzju6SAY_YNcuGByXRL36mqM9xtxjTH2rONnF9Ts1mZywv3MQC9TIYkzz-hdxaCjQ2xaKqkIP7joo5ctuLyzelR52UTEVNxiF-KobPZNRKwuZzF7n4H6k1TTJ_b8ynSBQr_5mzkXP6Dld_RzfeEgK5ZkKu493Ef-SBatdr72OpU5DsxPPNKz0b_jzsYDoWsXgV6nFGqJM8mg3m0pRXeQ8l4UKDiPva-5vY2XwnC8Whalx5oBA7d4w1mEfFXPN2m3Y_UbrVlB_TdgDt32fPe8J84CRVda_57q1b-aCFWdGmd49hJNxHZKU4EI0D2GBi8pCC3u-0ECDFWq4JxUF87u-wv4DJh4l2IfcK6tDDC2jM34U2CWielG2gAbGIFQdAt0cxDSi0HlrvkeYACTI2R7F8DjYvlD0A-JkHKsd1nJZ5kTR6fDsDeFFlzy_HD0-zpJi-SpOAOCxR9Z4MiDRLnFKea4IwtmwzvNB0w6Jx2loPYyO7zXhgjOaQBLzZcMcvjRlxFfG6cXTsxsZnGOvFFuO1V6Qn_dDrLzw-8E5cvHVZCIlDwPE4hlyD7UDMs43Z9kwk4QkGoTCIkqlmBEB69kOWWz-zygiXcFzlanxUtbMp6EfXNcJn_eOnCkFCT2ocFbySHU5oSlUHN5AJCMYZn-soxgY4cB34BuplVQWc-ROArYUXd63QuYNMusNIbXXRW733c6QqIrykRk1dvp0cwi4zbGfeBo1BUMhZguGt0yUQfJgvycLvCG-Wh6gyc2il8ui0OKQbAPw5D0UdenadCJ6kYgEtZYnEQ_AGD1uKcFTMHmxvhxyaT3JOQxzGAluH0-PpWu3dHXUAr6j4sCFFzsAHBjx_hoxDKfD6OShgYbKo6rV6zmRoOolG73leLQAtH0y2Uy_i6GUDgQmkUq237bZLa68VOQIq_H_EI9YY3HxrH5RXlm_F97cnvl2rruSwmhVX8dSydXV-6IBrumHt5KsILWwlZ7YlQWtg2yCRV9hCRcmaaWkD8BuXj9_Tn5Mg9NXUQq9mISj3Kj1P_ZZLPYGMg89fO1Pqt6wzVlfIHE30RrcdaFUzcjK2wSX0TP2WotZsDX5vaIurACcf6UcXiurmNca2-ik-xg3YpsV-GZFTcOo6OhHKlEZuUxWnBdn1EYZw7JWmsdsueMTNMNpbmGGCexHqmdvO3Hrkot0Fm00">http://www.plantuml.com/plantuml/uml/fLLjRz...</a>.</p>
