@@ -1,0 +1,21 @@
+<form action="#" method="post" enctype="multipart/form-data">
+  <div class="mb-2">
+    <input class="form-control-serif" type="text" name="contact" required placeholder="{% if site.lang == 'ru' %}Как с вами связаться (Telegram, телефон, email, ссылка, ник, любой удобный способ){% elsif site.lang == 'rs' %}Kako da vas kontaktiram (Telegram, telefon, email, link, korisničko ime, bilo koji način){% else %}How to contact you (Telegram, phone, email, link, username, any preferred way){% endif %}">
+  </div>
+  <div class="mb-2">
+    <textarea class="form-control-serif" name="task" rows="8" required placeholder="{% if site.lang == 'ru' %}Пишите в свободной форме всё, что хотите: задачу, контекст, примеры, ограничения, дедлайн, бюджет, ссылки, текущий стек и любые дополнительные детали.{% elsif site.lang == 'rs' %}Pišite slobodno sve što želite: zadatak, kontekst, primere, ograničenja, rok, budžet, linkove, trenutni stack i dodatne detalje.{% else %}Write in any format whatever you want: task, context, examples, constraints, deadline, budget, links, current stack, and any extra details.{% endif %}"></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="brief-files">
+{% if site.lang == "ru" %}Файлы (опционально){% endif %}
+{% if site.lang == "rs" %}Fajlovi (opciono){% endif %}
+{% if site.lang == "en" %}Files (optional){% endif %}
+    </label>
+    <input id="brief-files" class="form-control-serif" type="file" name="files" multiple>
+  </div>
+  <button class="button" type="submit">
+{% if site.lang == "ru" %}Отправить бриф{% endif %}
+{% if site.lang == "rs" %}Pošalji brif{% endif %}
+{% if site.lang == "en" %}Submit brief{% endif %}
+  </button>
+</form>

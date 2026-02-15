@@ -416,6 +416,31 @@ h3 {
   padding: 12px 0;
 }
 
+.sub-footer-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sub-footer-line::-webkit-scrollbar {
+  display: none;
+}
+
+.sub-footer-line a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sub-footer-line a:link,
+.sub-footer-line a:visited,
+.sub-footer-line a:hover,
+.sub-footer-line a:focus {
+  color: #fff;
+}
+
 .sub-footer-inner {
   display: flex;
   justify-content: space-between;
