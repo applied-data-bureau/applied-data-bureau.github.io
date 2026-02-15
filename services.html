@@ -18,17 +18,48 @@ permalink: /services/
 {% if site.lang == "en" %}All services{% endif %}
 </h1>
 
-<div class="row row-cols-1 row-cols-md-2 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4">
 {% assign all_posts = site.posts %}
 {% for post in all_posts %}
   {% if post.type == "kwork" %}
   <div class="col">
-    <div class="card h-100 shadow-sm">
+    <div class="card h-100 shadow-sm services-card position-relative">
+      {% if site.lang == "rs" %}
+      {% assign service_image = "/img/services/data.svg" %}
+      {% if post.url contains "bots" %}
+        {% assign service_image = "/img/services/bots.svg" %}
+      {% elsif post.url contains "data" %}
+        {% assign service_image = "/img/services/data.svg" %}
+      {% elsif post.url contains "jekyll" %}
+        {% assign service_image = "/img/services/jekyll.svg" %}
+      {% elsif post.url contains "n8n" %}
+        {% assign service_image = "/img/services/n8n.svg" %}
+      {% elsif post.url contains "supabase" %}
+        {% assign service_image = "/img/services/supabase.svg" %}
+      {% elsif post.url contains "maps" %}
+        {% assign service_image = "/img/services/maps.svg" %}
+      {% elsif post.url contains "perl" %}
+        {% assign service_image = "/img/services/perl.svg" %}
+      {% elsif post.url contains "legacy" %}
+        {% assign service_image = "/img/services/legacy.svg" %}
+      {% elsif post.url contains "latex" %}
+        {% assign service_image = "/img/services/latex.svg" %}
+      {% endif %}
+      <div class="services-card-media">
+        <img
+          class="services-card-image"
+          src="{{ service_image | relative_url }}"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        >
+      </div>
+      {% endif %}
       <div class="card-body d-flex flex-column">
-        <h5 class="card-title"><a class="link-body-emphasis text-decoration-none" href="{{ post.url }}">{{ post.title }}</a></h5>
+        <h5 class="card-title"><a class="services-card-link stretched-link link-body-emphasis text-decoration-none" href="{{ post.url }}">{{ post.title }}</a></h5>
         <p class="card-text">{{ post.excerpt | strip_html | truncate: 180 }}</p>
         <div class="mt-auto">
-          <a class="btn btn-outline-primary btn-sm" href="{{ post.url }}">
+          <a class="btn btn-outline-primary btn-sm position-relative" style="z-index: 2;" href="{{ post.url }}">
 {% if site.lang == "ru" %}Открыть услугу{% endif %}
 {% if site.lang == "rs" %}Otvori uslugu{% endif %}
 {% if site.lang == "en" %}Open service{% endif %}
