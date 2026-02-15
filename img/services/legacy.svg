@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#edf5ff"/>
+      <stop offset="1" stop-color="#ebfff4"/>
+    </linearGradient>
+    <linearGradient id="gear" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#508dff"/>
+      <stop offset="1" stop-color="#43caa7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="320" y="180" width="960" height="540" rx="40" fill="#ffffff"/>
+  <circle cx="700" cy="450" r="150" fill="url(#gear)"/>
+  <circle cx="700" cy="450" r="62" fill="#ffffff"/>
+  <rect x="686" y="265" width="28" height="70" rx="12" fill="#79acff"/>
+  <rect x="686" y="565" width="28" height="70" rx="12" fill="#79acff"/>
+  <rect x="515" y="436" width="70" height="28" rx="12" fill="#6dd8bd"/>
+  <rect x="815" y="436" width="70" height="28" rx="12" fill="#6dd8bd"/>
+  <rect x="960" y="320" width="180" height="40" rx="20" fill="#cfe2ff"/>
+  <rect x="920" y="390" width="220" height="40" rx="20" fill="#d4f5e9"/>
+  <rect x="980" y="460" width="160" height="40" rx="20" fill="#cfe2ff"/>
+</svg>

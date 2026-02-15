@@ -5,17 +5,22 @@ permalink: /services/
 ---
 
 <p class="mb-3">
-  <a class="link-body-emphasis text-decoration-none" href="/">
-{% if site.lang == "ru" %}← Назад к блогу{% endif %}
-{% if site.lang == "rs" %}← Nazad na blog{% endif %}
-{% if site.lang == "en" %}← Back to blog{% endif %}
+  <a class="link-body-emphasis text-decoration-none me-3" href="/">
+{% if site.lang == "ru" %}← На главную{% endif %}
+{% if site.lang == "rs" %}← Nazad na početnu{% endif %}
+{% if site.lang == "en" %}← Back to home{% endif %}
+  </a>
+  <a class="link-body-emphasis text-decoration-none" href="/blog/">
+{% if site.lang == "ru" %}Перейти в блог →{% endif %}
+{% if site.lang == "rs" %}Idi na blog →{% endif %}
+{% if site.lang == "en" %}Go to blog →{% endif %}
   </a>
 </p>
 
 <h1 class="pb-4 mb-4 border-bottom">
-{% if site.lang == "ru" %}Все услуги{% endif %}
-{% if site.lang == "rs" %}Sve usluge{% endif %}
-{% if site.lang == "en" %}All services{% endif %}
+{% if site.lang == "ru" %}Полный список услуг{% endif %}
+{% if site.lang == "rs" %}Kompletna lista usluga{% endif %}
+{% if site.lang == "en" %}Full services list{% endif %}
 </h1>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">

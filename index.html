@@ -3,35 +3,173 @@ layout: default
 title: Home
 ---
 
-<h2 class="pb-4 mb-3 fst-italic border-bottom">
-{% if site.lang == "ru" %}Блог, последние публикации{% endif %}
-{% if site.lang == "rs" %}Blog, najnovije objave{% endif %}
-{% if site.lang == "en" %}Blog, latest posts{% endif %}
-</h2>
+<section class="p-4 p-md-5 rounded-4 hero-card mb-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-8">
+      <h1 class="display-5 mb-3">
+{% if site.lang == "ru" %}Бюро прикладных данных для бизнеса{% endif %}
+{% if site.lang == "rs" %}Biro primenjenih podataka za biznis{% endif %}
+{% if site.lang == "en" %}Applied Data Bureau for Business{% endif %}
+      </h1>
+      <p class="lead mb-4">
+{% if site.lang == "ru" %}Делаем автоматизацию, интеграции и разработку без лишней сложности: от ботов и n8n до legacy-систем и быстрых сайтов.{% endif %}
+{% if site.lang == "rs" %}Radimo automatizaciju, integracije i razvoj bez nepotrebne složenosti: od botova i n8n do legacy sistema i brzih sajtova.{% endif %}
+{% if site.lang == "en" %}We deliver automation, integrations, and development without unnecessary complexity: from bots and n8n to legacy systems and fast websites.{% endif %}
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary" href="/services/">
+{% if site.lang == "ru" %}Смотреть все услуги{% endif %}
+{% if site.lang == "rs" %}Pogledaj sve usluge{% endif %}
+{% if site.lang == "en" %}View all services{% endif %}
+        </a>
+        <a class="btn btn-outline-primary" href="/blog/">
+{% if site.lang == "ru" %}Перейти в блог{% endif %}
+{% if site.lang == "rs" %}Idi na blog{% endif %}
+{% if site.lang == "en" %}Go to blog{% endif %}
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="p-3 rounded-3 bg-white border">
+        <p class="mb-2 fw-semibold">
+{% if site.lang == "ru" %}Быстрый старт{% endif %}
+{% if site.lang == "rs" %}Brz početak{% endif %}
+{% if site.lang == "en" %}Quick start{% endif %}
+        </p>
+        <p class="mb-0 small text-body-secondary">
+{% if site.lang == "ru" %}Опишите задачу в 3-5 предложениях и получите план работ с оценкой сроков.{% endif %}
+{% if site.lang == "rs" %}Opišite zadatak u 3-5 rečenica i dobićete plan rada sa procenom rokova.{% endif %}
+{% if site.lang == "en" %}Describe your task in 3-5 sentences and get a delivery plan with timeline estimate.{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<p class="mb-4">
-  <a class="btn btn-outline-primary" href="/services">
-{% if site.lang == "ru" %}Все услуги{% endif %}
-{% if site.lang == "rs" %}Sve usluge{% endif %}
-{% if site.lang == "en" %}All services{% endif %}
-  </a>
-</p>
+<section class="mb-5">
+  <h2 class="section-title">
+{% if site.lang == "ru" %}Короткий список услуг{% endif %}
+{% if site.lang == "rs" %}Kratka lista usluga{% endif %}
+{% if site.lang == "en" %}Short list of services{% endif %}
+  </h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    <div class="col"><div class="service-mini-card"><h3 class="h5">Telegram / Viber bots</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Боты под продажи, поддержку, CRM и уведомления.{% endif %}{% if site.lang == "rs" %}Botovi za prodaju, podršku, CRM i obaveštenja.{% endif %}{% if site.lang == "en" %}Bots for sales, support, CRM, and notifications.{% endif %}</p></div></div>
+    <div class="col"><div class="service-mini-card"><h3 class="h5">n8n automation</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Автоматизация ручных операций и интеграций между сервисами.{% endif %}{% if site.lang == "rs" %}Automatizacija ručnih procesa i integracija između servisa.{% endif %}{% if site.lang == "en" %}Automation of manual workflows and service integrations.{% endif %}</p></div></div>
+    <div class="col"><div class="service-mini-card"><h3 class="h5">{% if site.lang == "ru" %}Обработка данных{% endif %}{% if site.lang == "rs" %}Obrada podataka{% endif %}{% if site.lang == "en" %}Data processing{% endif %}</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Большие файлы Excel/CSV/JSON, отчеты и преобразования.{% endif %}{% if site.lang == "rs" %}Veliki Excel/CSV/JSON fajlovi, izveštaji i transformacije.{% endif %}{% if site.lang == "en" %}Large Excel/CSV/JSON files, reports, and transformations.{% endif %}</p></div></div>
+    <div class="col"><div class="service-mini-card"><h3 class="h5">Perl / legacy</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Поддержка, оптимизация и развитие существующих систем.{% endif %}{% if site.lang == "rs" %}Održavanje, optimizacija i razvoj postojećih sistema.{% endif %}{% if site.lang == "en" %}Maintenance, optimization, and extension of existing systems.{% endif %}</p></div></div>
+    <div class="col"><div class="service-mini-card"><h3 class="h5">Jekyll websites</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Легкие SEO-сайты и посадочные страницы на статике.{% endif %}{% if site.lang == "rs" %}Laki SEO sajtovi i landing stranice na statici.{% endif %}{% if site.lang == "en" %}Lean SEO websites and landing pages on static stack.{% endif %}</p></div></div>
+    <div class="col"><div class="service-mini-card"><h3 class="h5">{% if site.lang == "ru" %}Интеграции и API{% endif %}{% if site.lang == "rs" %}Integracije i API{% endif %}{% if site.lang == "en" %}Integrations and APIs{% endif %}</h3><p class="mb-0 text-body-secondary">{% if site.lang == "ru" %}Связка CRM, мессенджеров, баз данных и внешних сервисов.{% endif %}{% if site.lang == "rs" %}Povezivanje CRM-a, mesindžera, baza i eksternih servisa.{% endif %}{% if site.lang == "en" %}Connecting CRM, messengers, databases, and external services.{% endif %}</p></div></div>
+  </div>
+  <p class="mt-3 mb-0">
+    <a class="link-primary fw-semibold" href="/services/">
+{% if site.lang == "ru" %}Полный список услуг →{% endif %}
+{% if site.lang == "rs" %}Kompletna lista usluga →{% endif %}
+{% if site.lang == "en" %}Full services list →{% endif %}
+    </a>
+  </p>
+</section>
 
-{% assign posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
-{% for post in posts %}
-  <article class="blog-post">
-    <h3 class="link-body-emphasis mb-1"><a href="{{ post.url }}">{{ post.title }}</a></h3>
-    <p class="blog-post-meta">{{ post.date | date: "%b %d" }}</p>
-    {{ post.excerpt }}
-  </article>
+<section class="mb-5" id="contact">
+  <h2 class="section-title">
+{% if site.lang == "ru" %}Как связаться{% endif %}
+{% if site.lang == "rs" %}Kako da stupimo u kontakt{% endif %}
+{% if site.lang == "en" %}How to contact{% endif %}
+  </h2>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <form class="contact-form" action="#" method="post">
+        <div class="mb-3">
+          <label class="form-label" for="contactName">
+{% if site.lang == "ru" %}Имя{% endif %}
+{% if site.lang == "rs" %}Ime{% endif %}
+{% if site.lang == "en" %}Name{% endif %}
+          </label>
+          <input id="contactName" class="form-control" type="text" name="name">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="contactMethod">
+{% if site.lang == "ru" %}Контакт (Telegram/Viber/Email){% endif %}
+{% if site.lang == "rs" %}Kontakt (Telegram/Viber/Email){% endif %}
+{% if site.lang == "en" %}Contact (Telegram/Viber/Email){% endif %}
+          </label>
+          <input id="contactMethod" class="form-control" type="text" name="contact">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="contactTask">
+{% if site.lang == "ru" %}Задача{% endif %}
+{% if site.lang == "rs" %}Zadatak{% endif %}
+{% if site.lang == "en" %}Task{% endif %}
+          </label>
+          <textarea id="contactTask" class="form-control" rows="4" name="task"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+{% if site.lang == "ru" %}Отправить заявку{% endif %}
+{% if site.lang == "rs" %}Pošalji upit{% endif %}
+{% if site.lang == "en" %}Send request{% endif %}
+        </button>
+      </form>
+    </div>
+    <div class="col-lg-5">
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Telegram
+          <a href="#" class="link-primary">@your_telegram</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Viber
+          <a href="#" class="link-primary">+xxx xx xxx xx xx</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Upwork
+          <a href="#" class="link-primary">Profile</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+{% if site.lang == "ru" %}Фриланс-биржа{% endif %}
+{% if site.lang == "rs" %}Freelance platforma{% endif %}
+{% if site.lang == "en" %}Freelance marketplace{% endif %}
+          <a href="#" class="link-primary">Profile</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5">
+  <h2 class="section-title">
+{% if site.lang == "ru" %}Отзывы{% endif %}
+{% if site.lang == "rs" %}Recenzije{% endif %}
+{% if site.lang == "en" %}Testimonials{% endif %}
+  </h2>
+  <div class="row g-3">
+    <div class="col-md-4"><blockquote class="p-3 rounded review-card mb-0">{% if site.lang == "ru" %}Сюда вставляется отзыв с фриланс-биржи №1.{% endif %}{% if site.lang == "rs" %}Ovde ide recenzija sa freelance platforme #1.{% endif %}{% if site.lang == "en" %}Freelance platform testimonial #1 goes here.{% endif %}</blockquote></div>
+    <div class="col-md-4"><blockquote class="p-3 rounded review-card mb-0">{% if site.lang == "ru" %}Сюда вставляется отзыв с фриланс-биржи №2.{% endif %}{% if site.lang == "rs" %}Ovde ide recenzija sa freelance platforme #2.{% endif %}{% if site.lang == "en" %}Freelance platform testimonial #2 goes here.{% endif %}</blockquote></div>
+    <div class="col-md-4"><blockquote class="p-3 rounded review-card mb-0">{% if site.lang == "ru" %}Сюда вставляется отзыв с фриланс-биржи №3.{% endif %}{% if site.lang == "rs" %}Ovde ide recenzija sa freelance platforme #3.{% endif %}{% if site.lang == "en" %}Freelance platform testimonial #3 goes here.{% endif %}</blockquote></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">
+{% if site.lang == "ru" %}Выполненные работы{% endif %}
+{% if site.lang == "rs" %}Završeni projekti{% endif %}
+{% if site.lang == "en" %}Completed work{% endif %}
+  </h2>
+  <div class="row row-cols-1 row-cols-md-2 g-3">
+{% assign case_posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
+{% for post in case_posts limit:4 %}
+    <div class="col">
+      <article class="work-card">
+        <h3 class="h5 mb-2"><a class="link-body-emphasis text-decoration-none" href="{{ post.url }}">{{ post.title }}</a></h3>
+        <p class="small text-body-secondary mb-2">{{ post.date | date: "%Y-%m-%d" }}</p>
+        <p class="mb-0">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+      </article>
+    </div>
 {% endfor %}
-
-<!--
-<nav class="blog-pagination" aria-label="Pagination">
-  <a class="btn btn-outline-primary rounded-pill" href="#">Older</a>
-    <a
-      class="btn btn-outline-secondary rounded-pill disabled"
-      aria-disabled="true"
-      >Newer</a>
-</nav>
--->
+  </div>
+  <p class="mt-3 mb-0">
+    <a class="link-primary fw-semibold" href="/blog/">
+{% if site.lang == "ru" %}Все статьи и кейсы в блоге →{% endif %}
+{% if site.lang == "rs" %}Svi članci i studije slučaja na blogu →{% endif %}
+{% if site.lang == "en" %}All articles and case studies in the blog →{% endif %}
+    </a>
+  </p>
+</section>
