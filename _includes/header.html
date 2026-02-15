@@ -1,27 +1,26 @@
-<div class="container">
-  <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-center py-3 border-bottom gap-3">
-    <a
-      href="/"
-      class="blog-header-logo h4 mb-0 text-body-emphasis text-decoration-none"
-    >
-      {{ site.title }}
-    </a>
-    <nav class="nav nav-pills gap-2">
-      <a class="nav-link" href="/">
-{% if site.lang == "ru" %}Главная{% endif %}
-{% if site.lang == "rs" %}Početna{% endif %}
-{% if site.lang == "en" %}Home{% endif %}
+<div class="header">
+  <div class="container">
+    <div class="logo">
+      <a href="/">
+        {% assign title_parts = site.title | split: " " %}
+        {% if site.lang == "en" %}
+          {% assign highlight_word = title_parts | last %}
+          {% assign base_title = site.title | remove: highlight_word | strip %}
+          {% if base_title != "" %}<span class="logo-rest">{{ base_title }}</span> {% endif %}<span class="logo-first">{{ highlight_word }}</span>
+        {% else %}
+          {% assign highlight_word = title_parts | first %}
+          {% assign base_title = site.title | remove_first: highlight_word | strip %}
+          <span class="logo-first">{{ highlight_word }}</span>{% if base_title != "" %} <span class="logo-rest">{{ base_title }}</span>{% endif %}
+        {% endif %}
       </a>
-      <a class="nav-link" href="/services/">
-{% if site.lang == "ru" %}Услуги{% endif %}
-{% if site.lang == "rs" %}Usluge{% endif %}
-{% if site.lang == "en" %}Services{% endif %}
-      </a>
-      <a class="nav-link" href="/blog/">
-{% if site.lang == "ru" %}Блог{% endif %}
-{% if site.lang == "rs" %}Blog{% endif %}
-{% if site.lang == "en" %}Blog{% endif %}
-      </a>
+    </div>
+    <nav class="main-menu">
+      <ul>
+        <li><a href="/services/">{% if site.lang == "ru" %}Услуги{% endif %}{% if site.lang == "rs" %}Usluge{% endif %}{% if site.lang == "en" %}Services{% endif %}</a></li>
+        <li><a href="/blog/">{% if site.lang == "ru" %}Блог{% endif %}{% if site.lang == "rs" %}Blog{% endif %}{% if site.lang == "en" %}Blog{% endif %}</a></li>
+        <li><a href="/#works">{% if site.lang == "ru" %}Кейсы{% endif %}{% if site.lang == "rs" %}Projekti{% endif %}{% if site.lang == "en" %}Work{% endif %}</a></li>
+        <li><a href="/#contact">{% if site.lang == "ru" %}Контакт{% endif %}{% if site.lang == "rs" %}Kontakt{% endif %}{% if site.lang == "en" %}Contact{% endif %}</a></li>
+      </ul>
     </nav>
-  </header>
+  </div>
 </div>

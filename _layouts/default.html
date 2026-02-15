@@ -1,11 +1,13 @@
 <!doctype html>
-<html lang="{{ site.lang }}" data-bs-theme="auto">
+<html lang="{{ site.lang }}">
 {% include head.html %}
-<body>
+<body class="page">
+<div class="wrapper">
 {% include header.html %}
-<main class="container py-4 py-md-5">
+<main>
   {{ content }}
 </main>
+</div>
 {% include footer.html %}
 {% include scripts.html %}
 </body>

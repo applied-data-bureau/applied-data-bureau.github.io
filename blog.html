@@ -4,31 +4,38 @@ title: Blog
 permalink: /blog/
 ---
 
-<section class="mb-4">
-  <h1 class="section-title">
-{% if site.lang == "ru" %}Блог: техстатьи и кейсы{% endif %}
+<div class="intro">
+  <div class="container">
+    <div class="row justify-content-start align-items-center">
+      <div class="col-12 col-md-7 col-lg-6">
+        <h1>
+{% if site.lang == "ru" %}Блог: технические статьи и кейсы{% endif %}
 {% if site.lang == "rs" %}Blog: tehnički članci i studije slučaja{% endif %}
 {% if site.lang == "en" %}Blog: technical articles and case studies{% endif %}
-  </h1>
-  <p class="text-body-secondary mb-0">
-{% if site.lang == "ru" %}Публикации по автоматизации, данным, интеграциям и реализованным проектам.{% endif %}
-{% if site.lang == "rs" %}Objave o automatizaciji, podacima, integracijama i realizovanim projektima.{% endif %}
-{% if site.lang == "en" %}Publications on automation, data, integrations, and delivered projects.{% endif %}
-  </p>
-</section>
+        </h1>
+        <p>
+{% if site.lang == "ru" %}Публикации о реализованных проектах, подходах к автоматизации и практических инженерных решениях.{% endif %}
+{% if site.lang == "rs" %}Objave o realizovanim projektima, pristupima automatizaciji i praktičnim inženjerskim rešenjima.{% endif %}
+{% if site.lang == "en" %}Publications on delivered projects, automation approaches, and practical engineering solutions.{% endif %}
+        </p>
+      </div>
+      <div class="col-12 col-md-5 col-lg-6">
+        <img class="intro-image" src="{{ '/img/illustrations/meditate.svg' | relative_url }}" alt="Illustration">
+      </div>
+    </div>
+  </div>
+</div>
 
-{% assign posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
-{% for post in posts %}
-<article class="blog-post pb-4 mb-4 border-bottom">
-  <h2 class="h3 mb-1">
-    <a class="link-body-emphasis text-decoration-none" href="{{ post.url }}">{{ post.title }}</a>
-  </h2>
-  <p class="text-body-secondary small mb-2">{{ post.date | date: "%Y-%m-%d" }}</p>
-  <p class="mb-2">{{ post.excerpt | strip_html | truncate: 220 }}</p>
-  <a class="link-primary" href="{{ post.url }}">
-{% if site.lang == "ru" %}Читать материал{% endif %}
-{% if site.lang == "rs" %}Pročitaj članak{% endif %}
-{% if site.lang == "en" %}Read post{% endif %}
-  </a>
-</article>
-{% endfor %}
+<div class="strip">
+  <div class="container section-wrap">
+    {% assign posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
+    {% for post in posts %}
+      <article class="blog-list-item">
+        <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <div class="date">{{ post.date | date: "%Y-%m-%d" }}</div>
+        <p>{{ post.excerpt | strip_html | truncate: 240 }}</p>
+        <a href="{{ post.url }}">{% if site.lang == "ru" %}Читать материал{% endif %}{% if site.lang == "rs" %}Pročitaj članak{% endif %}{% if site.lang == "en" %}Read post{% endif %}</a>
+      </article>
+    {% endfor %}
+  </div>
+</div>
