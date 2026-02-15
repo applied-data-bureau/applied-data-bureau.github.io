@@ -1,0 +1,41 @@
+---
+layout: post
+title: "Watermarks for E-commerce Images"
+type: post
+excerpt: "Technical implementation of watermark generation and tiled overlay in Perl/ImageMagick for large image catalogs."
+---
+
+<p>Business constraints required visible watermarks on product images. The focus here is technical implementation, not legal or ethical debate.</p>
+
+<h3>Initial Requirements</h3>
+
+<p>1. Make unauthorized reuse difficult.<br>
+2. Keep watermark visible on both light and dark backgrounds.<br>
+3. Preserve text readability in images.<br>
+4. Support batch processing without Photoshop/manual GUI work.</p>
+
+<h3>Watermark Design</h3>
+
+<p>A single semi-transparent caption was not enough. White text disappears on light backgrounds, dark text disappears on dark ones.</p>
+
+<p>Adding a shadow gave much better contrast across mixed backgrounds.</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry-ru.jpg" class="img-fluid" alt="Contrast example"></p>
+
+<p>To improve protection, the final step was tiled watermarking across the whole image, not one centered logo.</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orange-ru.jpg" class="img-fluid" alt="Tiled watermark"></p>
+
+<h3>Implementation</h3>
+
+<p>The solution was built with ImageMagick in Perl. One script generated watermark assets, another applied them to source images in batch mode.</p>
+
+<pre><code>use Image::Magick;
+# create transparent canvas, render text, blur, rotate,
+# tile watermark layer, composite over source image,
+# crop to original bounds, save JPEG with target quality
+</code></pre>
+
+<p>Final output:</p>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orng-ru.jpg" class="img-fluid" alt="Final result"></p>

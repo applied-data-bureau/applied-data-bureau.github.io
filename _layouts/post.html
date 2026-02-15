@@ -1,17 +1,29 @@
 ---
 layout: default
 ---
-<article class="blog-post">
-<h2 class="display-5 link-body-emphasis mb-1">{{ page.title }}</h2>
 
-{% unless page.type == "kwork" %}
-  <p class="blog-post-meta">
-    {{ page.date | date: "%B %d, %Y" }}
-  </p>
-{% endunless %}
+<div class="intro">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-9">
+        <h1>{{ page.title }}</h1>
+        {% unless page.type == "kwork" %}
+        <p class="mb-0">{{ page.date | date: "%Y-%m-%d" }}</p>
+        {% endunless %}
+        <p class="mb-0">
+          <a href="/blog/">{% if site.lang == "ru" %}← Назад в блог{% endif %}{% if site.lang == "rs" %}← Nazad na blog{% endif %}{% if site.lang == "en" %}← Back to blog{% endif %}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-{{ content }}
-</article>
- 
-
-
+<div class="strip">
+  <div class="container section-wrap">
+    <div class="row">
+      <div class="col-12 col-lg-9 content">
+        {{ content }}
+      </div>
+    </div>
+  </div>
+</div>

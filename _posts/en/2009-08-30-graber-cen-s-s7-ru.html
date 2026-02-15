@@ -1,0 +1,49 @@
+---
+layout: post
+title: "S7.ru Fare Scraper"
+type: post
+excerpt: "How I built a Perl bot that fetches S7 fares, keeps session state, parses flight rows, and extracts the minimum available ticket price."
+---
+
+<h4>Task</h4>
+
+<p>The goal was to build a bot that collects ticket prices from S7. The workflow was: choose route/date, submit search, read the flights table, and save minimum fares with flight numbers.</p>
+
+<p>The tricky part: flight lists could change from day to day, so the parser had to track real flight identifiers instead of relying on row order.</p>
+
+<p>Source: <a href="http://www.weblancer.net/projects/130290.html">weblancer.net</a></p>
+
+<h4>Approach</h4>
+
+<p>I split the problem into four parts:</p>
+
+<p>1) request and session handling<br>
+2) parsing response HTML<br>
+3) execution logic for daily runs<br>
+4) readable output for users</p>
+
+<h4>Data Retrieval</h4>
+
+<p>The search page was at <code>http://ibe.s7.ru/S7/webqtrip.html</code>. I reproduced browser behavior with Perl and preserved request flow state.</p>
+
+<ul class="code">
+<li><span class="c09f">#!/usr/bin/perl<span></li>
+<li><span><span class="c00f">use</span> strict;<span></li>
+<li><span><span class="c00f">use</span> LWP::UserAgent;</span></li>
+<li class="br"><span><span class="c00f">my</span> <span class="c369">$url</span> = <span class="c090">'http://ibe.s7.ru/S7/webqtrip.html'</span>;</span></li>
+<li class="br"><span><span class="c00f">my</span> <span class="c369">%post_params</span> = (</span></li>
+<li class="indent1"><span><span class="cc00">origin</span> => <span class="c090">'MOW'</span>,</span></li>
+<li class="indent1"><span><span class="cc00">destination</span> => <span class="c090">'UFA'</span>,</span></li>
+<li class="indent1"><span><span class="cc00">departureDate</span> => <span class="c090">'2009-08-05'</span>,</span></li>
+<li class="indent1"><span><span class="cc00">cabinClass</span> => <span class="c090">'E'</span>, <span class="c09f"># E - economy, B - business</span></span></li>
+<li class="br indent1"><span><span class="cc00">journeySpan</span> => <span class="c090">'OW'</span>, <span class="cc00">numAdults</span> => <span class="c090">'1'</span>,</span></li>
+<li><span>);</span></li>
+</ul>
+
+<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2009-08-30-graber-cen-s-s7-ru/mskufa.png" class="img-fluid" alt="S7 fares table"></p>
+
+<h4>Parsing</h4>
+
+<p>After getting the HTML, I extracted flight rows and fare blocks via tag-based lookup and mapped each fare type to a route instance.</p>
+
+<p>This produced a structured output table with flight number + minimum fare per date.</p>

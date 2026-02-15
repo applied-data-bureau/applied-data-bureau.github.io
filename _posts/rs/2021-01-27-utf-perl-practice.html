@@ -1,0 +1,50 @@
+---
+layout: post
+title: "UTF Perl Practice / kako koristiti UTF-8 u Perl-u"
+type: post
+excerpt: "Praktične beleške o Unicode-u u Perl-u: terminologija, ponašanje UTF flag-a, Encode vs utf8::* API i tipične greške u toku podataka."
+---
+
+<p>Ovaj post čuva i osavremenjuje vrlo koristan opširan tekst o Unicode-u za Perl programere:</p>
+
+<p><a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">arhivirani izvor</a>.</p>
+
+<h2>Zašto je tema i dalje aktuelna</h2>
+
+<p>I danas se u legacy skriptama i integracijama redovno javljaju UTF problemi: double-encoding, mojibake i wide-character upozorenja.</p>
+
+<h2>Osnovni pojmovi</h2>
+
+<ul>
+<li><b>Unicode</b>: standard za skup znakova</li>
+<li><b>UCS</b>: ISO/IEC 10646 skup, usklađen sa Unicode-om</li>
+<li><b>UTF-8/16/32</b>: formati za transformaciju kodnih pozicija u bajtove</li>
+</ul>
+
+<h2>Praktičan Perl model</h2>
+
+<p>U praksi se najbolje pokazuje sledeće pravilo:</p>
+
+<ul>
+<li>dekodirati spoljne bajtove na ulazu</li>
+<li>interno raditi sa karakterima</li>
+<li>na izlazu eksplicitno enkodirati</li>
+</ul>
+
+<p>Post detaljno objašnjava kako UTF flag utiče na operacije nad stringovima i zašto nekontrolisano menjanje flag-a dovodi do oštećenih podataka.</p>
+
+<h2>Korisni API-jevi</h2>
+
+<p>Upoređuju se dva pristupa:</p>
+
+<ul>
+<li><code>utf8::*</code> pomoćne funkcije za rad sa UTF-8 bajtovima i flag-om</li>
+<li><code>Encode::*</code> za eksplicitne pipeline-ove konverzije kodiranja</li>
+</ul>
+
+<pre><code>perldoc perluniintro
+perldoc perlunicode
+perldoc Encode
+perldoc encoding</code></pre>
+
+<p>U tekstu je prikazana i praktična transliteracija (<code>Text::Unidecode</code>) i normalizacija u mešovitim kodnim okruženjima (uključujući koi8-r).</p>

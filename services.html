@@ -1,42 +1,47 @@
 ---
-layout: services
+layout: default
 title: Services
 permalink: /services/
 ---
 
-<p class="mb-3">
-  <a class="link-body-emphasis text-decoration-none" href="/">
-{% if site.lang == "ru" %}← Назад к блогу{% endif %}
-{% if site.lang == "rs" %}← Nazad na blog{% endif %}
-{% if site.lang == "en" %}← Back to blog{% endif %}
-  </a>
-</p>
-
-<h1 class="pb-4 mb-4 border-bottom">
-{% if site.lang == "ru" %}Все услуги{% endif %}
-{% if site.lang == "rs" %}Sve usluge{% endif %}
-{% if site.lang == "en" %}All services{% endif %}
-</h1>
-
-<div class="row row-cols-1 row-cols-md-2 g-4">
-{% assign all_posts = site.posts %}
-{% for post in all_posts %}
-  {% if post.type == "kwork" %}
-  <div class="col">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body d-flex flex-column">
-        <h5 class="card-title"><a class="link-body-emphasis text-decoration-none" href="{{ post.url }}">{{ post.title }}</a></h5>
-        <p class="card-text">{{ post.excerpt | strip_html | truncate: 180 }}</p>
-        <div class="mt-auto">
-          <a class="btn btn-outline-primary btn-sm" href="{{ post.url }}">
-{% if site.lang == "ru" %}Открыть услугу{% endif %}
-{% if site.lang == "rs" %}Otvori uslugu{% endif %}
-{% if site.lang == "en" %}Open service{% endif %}
-          </a>
-        </div>
+<div class="intro">
+  <div class="container">
+    <div class="row justify-content-start align-items-center">
+      <div class="col-12 col-md-7 col-lg-6">
+        <h1>
+{% if site.lang == "ru" %}Полный список услуг{% endif %}
+{% if site.lang == "rs" %}Kompletna lista usluga{% endif %}
+{% if site.lang == "en" %}Full services list{% endif %}
+        </h1>
+        <p>
+{% if site.lang == "ru" %}Под каждый запрос подбирается рабочее решение: от автоматизации процессов до доработки существующей системы.{% endif %}
+{% if site.lang == "rs" %}Za svaki zahtev biramo praktično rešenje: od automatizacije procesa do dorade postojećeg sistema.{% endif %}
+{% if site.lang == "en" %}Each request gets a practical solution: from process automation to extending existing systems.{% endif %}
+        </p>
+        <p class="mb-0">
+          <a class="button me-2" href="/blog/">{% if site.lang == "ru" %}Блог и кейсы{% endif %}{% if site.lang == "rs" %}Blog i projekti{% endif %}{% if site.lang == "en" %}Blog and case studies{% endif %}</a>
+          <a class="button button-outline" href="/">{% if site.lang == "ru" %}На главную{% endif %}{% if site.lang == "rs" %}Početna{% endif %}{% if site.lang == "en" %}Home{% endif %}</a>
+        </p>
+      </div>
+      <div class="col-12 col-md-5 col-lg-6">
+        <img class="intro-image" src="{{ '/img/illustrations/pointing.svg' | relative_url }}" alt="Illustration">
       </div>
     </div>
   </div>
+</div>
+
+<div class="strip">
+  <div class="container section-wrap">
+    <div class="row">
+{% assign all_posts = site.posts %}
+{% for post in all_posts %}
+  {% if post.type == "kwork" %}
+      <div class="col-12 col-md-6 service-summary">
+        <h2 class="service-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <p>{{ post.excerpt | strip_html | truncate: 170 }}</p>
+      </div>
   {% endif %}
 {% endfor %}
+    </div>
+  </div>
 </div>

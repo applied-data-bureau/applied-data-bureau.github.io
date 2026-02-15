@@ -1,14 +1,23 @@
-<footer class="py-5 text-center text-body-secondary bg-body-tertiary">
-  <!--
-  <p>
-    Blog template for Bootstrap · Jekyll
-  </p>
-  -->
-  <p class="mb-0">
-    <a href="#">
-{% if site.lang == "ru" %}Наверх{% endif %}
-{% if site.lang == "rs" %}Na vrh{% endif %}
-{% if site.lang == "en" %}To top{% endif %}   
-      </a>
-  </p>
-</footer>
+<div class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <h3 class="footer-title">{{ site.title }}</h3>
+      <ul class="footer-menu">
+        <li><a href="/">{% if site.lang == "ru" %}Главная{% endif %}{% if site.lang == "rs" %}Početna{% endif %}{% if site.lang == "en" %}Home{% endif %}</a></li>
+        <li><a href="/#contact">{% if site.lang == "ru" %}Контакт{% endif %}{% if site.lang == "rs" %}Kontakt{% endif %}{% if site.lang == "en" %}Contact{% endif %}</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="sub-footer">
+  <div class="container">
+    <div class="sub-footer-inner">
+      <div class="sub-footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">Telegram</a>
+        <a href="#">Upwork</a>
+      </div>
+      <div class="copyright">Free Jekyll theme by <a href="https://www.zerostatic.io">www.zerostatic.io</a></div>
+    </div>
+  </div>
+</div>
