@@ -38,7 +38,7 @@ title: Home
             </ul>
           </div>
           <div class="contact-box-actions">
-            <a class="button" href="/brief/">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
+            <a class="button" href="{{ '/brief.html' | relative_url }}">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ title: Home
         </div>
         {% endfor %}
         <p class="mb-0 mt-3">
-          <a class="button" href="/testimonials/">
+          <a class="button" href="{{ '/testimonials.html' | relative_url }}">
             {% if site.lang == "ru" %}Все отзывы{% endif %}
             {% if site.lang == "rs" %}Sve recenzije{% endif %}
             {% if site.lang == "en" %}All testimonials{% endif %}
