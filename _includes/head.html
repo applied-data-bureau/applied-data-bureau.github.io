@@ -3,7 +3,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ site.title }}">
   <meta name="author" content="Raskumandrin">
-  <title>{{ page.title }} · {{ site.title }}</title>
+  {% assign page_title = page.title | default: "" %}
+  {% if page.name == "testimonials.html" %}
+    {% if site.lang == "ru" %}{% assign page_title = "Отзывы клиентов" %}{% endif %}
+    {% if site.lang == "rs" %}{% assign page_title = "Recenzije klijenata" %}{% endif %}
+    {% if site.lang == "en" %}{% assign page_title = "Client Testimonials" %}{% endif %}
+  {% endif %}
+  {% if page.name == "brief.html" %}
+    {% if site.lang == "ru" %}{% assign page_title = "Бриф по задаче" %}{% endif %}
+    {% if site.lang == "rs" %}{% assign page_title = "Brif zadatka" %}{% endif %}
+    {% if site.lang == "en" %}{% assign page_title = "Task brief" %}{% endif %}
+  {% endif %}
+  <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
