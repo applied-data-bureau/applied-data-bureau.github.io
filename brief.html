@@ -1,0 +1,33 @@
+---
+layout: default
+---
+<div class="intro">
+  <div class="container section-wrap">
+    <div class="row">
+      <div class="col-12 col-md-8">
+        <h1>
+{% if site.lang == "ru" %}Бриф по задаче{% endif %}
+{% if site.lang == "rs" %}Brif zadatka{% endif %}
+{% if site.lang == "en" %}Task brief{% endif %}
+        </h1>
+        <p class="lead">
+{% if site.lang == "ru" %}Опишите задачу в свободной форме: что нужно сделать, что важно, какие сроки и любые детали, которые считаете полезными.{% endif %}
+{% if site.lang == "rs" %}Opišite zadatak slobodno: šta treba uraditi, šta je važno, rok i sve detalje koje smatrate korisnim.{% endif %}
+{% if site.lang == "en" %}Describe your task in any format: what you need, priorities, timeline, and any details you find useful.{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="container section-wrap">
+    <div class="row">
+      <div class="col-12 col-md-8">
+        <div class="contact-form-card">
+{% include brief-form.html %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

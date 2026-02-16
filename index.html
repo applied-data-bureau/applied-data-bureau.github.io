@@ -29,14 +29,16 @@ title: Home
 {% if site.lang == "en" %}How to contact{% endif %}
             </h3>
             <ul class="contact-list">
-              <li>Telegram: <a href="#">@your_telegram</a></li>
-              <li>Viber: <a href="#">+xxx xx xxx xx xx</a></li>
-              <li>Upwork: <a href="#">Profile</a></li>
-              <li>{% if site.lang == "ru" %}Фриланс-биржа{% endif %}{% if site.lang == "rs" %}Freelance platforma{% endif %}{% if site.lang == "en" %}Freelance marketplace{% endif %}: <a href="#">Profile</a></li>
+              <li>Telegram: <a href="https://t.me/raskumas">@raskumas</a></li>
+              <li>Upwork: <a href="https://www.upwork.com/o/profiles/users/_~01d64c6ae8d4d867ff/">Profile</a></li>
+{% if site.lang == "ru" %}
+              <li>FL.ru: <a href="https://www.fl.ru/users/raskumandrin2/opinions/">Профиль</a></li>
+              <li>Kwork: <a href="https://kwork.ru/user/raskumandrin">Профиль</a></li>
+{% endif %}
             </ul>
           </div>
           <div class="contact-box-actions">
-            <a class="button" href="#">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
+            <a class="button" href="/brief/">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
           </div>
         </div>
       </div>
@@ -88,22 +90,7 @@ title: Home
 {% if site.lang == "rs" %}Kontakt forma{% endif %}
 {% if site.lang == "en" %}Contact form{% endif %}
           </h2>
-          <form action="#" method="post">
-            <div class="mb-2">
-              <input class="form-control-serif" type="text" name="name" placeholder="{% if site.lang == 'ru' %}Имя{% elsif site.lang == 'rs' %}Ime{% else %}Name{% endif %}">
-            </div>
-            <div class="mb-2">
-              <input class="form-control-serif" type="text" name="contact" placeholder="Telegram / Viber / Email">
-            </div>
-            <div class="mb-3">
-              <textarea class="form-control-serif" name="task" rows="4" placeholder="{% if site.lang == 'ru' %}Кратко опишите задачу{% elsif site.lang == 'rs' %}Kratko opišite zadatak{% else %}Briefly describe your task{% endif %}"></textarea>
-            </div>
-            <button class="button" type="submit">
-{% if site.lang == "ru" %}Отправить{% endif %}
-{% if site.lang == "rs" %}Pošalji{% endif %}
-{% if site.lang == "en" %}Send{% endif %}
-            </button>
-          </form>
+{% include brief-form.html %}
         </div>
       </div>
       <div class="col-12 col-md-5 mb-3">
