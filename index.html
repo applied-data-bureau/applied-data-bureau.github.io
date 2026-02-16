@@ -49,32 +49,29 @@ title: Home
   </div>
 </div>
 
-<div class="strip">
+<div class="strip" id="works">
   <div class="container section-wrap">
     <div class="row">
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/bots">Telegram / Viber Bots</a></h2>
-        <p>{% if site.lang == "ru" %}Боты для продаж, поддержки клиентов и автоматизации коммуникаций.{% endif %}{% if site.lang == "rs" %}Botovi za prodaju, podršku i automatizaciju komunikacije.{% endif %}{% if site.lang == "en" %}Bots for sales, support, and communication automation.{% endif %}</p>
+      <div class="col-12 mb-4">
+        <h2>
+{% if site.lang == "ru" %}Где бизнес быстрее получает результат от данных{% endif %}
+{% if site.lang == "rs" %}Gde biznis brže dobija rezultate iz podataka{% endif %}
+{% if site.lang == "en" %}Where Business Gets Faster Results from Data{% endif %}
+        </h2>
       </div>
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/data">{% if site.lang == "ru" %}Обработка данных{% endif %}{% if site.lang == "rs" %}Obrada podataka{% endif %}{% if site.lang == "en" %}Data Processing{% endif %}</a></h2>
-        <p>{% if site.lang == "ru" %}Обработка больших массивов Excel/CSV/JSON и подготовка отчетов.{% endif %}{% if site.lang == "rs" %}Obrada velikih Excel/CSV/JSON skupova i izrada izveštaja.{% endif %}{% if site.lang == "en" %}Large Excel/CSV/JSON data processing and reporting.{% endif %}</p>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/data">{% if site.lang == "ru" %}Операционный хаос в данных и отчетах{% endif %}{% if site.lang == "rs" %}Operativni haos u podacima i izveštajima{% endif %}{% if site.lang == "en" %}Operational Chaos in Data and Reporting{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Меньше ручной работы, ошибок и потерь времени{% endif %}{% if site.lang == "rs" %}Manje ručnog rada, grešaka i gubitka vremena{% endif %}{% if site.lang == "en" %}Less manual work, fewer errors, less wasted time{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Если данные разбросаны по Excel/CSV, а отчеты собираются вручную, мы выстраиваем единый поток: автоматизируем сбор и обработку, синхронизируем источники и делаем отчетность стабильной. Для бизнеса это означает быстрее принимать решения и держать процессы под контролем.{% endif %}{% if site.lang == "rs" %}Ako su podaci rasuti po Excel/CSV fajlovima, a izveštaji se rade ručno, gradimo jedinstven tok: automatizujemo prikupljanje i obradu, sinhronizujemo izvore i stabilizujemo izveštavanje. Za biznis to znači brže odluke i bolju kontrolu procesa.{% endif %}{% if site.lang == "en" %}If data is scattered across Excel/CSV files and reporting is manual, we build one operating flow: automate collection and processing, synchronize sources, and stabilize reporting. For the business, this means faster decisions and tighter process control.{% endif %}</p>
+        </article>
       </div>
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/n8n">n8n Automation</a></h2>
-        <p>{% if site.lang == "ru" %}Связка CRM, мессенджеров и API через автоматизированные сценарии.{% endif %}{% if site.lang == "rs" %}Povezivanje CRM-a, mesindžera i API-ja kroz automatizovane tokove.{% endif %}{% if site.lang == "en" %}Connecting CRM, messengers, and APIs with automated workflows.{% endif %}</p>
-      </div>
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/perl">Perl / Legacy</a></h2>
-        <p>{% if site.lang == "ru" %}Поддержка, доработка и ускорение уже работающих legacy-систем.{% endif %}{% if site.lang == "rs" %}Održavanje, dorada i ubrzanje postojećih legacy sistema.{% endif %}{% if site.lang == "en" %}Maintenance, extension, and optimization of existing legacy systems.{% endif %}</p>
-      </div>
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/jekyll">Jekyll Websites</a></h2>
-        <p>{% if site.lang == "ru" %}Быстрые лендинги и контентные сайты с SEO-структурой.{% endif %}{% if site.lang == "rs" %}Brzi landing i content sajtovi sa SEO strukturom.{% endif %}{% if site.lang == "en" %}Fast landing and content websites with SEO structure.{% endif %}</p>
-      </div>
-      <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="/services/">{% if site.lang == "ru" %}Полный каталог услуг{% endif %}{% if site.lang == "rs" %}Kompletan katalog usluga{% endif %}{% if site.lang == "en" %}Full services catalog{% endif %}</a></h2>
-        <p>{% if site.lang == "ru" %}Полный список услуг и подробные описания по каждой специализации.{% endif %}{% if site.lang == "rs" %}Kompletna lista usluga i detaljni opisi po specijalizaciji.{% endif %}{% if site.lang == "en" %}Full list of services with detailed descriptions by specialization.{% endif %}</p>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/n8n">{% if site.lang == "ru" %}Нет data-команды, но данные уже критичны для роста{% endif %}{% if site.lang == "rs" %}Nema data tima, ali su podaci već kritični za rast{% endif %}{% if site.lang == "en" %}No Data Team, but Data is Already Critical for Growth{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Внешняя data-экспертиза без найма штатной команды{% endif %}{% if site.lang == "rs" %}Eksterna data ekspertiza bez zapošljavanja internog tima{% endif %}{% if site.lang == "en" %}External Data Expertise Without Hiring an In-House Team{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Берем на себя роль внешнего data-инженера: проектируем и поддерживаем пайплайны, настраиваем интеграции и автоматизацию, приводим отчеты к рабочему виду. В итоге бизнес получает понятную систему данных, на которую можно опираться в продажах, операциях и планировании.{% endif %}{% if site.lang == "rs" %}Preuzimamo ulogu eksternog data inženjera: projektujemo i održavamo pipeline-ove, podešavamo integracije i automatizaciju, i dovodimo izveštaje u upotrebljivo stanje. Rezultat je jasan sistem podataka na koji biznis može da se osloni u prodaji, operacijama i planiranju.{% endif %}{% if site.lang == "en" %}We act as your external data engineer: design and maintain pipelines, implement integrations and automation, and make reporting decision-ready. The result is a reliable data system your business can use across sales, operations, and planning.{% endif %}</p>
+        </article>
       </div>
     </div>
   </div>
@@ -118,6 +115,39 @@ title: Home
         </p>
       </div>
     </div>
+    <div class="row mb-4">
+      <div class="col-12 mb-3">
+        <h2>{% if site.lang == "ru" %}Решаем data-задачи без ручного хаоса{% endif %}{% if site.lang == "rs" %}Rešavamo data zadatke bez ručnog haosa{% endif %}{% if site.lang == "en" %}We Solve Data Tasks Without Manual Chaos{% endif %}</h2>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/data">{% if site.lang == "ru" %}Данные и отчеты без ручной рутины{% endif %}{% if site.lang == "rs" %}Podaci i izveštaji bez ručne rutine{% endif %}{% if site.lang == "en" %}Data and Reporting Without Manual Routine{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Когда данные расползлись по таблицам{% endif %}{% if site.lang == "rs" %}Kada su podaci rasuti po tabelama{% endif %}{% if site.lang == "en" %}When data is scattered across spreadsheets{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Собираем разрозненные Excel/CSV-источники в единую логику: автоматизируем обработку, выстраиваем стабильную отчетность и снижаем число ошибок в ежедневной работе.{% endif %}{% if site.lang == "rs" %}Objedinjavamo razbacane Excel/CSV izvore u jedinstvenu logiku: automatizujemo obradu, uspostavljamo stabilno izveštavanje i smanjujemo broj grešaka u svakodnevnom radu.{% endif %}{% if site.lang == "en" %}We unify scattered Excel/CSV sources into one logic: automate processing, establish stable reporting, and reduce day-to-day errors.{% endif %}</p>
+        </article>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/n8n">{% if site.lang == "ru" %}Интеграции между CRM, API и мессенджерами{% endif %}{% if site.lang == "rs" %}Integracije između CRM-a, API-ja i mesindžera{% endif %}{% if site.lang == "en" %}Integrations Between CRM, APIs, and Messengers{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Когда процессы теряются между сервисами{% endif %}{% if site.lang == "rs" %}Kada se procesi gube između servisa{% endif %}{% if site.lang == "en" %}When processes break between tools{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Связываем системы в единый контур: заявки, статусы и события передаются автоматически, а у команды появляется прозрачный и управляемый операционный поток.{% endif %}{% if site.lang == "rs" %}Povezujemo sisteme u jedinstven tok: leadovi, statusi i događaji prenose se automatski, a tim dobija transparentan i upravljiv operativni tok.{% endif %}{% if site.lang == "en" %}We connect systems into one flow: leads, statuses, and events move automatically, giving the team a transparent and controllable operation pipeline.{% endif %}</p>
+        </article>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/perl">{% if site.lang == "ru" %}Legacy-системы и поддерживаемые data-пайплайны{% endif %}{% if site.lang == "rs" %}Legacy sistemi i održivi data pipeline-ovi{% endif %}{% if site.lang == "en" %}Legacy Systems and Maintainable Data Pipelines{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Когда старые системы тормозят развитие{% endif %}{% if site.lang == "rs" %}Kada stari sistemi usporavaju razvoj{% endif %}{% if site.lang == "en" %}When legacy systems slow down delivery{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Аккуратно дорабатываем legacy-контур, стабилизируем интеграции и поддерживаем пайплайны после запуска, чтобы система работала предсказуемо и без постоянных сбоев.{% endif %}{% if site.lang == "rs" %}Pažljivo unapređujemo legacy okruženje, stabilizujemo integracije i održavamo pipeline-ove nakon isporuke, kako bi sistem radio predvidivo i bez stalnih prekida.{% endif %}{% if site.lang == "en" %}We carefully improve legacy environments, harden integrations, and support pipelines after launch so systems run predictably with fewer incidents.{% endif %}</p>
+        </article>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <h3><a href="/services/">{% if site.lang == "ru" %}Полный каталог data-first услуг{% endif %}{% if site.lang == "rs" %}Kompletan katalog data-first usluga{% endif %}{% if site.lang == "en" %}Full Data-First Services Catalog{% endif %}</a></h3>
+          <div class="date">{% if site.lang == "ru" %}Для задач вне типового шаблона{% endif %}{% if site.lang == "rs" %}Za zadatke van standardnog šablona{% endif %}{% if site.lang == "en" %}For non-standard business cases{% endif %}</div>
+          <p class="mb-0">{% if site.lang == "ru" %}Если задача сложнее стандартного сценария, проектируем решение под ваш контекст: данные, интеграции, контроль качества и сопровождение в рамках одного понятного процесса.{% endif %}{% if site.lang == "rs" %}Ako je zadatak složeniji od standardnog scenarija, projektujemo rešenje za vaš kontekst: podaci, integracije, kontrola kvaliteta i podrška u jednom jasnom procesu.{% endif %}{% if site.lang == "en" %}If the case is beyond a standard scenario, we design a solution for your context: data, integrations, quality control, and support within one clear process.{% endif %}</p>
+        </article>
+      </div>
+    </div>
     <div class="row">
       <div class="col-12 col-md-4 mb-3">
         <div class="feature">
@@ -141,25 +171,5 @@ title: Home
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="strip" id="works">
-  <div class="container section-wrap">
-    <div class="row">
-      {% assign case_posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
-      {% for post in case_posts limit:4 %}
-      <div class="col-12 col-md-6 mb-3">
-        <article class="work-card">
-          <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-          <div class="date">{{ post.date | date: "%Y-%m-%d" }}</div>
-          <p class="mb-0">{{ post.excerpt | strip_html | truncate: 170 }}</p>
-        </article>
-      </div>
-      {% endfor %}
-    </div>
-    <p class="mb-0 mt-2">
-      <a class="button" href="/blog/">{% if site.lang == "ru" %}Все статьи и кейсы{% endif %}{% if site.lang == "rs" %}Svi članci i projekti{% endif %}{% if site.lang == "en" %}All articles and case studies{% endif %}</a>
-    </p>
   </div>
 </div>
