@@ -1,19 +1,87 @@
-<form action="#" method="post" enctype="multipart/form-data">
+<form
+  action="{{ site.brief_form_endpoint | default: '/api/brief' }}"
+  {% if site.brief_form_endpoint_fallback %}data-endpoint-fallback="{{ site.brief_form_endpoint_fallback }}"{% endif %}
+  method="post"
+  enctype="multipart/form-data"
+  data-brief-form
+  novalidate
+>
   <div class="mb-2">
-    <input class="form-control-serif" type="text" name="contact" required placeholder="{% if site.lang == 'ru' %}Как с вами связаться (Telegram, телефон, email, ссылка, ник, любой удобный способ){% elsif site.lang == 'rs' %}Kako da vas kontaktiram (Telegram, telefon, email, link, korisničko ime, bilo koji način){% else %}How to contact you (Telegram, phone, email, link, username, any preferred way){% endif %}">
+    <label for="brief-contact">
+{% if site.lang == "ru" %}Контакт для ответа{% endif %}
+{% if site.lang == "rs" %}Kontakt za odgovor{% endif %}
+{% if site.lang == "en" %}Reply contact{% endif %}
+    </label>
+    <input
+      id="brief-contact"
+      class="form-control-serif"
+      type="text"
+      name="contact"
+      minlength="3"
+      maxlength="200"
+      required
+      autocomplete="email"
+      placeholder="{% if site.lang == 'ru' %}Как с вами связаться (Telegram, телефон, email, ссылка, ник, любой удобный способ){% elsif site.lang == 'rs' %}Kako da vas kontaktiram (Telegram, telefon, email, link, korisničko ime, bilo koji način){% else %}How to contact you (Telegram, phone, email, link, username, any preferred way){% endif %}"
+    >
   </div>
   <div class="mb-2">
-    <textarea class="form-control-serif" name="task" rows="8" required placeholder="{% if site.lang == 'ru' %}Пишите в свободной форме всё, что хотите: задачу, контекст, примеры, ограничения, дедлайн, бюджет, ссылки, текущий стек и любые дополнительные детали.{% elsif site.lang == 'rs' %}Pišite slobodno sve što želite: zadatak, kontekst, primere, ograničenja, rok, budžet, linkove, trenutni stack i dodatne detalje.{% else %}Write in any format whatever you want: task, context, examples, constraints, deadline, budget, links, current stack, and any extra details.{% endif %}"></textarea>
+    <label for="brief-task">
+{% if site.lang == "ru" %}Описание задачи{% endif %}
+{% if site.lang == "rs" %}Opis zadatka{% endif %}
+{% if site.lang == "en" %}Task details{% endif %}
+    </label>
+    <textarea
+      id="brief-task"
+      class="form-control-serif"
+      name="task"
+      rows="8"
+      minlength="20"
+      maxlength="5000"
+      required
+      placeholder="{% if site.lang == 'ru' %}Пишите в свободной форме всё, что хотите: задачу, контекст, примеры, ограничения, дедлайн, бюджет, ссылки, текущий стек и любые дополнительные детали.{% elsif site.lang == 'rs' %}Pišite slobodno sve što želite: zadatak, kontekst, primere, ograničenja, rok, budžet, linkove, trenutni stack i dodatne detalje.{% else %}Write in any format whatever you want: task, context, examples, constraints, deadline, budget, links, current stack, and any extra details.{% endif %}"
+    ></textarea>
   </div>
   <div class="mb-3">
     <label for="brief-files">
-{% if site.lang == "ru" %}Файлы (опционально){% endif %}
-{% if site.lang == "rs" %}Fajlovi (opciono){% endif %}
-{% if site.lang == "en" %}Files (optional){% endif %}
+{% if site.lang == "ru" %}Файлы (опционально, до 3 шт. по 5MB){% endif %}
+{% if site.lang == "rs" %}Fajlovi (opciono, do 3 kom. po 5MB){% endif %}
+{% if site.lang == "en" %}Files (optional, up to 3 x 5MB){% endif %}
     </label>
     <input id="brief-files" class="form-control-serif" type="file" name="files" multiple>
   </div>
-  <button class="button" type="submit">
+
+  <div class="brief-form-hp" aria-hidden="true">
+    <label for="brief-website">Website</label>
+    <input id="brief-website" class="form-control-serif" type="text" name="website" tabindex="-1" autocomplete="off">
+  </div>
+  <input type="hidden" name="form_started_at" value="">
+  <input type="hidden" name="site_lang" value="{{ site.lang }}">
+
+{% if site.turnstile_site_key %}
+  <div class="mb-3">
+    <div class="cf-turnstile" data-sitekey="{{ site.turnstile_site_key }}"></div>
+  </div>
+{% endif %}
+
+  <p class="brief-form-note">
+{% if site.lang == "ru" %}После отправки вы получите ответ на указанный контакт. Обычно в течение 24 часов.{% endif %}
+{% if site.lang == "rs" %}Nakon slanja dobićete odgovor na navedeni kontakt, obično u roku od 24 sata.{% endif %}
+{% if site.lang == "en" %}After sending, you will get a reply via your contact, usually within 24 hours.{% endif %}
+  </p>
+
+  <div
+    class="brief-form-status"
+    role="status"
+    aria-live="polite"
+    data-sending="{% if site.lang == 'ru' %}Отправляем...{% elsif site.lang == 'rs' %}Šaljemo...{% else %}Sending...{% endif %}"
+    data-success="{% if site.lang == 'ru' %}Бриф отправлен. Спасибо, вернусь с ответом в ближайшее время.{% elsif site.lang == 'rs' %}Brif je poslat. Hvala, javiću se uskoro.{% else %}Brief sent. Thank you, I will get back to you soon.{% endif %}"
+    data-validation-error="{% if site.lang == 'ru' %}Проверьте поля: контакт и описание задачи обязательны.{% elsif site.lang == 'rs' %}Proverite polja: kontakt i opis zadatka su obavezni.{% else %}Please check the fields: contact and task details are required.{% endif %}"
+    data-network-error="{% if site.lang == 'ru' %}Не удалось отправить бриф. Если проблема повторяется (например, из РФ), напишите в Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% elsif site.lang == 'rs' %}Slanje nije uspelo. Ako se problem ponavlja (na primer iz RF), javite se na Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% else %}Could not send the brief. If it keeps failing (for example from Russia), write in Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% endif %}"
+    data-server-error="{% if site.lang == 'ru' %}Сервер вернул ошибку. Если повторяется, напишите в Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% elsif site.lang == 'rs' %}Server je vratio grešku. Ako se ponavlja, javite se na Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% else %}The server returned an error. If it persists, write in Telegram: {{ site.telegram_contact_url | default: 'https://t.me/raskumas' }}{% endif %}"
+    hidden
+  ></div>
+
+  <button class="button" type="submit" data-submit-label="{% if site.lang == 'ru' %}Отправить бриф{% elsif site.lang == 'rs' %}Pošalji brif{% else %}Submit brief{% endif %}" data-submit-loading="{% if site.lang == 'ru' %}Отправляем...{% elsif site.lang == 'rs' %}Šaljemo...{% else %}Sending...{% endif %}">
 {% if site.lang == "ru" %}Отправить бриф{% endif %}
 {% if site.lang == "rs" %}Pošalji brif{% endif %}
 {% if site.lang == "en" %}Submit brief{% endif %}

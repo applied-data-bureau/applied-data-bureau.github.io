@@ -268,6 +268,53 @@ h3 {
   border-color: var(--primary);
 }
 
+.form-control-serif.is-invalid {
+  border-color: #cf1f18;
+}
+
+.brief-form-note {
+  margin: 0 0 14px;
+  color: var(--grey);
+}
+
+.brief-form-status {
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.brief-form-status.is-loading {
+  background: #fff4dd;
+  border: 1px solid #f0cf8d;
+  color: #6c4e1f;
+}
+
+.brief-form-status.is-success {
+  background: #edf8f1;
+  border: 1px solid #b9dfc4;
+  color: #1c5a34;
+}
+
+.brief-form-status.is-error {
+  background: #fdeeee;
+  border: 1px solid #f2c3c3;
+  color: #822020;
+}
+
+.brief-form-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .contact-box {
   position: relative;
   overflow: hidden;

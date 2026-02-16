@@ -2,11 +2,16 @@ theme: null
 markdown: kramdown
 plugins: []
 
+brief_form_endpoint: "https://brief.raskumandrin.workers.dev/api/brief"
+telegram_contact_url: "https://t.me/raskumas"
 
 permalink: /:slug
 
 exclude:
   - Dockerfile
+  - functions
+  - workers
+  - wrangler.toml
 
 collections:
   posts:
