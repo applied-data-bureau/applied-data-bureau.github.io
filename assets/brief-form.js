@@ -8,22 +8,14 @@
 
   var contactInput = form.querySelector('input[name="contact"]');
   var taskInput = form.querySelector('textarea[name="task"]');
-  var startedAtInput = form.querySelector('input[name="form_started_at"]');
   var statusBox = form.querySelector(".brief-form-status");
   var submitButton = form.querySelector('button[type="submit"]');
   var defaultButtonLabel = submitButton ? submitButton.getAttribute("data-submit-label") : "";
   var loadingButtonLabel = submitButton ? submitButton.getAttribute("data-submit-loading") : "";
   var fallbackEndpoint = form.getAttribute("data-endpoint-fallback");
-  var minSubmitDelayMs = 4100;
 
   if (!contactInput || !taskInput || !statusBox || !submitButton) {
     return;
-  }
-
-  function updateStartedAt() {
-    if (startedAtInput) {
-      startedAtInput.value = String(Date.now());
-    }
   }
 
   function clearInvalidState(input) {
@@ -73,16 +65,7 @@
       return statusBox.getAttribute("data-invalid-form-error") || statusBox.getAttribute("data-validation-error");
     }
 
-    if (message === "Anti-spam check failed.") {
-      return statusBox.getAttribute("data-antispam-error") || statusBox.getAttribute("data-network-error");
-    }
-
     return message;
-  }
-
-  function getFormStartedAt() {
-    var startedAt = Number(startedAtInput && startedAtInput.value ? startedAtInput.value : 0);
-    return Number.isFinite(startedAt) ? startedAt : 0;
   }
 
   contactInput.addEventListener("input", function () {
@@ -93,8 +76,6 @@
     clearInvalidState(taskInput);
   });
 
-  updateStartedAt();
-
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     hideStatus();
@@ -102,14 +83,6 @@
     var formData = new FormData(form);
     setSubmitting(true);
     showStatus("is-loading", statusBox.getAttribute("data-sending"));
-
-    var elapsedMs = Date.now() - getFormStartedAt();
-    if (elapsedMs < minSubmitDelayMs) {
-      await new Promise(function (resolve) {
-        setTimeout(resolve, minSubmitDelayMs - elapsedMs);
-      });
-      formData.set("form_started_at", String(getFormStartedAt()));
-    }
 
     var endpoints = [form.action];
     if (fallbackEndpoint && fallbackEndpoint !== form.action) {
@@ -135,14 +108,13 @@
             payload = null;
           }
 
-          if (!response.ok) {
+          if (!response.ok || (payload && payload.ok === false)) {
             lastErrorMessage = normalizeServerError(payload && payload.error);
             continue;
           }
 
           showStatus("is-success", statusBox.getAttribute("data-success"));
           form.reset();
-          updateStartedAt();
           return;
         } catch (fetchError) {
           lastErrorMessage = statusBox.getAttribute("data-network-error");

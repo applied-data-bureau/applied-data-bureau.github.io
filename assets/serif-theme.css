@@ -301,14 +301,6 @@ h3 {
   color: #822020;
 }
 
-.brief-form-hp {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
 .button:disabled {
   opacity: 0.75;
   cursor: not-allowed;
