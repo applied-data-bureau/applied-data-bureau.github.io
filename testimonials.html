@@ -1,0 +1,41 @@
+---
+layout: default
+title: Testimonials
+---
+
+<div class="strip">
+  <div class="container section-wrap">
+    <h1>
+      {% if site.lang == "ru" %}Отзывы клиентов{% endif %}
+      {% if site.lang == "rs" %}Recenzije klijenata{% endif %}
+      {% if site.lang == "en" %}Client Testimonials{% endif %}
+    </h1>
+    <p>
+      {% if site.lang == "ru" %}Публичные отзывы с внешних платформ.{% endif %}
+      {% if site.lang == "rs" %}Javne recenzije sa eksternih platformi.{% endif %}
+      {% if site.lang == "en" %}Public feedback from external platforms.{% endif %}
+    </p>
+
+    {% assign testimonials_sorted = site.data.testimonials | sort: "date" | reverse %}
+    <div class="row">
+      {% for testimonial in testimonials_sorted %}
+      <div class="col-12 col-md-6 mb-3">
+        <article class="work-card">
+          <p class="mb-2"><strong>{{ testimonial.source }} • {{ testimonial.date }} • {{ testimonial.rating }}</strong></p>
+          <h3 class="mb-2">
+            <a href="{{ testimonial.project_url }}" target="_blank" rel="noopener noreferrer">{{ testimonial.project_title[site.lang] }}</a>
+          </h3>
+          <p class="mb-2">{{ testimonial.quote[site.lang] }}</p>
+          <p class="mb-0">
+            <a href="{{ testimonial.review_url }}" target="_blank" rel="noopener noreferrer">
+              {% if site.lang == "ru" %}Оригинал отзыва{% endif %}
+              {% if site.lang == "rs" %}Original recenzije{% endif %}
+              {% if site.lang == "en" %}Original review{% endif %}
+            </a>
+          </p>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

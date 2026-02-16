@@ -1,0 +1,239 @@
+- id: fl-telegram-photo-bot
+  featured: false
+  source: FL.ru
+  date: "2026-01-21"
+  rating: "5.0/5"
+  project_url: "https://www.fl.ru/projects/5481363/ischu-razrabotchika-telegram-bota-python---nodejs.html"
+  review_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_961034-2"
+  project_title:
+    ru: "Telegram-бот для распознавания фотографий"
+    rs: "Telegram bot za prepoznavanje fotografija"
+    en: "Telegram Bot for Photo Recognition"
+  quote:
+    ru: "Проект оказался сложнее ожидаемого, но задача была доведена до результата: предложены улучшения, сохранён высокий уровень безопасности и стабильная коммуникация."
+    rs: "Projekat je bio složeniji od očekivanog, ali je uspešno isporučen: predložena su poboljšanja, uz visok nivo bezbednosti i stabilnu komunikaciju."
+    en: "The project was more complex than expected, but delivery was completed successfully with practical improvements, strong security focus, and reliable communication."
+
+- id: fl-n8n-ai-agent
+  featured: true
+  source: FL.ru
+  date: "2026-01-14"
+  rating: "5.0/5"
+  project_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_960894-2"
+  review_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_960894-2"
+  project_title:
+    ru: "ИИ-агент в n8n (Google Sheets + OpenAI)"
+    rs: "AI agent u n8n (Google Sheets + OpenAI)"
+    en: "AI Agent in n8n (Google Sheets + OpenAI)"
+  quote:
+    ru: "Задача выполнена быстро, результат и логика решения объяснены понятно, внедрение прошло без лишних итераций."
+    rs: "Zadatak je urađen brzo, rezultat i logika rešenja su jasno objašnjeni, a implementacija je prošla bez suvišnih iteracija."
+    en: "The task was delivered quickly with clear explanation of the result and implementation logic, without unnecessary iterations."
+
+- id: upwork-db-estimates
+  featured: false
+  source: Upwork
+  date: "2025-11-29"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021984643927077076018"
+  review_url: "https://www.upwork.com/jobs/~021984643927077076018"
+  project_title:
+    ru: "Database Developer for Non-Profit — ESTIMATES Needed"
+    rs: "Database Developer for Non-Profit — ESTIMATES Needed"
+    en: "Database Developer for Non-Profit — ESTIMATES Needed"
+  quote:
+    ru: "Клиент отметил выполнение в срок и в бюджете при минимальном онбординге: достаточно было описать задачу и получить готовый результат."
+    rs: "Klijent je istakao isporuku u roku i budžetu uz minimalan onboarding: bilo je dovoljno opisati zadatak i dobiti gotov rezultat."
+    en: "The client highlighted on-time and on-budget delivery with minimal onboarding: requirements were explained once and converted into a finished result."
+
+- id: fl-receipt-bot
+  featured: false
+  source: FL.ru
+  date: "2025-12-20"
+  rating: "5.0/5"
+  project_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_960553-2"
+  review_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_960553-2"
+  project_title:
+    ru: "ТГ-бот для распознавания чеков"
+    rs: "Telegram bot za prepoznavanje fiskalnih računa"
+    en: "Telegram Bot for Receipt Recognition"
+  quote:
+    ru: "Заказчик отдельно отметил скорость, качество документации и внимательность к деталям на всех этапах."
+    rs: "Klijent je posebno istakao brzinu, kvalitet dokumentacije i pažnju prema detaljima u svim fazama."
+    en: "The client specifically highlighted execution speed, documentation quality, and strong attention to detail throughout the project."
+
+- id: fl-region-table
+  featured: false
+  source: FL.ru
+  date: "2025-11-17"
+  rating: "5.0/5"
+  project_url: "https://www.fl.ru/projects/5469446/opredelit-region-rf-po-nazvaniyu-goroda-v-tablitse.html"
+  review_url: "https://www.fl.ru/users/raskumandrin2/opinions/#p_959799-2"
+  project_title:
+    ru: "Определение региона РФ по названию города"
+    rs: "Određivanje regiona po nazivu grada"
+    en: "Region Detection by City Name"
+  quote:
+    ru: "Работа выполнена строго по ТЗ и в согласованный срок."
+    rs: "Posao je urađen tačno po specifikaciji i u dogovorenom roku."
+    en: "The task was completed exactly to specification and within the agreed timeline."
+
+- id: upwork-scrape-dictionary
+  featured: false
+  source: Upwork
+  date: "2025-07-15"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021944723439332131910"
+  review_url: "https://www.upwork.com/jobs/~021944723439332131910"
+  project_title:
+    ru: "Scrape dictionary from website"
+    rs: "Scrape dictionary from website"
+    en: "Scrape Dictionary from Website"
+  quote:
+    ru: "Клиент отметил точное понимание требований, полезные инженерные предложения и оперативную поставку."
+    rs: "Klijent je istakao tačno razumevanje zahteva, korisne inženjerske predloge i brzu isporuku."
+    en: "The client noted accurate requirement understanding, useful engineering suggestions, and prompt delivery."
+
+- id: upwork-mysql-transform
+  featured: true
+  source: Upwork
+  date: "2023-10-17"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~0140a26166af6666d5"
+  review_url: "https://www.upwork.com/jobs/~0140a26166af6666d5"
+  project_title:
+    ru: "MySQL — importing and transforming data"
+    rs: "MySQL — importing and transforming data"
+    en: "MySQL — Importing and Transforming Data"
+  quote:
+    ru: "Клиент подчеркнул быстрое погружение в задачу, сильную коммуникацию и быстрое закрытие срочного проекта."
+    rs: "Klijent je naglasio brzo razumevanje zadatka, kvalitetnu komunikaciju i brzo zatvaranje hitnog projekta."
+    en: "The client emphasized fast problem understanding, strong communication, and rapid completion of an urgent project."
+
+- id: upwork-csv-to-text-conversion
+  featured: false
+  source: Upwork
+  date: "2025-08-06"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021951698325609144770"
+  review_url: "https://www.upwork.com/jobs/~021951698325609144770"
+  project_title:
+    ru: "CSV to Text File Conversion Specialist"
+    rs: "CSV to Text File Conversion Specialist"
+    en: "CSV to Text File Conversion Specialist"
+  quote:
+    ru: "Работа выполнена быстро и без ошибок; клиент отметил готовность снова обращаться."
+    rs: "Posao je urađen brzo i bez grešaka; klijent je naveo da će ponovo angažovati izvođača."
+    en: "Work was delivered quickly and accurately; the client stated they would hire again."
+
+- id: upwork-jekyll-accounting-blog
+  featured: false
+  source: Upwork
+  date: "2024-12-29"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021872207320424977694"
+  review_url: "https://www.upwork.com/jobs/~021872207320424977694"
+  project_title:
+    ru: "Jekyll Site Development with Gitbook Theme for Accounting Blog"
+    rs: "Jekyll Site Development with Gitbook Theme for Accounting Blog"
+    en: "Jekyll Site Development with Gitbook Theme for Accounting Blog"
+  quote:
+    ru: "Клиент отметил скорость и тщательность выполнения задач."
+    rs: "Klijent je istakao brzinu i temeljnost izvršenja zadataka."
+    en: "The client highlighted speed and thorough execution."
+
+- id: upwork-open-food-facts
+  featured: false
+  source: Upwork
+  date: "2024-12-03"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021863882009022731319"
+  review_url: "https://www.upwork.com/jobs/~021863882009022731319"
+  project_title:
+    ru: "Data Download Assistance from Open Food Facts"
+    rs: "Data Download Assistance from Open Food Facts"
+    en: "Data Download Assistance from Open Food Facts"
+  quote:
+    ru: "Клиент отметил, что объём и качество результата превзошли исходный запрос."
+    rs: "Klijent je istakao da su obim i kvalitet rezultata prevazišli početni zahtev."
+    en: "The client noted the delivered result exceeded the initial request."
+
+- id: upwork-undeliverable-emails
+  featured: false
+  source: Upwork
+  date: "2024-11-22"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~021859256206320503372"
+  review_url: "https://www.upwork.com/jobs/~021859256206320503372"
+  project_title:
+    ru: "Data Compilation: Undeliverable Email Messages to Excel"
+    rs: "Data Compilation: Undeliverable Email Messages to Excel"
+    en: "Data Compilation: Undeliverable Email Messages to Excel"
+  quote:
+    ru: "Работа завершена быстро и корректно; взаимодействие оценено как комфортное."
+    rs: "Posao je završen brzo i ispravno; saradnja je ocenjena kao veoma prijatna."
+    en: "Work was completed quickly and correctly; collaboration was rated as excellent."
+
+- id: upwork-remove-dnc
+  featured: false
+  source: Upwork
+  date: "2024-05-16"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~01a54e0899736bcaf7"
+  review_url: "https://www.upwork.com/jobs/~01a54e0899736bcaf7"
+  project_title:
+    ru: "Remove DNC numbers from Skip Trace CSV file"
+    rs: "Remove DNC numbers from Skip Trace CSV file"
+    en: "Remove DNC Numbers from Skip Trace CSV File"
+  quote:
+    ru: "Клиент выделил скорость, точность и прозрачную коммуникацию."
+    rs: "Klijent je izdvojio brzinu, preciznost i jasnu komunikaciju."
+    en: "The client highlighted speed, accuracy, and clear communication."
+
+- id: upwork-data-collection-entry
+  featured: true
+  source: Upwork
+  date: "2024-02-02"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~012f64fd4e9f93a4bf"
+  review_url: "https://www.upwork.com/jobs/~012f64fd4e9f93a4bf"
+  project_title:
+    ru: "Data Collection and Entry"
+    rs: "Data Collection and Entry"
+    en: "Data Collection and Entry"
+  quote:
+    ru: "Отмечены профессиональный подход, внимание к деталям и досрочная поставка результата."
+    rs: "Istaknuti su profesionalan pristup, pažnja prema detaljima i isporuka pre roka."
+    en: "Professional execution, attention to detail, and early delivery were highlighted."
+
+- id: upwork-python-txt-to-csv
+  featured: false
+  source: Upwork
+  date: "2023-10-15"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~01434d034e24a21beb"
+  review_url: "https://www.upwork.com/jobs/~01434d034e24a21beb"
+  project_title:
+    ru: "Python: convert 25GB TXT to CSV"
+    rs: "Python: convert 25GB TXT to CSV"
+    en: "Python: Convert 25GB TXT to CSV"
+  quote:
+    ru: "Клиент оставил максимально позитивную оценку результата."
+    rs: "Klijent je ostavio maksimalno pozitivnu ocenu rezultata."
+    en: "The client left a strongly positive assessment of the result."
+
+- id: upwork-perl-cgi-web-tool
+  featured: false
+  source: Upwork
+  date: "2016-07-21"
+  rating: "5.0/5"
+  project_url: "https://www.upwork.com/jobs/~011b7c5255028e8593"
+  review_url: "https://www.upwork.com/jobs/~011b7c5255028e8593"
+  project_title:
+    ru: "Forms-based Web Tool Development in Perl/CGI"
+    rs: "Forms-based Web Tool Development in Perl/CGI"
+    en: "Forms-based Web Tool Development in Perl/CGI"
+  quote:
+    ru: "Клиент отметил сильные инженерные навыки, качественный дизайн решений и удобную рабочую коммуникацию."
+    rs: "Klijent je istakao snažne inženjerske veštine, kvalitet dizajna rešenja i jednostavnu radnu komunikaciju."
+    en: "The client highlighted strong engineering skills, elegant solution design, and smooth communication."
