@@ -50,18 +50,7 @@
     <input id="brief-files" class="form-control-serif" type="file" name="files" multiple>
   </div>
 
-  <div class="brief-form-hp" aria-hidden="true">
-    <label for="brief-website">Website</label>
-    <input id="brief-website" class="form-control-serif" type="text" name="website" tabindex="-1" autocomplete="off">
-  </div>
-  <input type="hidden" name="form_started_at" value="">
   <input type="hidden" name="site_lang" value="{{ site.lang }}">
-
-{% if site.turnstile_site_key %}
-  <div class="mb-3">
-    <div class="cf-turnstile" data-sitekey="{{ site.turnstile_site_key }}"></div>
-  </div>
-{% endif %}
 
   <p class="brief-form-note">
 {% if site.lang == "ru" %}После отправки вы получите ответ на указанный контакт. Обычно в течение 24 часов.{% endif %}
@@ -81,7 +70,6 @@
     data-contact-error="{% if site.lang == 'ru' %}Поле «Контакт» заполнено некорректно. Нужно от 3 до 200 символов.{% elsif site.lang == 'rs' %}Polje „Kontakt“ nije ispravno. Potrebno je 3 do 200 znakova.{% else %}The “Contact” field is invalid. It must be 3 to 200 characters.{% endif %}"
     data-task-error="{% if site.lang == 'ru' %}Поле «Описание задачи» слишком короткое или слишком длинное. Нужно от 20 до 5000 символов.{% elsif site.lang == 'rs' %}Polje „Opis zadatka“ je prekratko ili predugačko. Potrebno je 20 do 5000 znakova.{% else %}The “Task details” field is too short or too long. It must be 20 to 5000 characters.{% endif %}"
     data-invalid-form-error="{% if site.lang == 'ru' %}Форму не удалось обработать. Проверьте поля и попробуйте снова.{% elsif site.lang == 'rs' %}Formular nije moguće obraditi. Proverite polja i pokušajte ponovo.{% else %}The form could not be processed. Check fields and try again.{% endif %}"
-    data-antispam-error="{% if site.lang == 'ru' %}Сработала антиспам-защита. Подождите несколько секунд и отправьте снова.{% elsif site.lang == 'rs' %}Aktivirana je anti-spam zaštita. Sačekajte nekoliko sekundi i pošaljite ponovo.{% else %}Anti-spam protection was triggered. Wait a few seconds and submit again.{% endif %}"
     hidden
   ></div>
 
