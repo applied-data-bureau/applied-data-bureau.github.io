@@ -14,6 +14,7 @@
   var defaultButtonLabel = submitButton ? submitButton.getAttribute("data-submit-label") : "";
   var loadingButtonLabel = submitButton ? submitButton.getAttribute("data-submit-loading") : "";
   var fallbackEndpoint = form.getAttribute("data-endpoint-fallback");
+  var minSubmitDelayMs = 4100;
 
   if (!contactInput || !taskInput || !statusBox || !submitButton) {
     return;
@@ -57,17 +58,31 @@
     submitButton.textContent = isSubmitting ? loadingButtonLabel : defaultButtonLabel;
   }
 
-  function validateField(input) {
-    var value = input.value ? input.value.trim() : "";
-    var min = Number(input.getAttribute("minlength")) || 0;
-    var max = Number(input.getAttribute("maxlength")) || Number.MAX_SAFE_INTEGER;
-    var isValid = value.length >= min && value.length <= max;
-
-    if (!isValid) {
-      input.classList.add("is-invalid");
+  function normalizeServerError(message) {
+    if (!message || typeof message !== "string") {
+      return statusBox.getAttribute("data-server-error");
     }
 
-    return isValid;
+    if (message === "Contact is invalid.") {
+      return statusBox.getAttribute("data-contact-error") || statusBox.getAttribute("data-validation-error");
+    }
+    if (message === "Task description is invalid.") {
+      return statusBox.getAttribute("data-task-error") || statusBox.getAttribute("data-validation-error");
+    }
+    if (message === "Invalid form data.") {
+      return statusBox.getAttribute("data-invalid-form-error") || statusBox.getAttribute("data-validation-error");
+    }
+
+    if (message === "Anti-spam check failed.") {
+      return statusBox.getAttribute("data-antispam-error") || statusBox.getAttribute("data-network-error");
+    }
+
+    return message;
+  }
+
+  function getFormStartedAt() {
+    var startedAt = Number(startedAtInput && startedAtInput.value ? startedAtInput.value : 0);
+    return Number.isFinite(startedAt) ? startedAt : 0;
   }
 
   contactInput.addEventListener("input", function () {
@@ -84,16 +99,17 @@
     event.preventDefault();
     hideStatus();
 
-    var isContactValid = validateField(contactInput);
-    var isTaskValid = validateField(taskInput);
-    if (!isContactValid || !isTaskValid) {
-      showStatus("is-error", statusBox.getAttribute("data-validation-error"));
-      return;
-    }
-
     var formData = new FormData(form);
     setSubmitting(true);
     showStatus("is-loading", statusBox.getAttribute("data-sending"));
+
+    var elapsedMs = Date.now() - getFormStartedAt();
+    if (elapsedMs < minSubmitDelayMs) {
+      await new Promise(function (resolve) {
+        setTimeout(resolve, minSubmitDelayMs - elapsedMs);
+      });
+      formData.set("form_started_at", String(getFormStartedAt()));
+    }
 
     var endpoints = [form.action];
     if (fallbackEndpoint && fallbackEndpoint !== form.action) {
@@ -120,9 +136,7 @@
           }
 
           if (!response.ok) {
-            lastErrorMessage = payload && typeof payload.error === "string"
-              ? payload.error
-              : statusBox.getAttribute("data-server-error");
+            lastErrorMessage = normalizeServerError(payload && payload.error);
             continue;
           }
 
