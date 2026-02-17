@@ -1,0 +1,179 @@
+bots:
+  ru:
+    problem: "Клиенты пишут в мессенджеры, а команда вручную отвечает на однотипные вопросы и теряет часть заявок."
+    solution: "Проектирую Telegram/Viber-бота под ваш сценарий: квалификация обращений, маршрутизация, интеграция с CRM и уведомления."
+    result: "Стабильный канал заявок 24/7, меньше ручной нагрузки на менеджеров и быстрее первая реакция для клиента."
+    timeline: "Черновой сценарий и оценка после брифа. MVP обычно запускается в короткий срок, расширения делаем итерациями."
+    collaboration: "Вы заполняете бриф → согласуем сценарии и интеграции → запускаем MVP → улучшаем на фактических диалогах."
+  rs:
+    problem: "Klijenti pišu u mesindžere, a tim ručno odgovara na ista pitanja i gubi deo leadova."
+    solution: "Projektujem Telegram/Viber bota po vašem scenariju: kvalifikacija upita, rutiranje, CRM integracija i notifikacije."
+    result: "Stabilan kanal leadova 24/7, manje ručnog rada za tim i brža prva reakcija prema klijentu."
+    timeline: "Nacrt scenarija i procena nakon brifa. MVP se obično pokreće brzo, a proširenja idu iterativno."
+    collaboration: "Popunjavate brif → usaglašavamo scenarije i integracije → puštamo MVP → unapređujemo na realnim dijalozima."
+  en:
+    problem: "Customers message your team in chat apps, but repetitive replies are manual and part of demand is lost."
+    solution: "I design a Telegram/Viber bot for your flow: lead qualification, routing, CRM sync, and notifications."
+    result: "A 24/7 lead channel with lower manual workload and faster first response for every incoming request."
+    timeline: "Draft scenario and estimate follow your brief. MVP is usually launched quickly, then expanded iteratively."
+    collaboration: "You submit the brief → we align scenarios and integrations → launch MVP → improve from real conversations."
+
+data:
+  ru:
+    problem: "Данные разбросаны по файлам, много дублей и ручных операций, из-за чего отчеты медленные и ненадежные."
+    solution: "Собираю источники в единый pipeline: очистка, нормализация, обогащение и экспорт в нужный формат."
+    result: "Готовый набор данных для CRM, аналитики или рассылок без ручной пересборки таблиц каждый день."
+    timeline: "После брифа и тестового файла фиксирую этапы: пилот на выборке, затем полный прогон на всем объеме."
+    collaboration: "Вы отправляете бриф и пример данных → согласуем правила обработки → показываю тестовый результат → запускаем полный объем."
+  rs:
+    problem: "Podaci su rasuti po fajlovima, ima duplikata i ručnih operacija, pa su izveštaji spori i nepouzdani."
+    solution: "Spajam izvore u jedinstven pipeline: čišćenje, normalizacija, obogaćivanje i izvoz u traženi format."
+    result: "Spreman skup podataka za CRM, analitiku ili kampanje bez svakodnevnog ručnog sklapanja tabela."
+    timeline: "Posle brifa i test fajla fiksiram faze: pilot na uzorku, zatim puni obrada na kompletnom obimu."
+    collaboration: "Šaljete brif i primer podataka → usaglašavamo pravila obrade → pokazujem test rezultat → pokrećemo pun obim."
+  en:
+    problem: "Data is spread across files with duplicates and manual handling, so reporting stays slow and unreliable."
+    solution: "I unify sources into one pipeline: cleaning, normalization, enrichment, and export to your target format."
+    result: "A ready dataset for CRM, analytics, or campaigns without daily manual spreadsheet assembly."
+    timeline: "After the brief and a sample file, we fix phases: pilot on a subset, then full run on total volume."
+    collaboration: "You send the brief and sample data → we align processing rules → I show a test output → we run full volume."
+
+jekyll:
+  ru:
+    problem: "Нужен быстрый и надежный сайт без тяжелой CMS, но при этом с управляемым контентом и SEO-базой."
+    solution: "Разрабатываю статический сайт на Jekyll: структура страниц, шаблоны, контентные блоки и автоматический деплой."
+    result: "Легкий сайт с высокой скоростью загрузки, прозрачным кодом и удобным процессом обновления контента."
+    timeline: "После брифа фиксируем структуру и объем. Сначала каркас и ключевые страницы, затем наполнение и полировка."
+    collaboration: "Вы заполняете бриф по структуре и целям → собираю прототип → согласуем правки → запускаем в прод."
+  rs:
+    problem: "Potreban je brz i pouzdan sajt bez teškog CMS-a, uz jasan sadržaj i dobru SEO osnovu."
+    solution: "Razvijam statički sajt na Jekyll-u: struktura, šabloni, sadržajni blokovi i automatski deploy."
+    result: "Lagani sajt sa visokim performansama, čistim kodom i jednostavnim procesom ažuriranja sadržaja."
+    timeline: "Nakon brifa fiksiramo strukturu i obim. Prvo skelet i ključne stranice, zatim sadržaj i finalna dorada."
+    collaboration: "Popunjavate brif sa ciljevima i strukturom → pravim prototip → usaglašavamo izmene → puštamo produkciju."
+  en:
+    problem: "You need a fast and reliable website without CMS overhead, while keeping content control and SEO basics."
+    solution: "I build a static Jekyll website: page structure, templates, content sections, and automated deployment."
+    result: "A lightweight site with strong loading speed, transparent codebase, and simple content update workflow."
+    timeline: "After the brief we lock scope and structure. First we deliver core pages, then content fill and polishing."
+    collaboration: "You submit a structure-focused brief → I build the prototype → we align revisions → ship to production."
+
+n8n:
+  ru:
+    problem: "Ключевые процессы завязаны на ручные действия, из-за чего заявки, статусы и уведомления регулярно теряются."
+    solution: "Проектирую и внедряю n8n-workflow под бизнес-цель: интеграции API, обработка событий, контроль ошибок и логирование."
+    result: "Процессы работают автоматически и прозрачно: меньше операционных сбоев и больше предсказуемости в ежедневной работе."
+    timeline: "После брифа выделяем приоритетный процесс и запускаем его первым, затем масштабируем на соседние участки."
+    collaboration: "Вы описываете цель в брифе → согласуем карту процессов → внедряю первый workflow → расширяем автоматизацию по этапам."
+  rs:
+    problem: "Ključni procesi su ručni, pa se leadovi, statusi i obaveštenja redovno gube između alata."
+    solution: "Projektujem i uvodim n8n workflow prema poslovnom cilju: API integracije, obrada događaja, kontrola grešaka i logovi."
+    result: "Procesi rade automatski i transparentno: manje operativnih prekida i više predvidivosti u svakodnevnom radu."
+    timeline: "Nakon brifa biramo prioritetni proces i puštamo ga prvo, zatim širimo automatizaciju na sledeće korake."
+    collaboration: "Opisujete cilj u brifu → usaglašavamo mapu procesa → uvodim prvi workflow → širimo automatizaciju fazno."
+  en:
+    problem: "Critical operations rely on manual actions, so leads, statuses, and notifications get lost between tools."
+    solution: "I design and implement n8n workflows around business outcomes: API integrations, event handling, error control, and logging."
+    result: "Automation becomes transparent and reliable with fewer operational failures and better day-to-day predictability."
+    timeline: "After the brief, we launch one priority process first, then scale automation across adjacent workflows."
+    collaboration: "You describe the goal in the brief → we align the process map → I ship the first workflow → we scale in phases."
+
+supabase:
+  ru:
+    problem: "Проекту нужна облачная БД и API, но нет целостной схемы данных, прав доступа и безопасного контура."
+    solution: "Настраиваю Supabase-платформу: структуру БД, роли и политики доступа, REST API и базовые интеграции."
+    result: "Готовый backend-слой для приложения с предсказуемым доступом к данным и понятной точкой интеграции."
+    timeline: "После брифа и модели данных поэтапно: схема → доступы → API → проверка сценариев нагрузки."
+    collaboration: "Вы отправляете бриф и описание сущностей → проектирую схему → настраиваю API и доступы → передаю документацию."
+  rs:
+    problem: "Projektu treba cloud baza i API, ali nema jasne šeme podataka, prava pristupa i bezbednog okvira."
+    solution: "Podešavam Supabase platformu: model baze, role i politike pristupa, REST API i osnovne integracije."
+    result: "Spreman backend sloj za aplikaciju sa predvidivim pristupom podacima i jasnom tačkom integracije."
+    timeline: "Posle brifa i modela podataka radimo fazno: šema → pristupi → API → provera ključnih opterećenja."
+    collaboration: "Šaljete brif i opis entiteta → projektujem šemu → podešavam API i pristupe → predajem dokumentaciju."
+  en:
+    problem: "Your product needs a cloud database and API, but data model, access control, and secure boundaries are unclear."
+    solution: "I set up Supabase end-to-end: schema design, roles and policies, REST API, and baseline integrations."
+    result: "A production-ready backend layer with predictable data access and a clear integration surface for your app."
+    timeline: "After the brief and entity model, work goes in phases: schema → access → API → load-path validation."
+    collaboration: "You send the brief and entity description → I design the schema → configure API and access → hand over docs."
+
+maps:
+  ru:
+    problem: "Клиентам сложно находить объекты и маршруты, а текущая карта не поддерживает бизнес-логику и фильтрацию."
+    solution: "Создаю интерактивную карту на подходящем стеке с вашими данными, фильтрами, карточками объектов и поиском."
+    result: "Понятная карта для клиентов и команды: быстрее поиск нужной точки и выше конверсия в целевое действие."
+    timeline: "После брифа и данных собираю рабочий прототип, затем довожу функциональность и визуальный слой до прод-версии."
+    collaboration: "Вы описываете сценарий в брифе → передаете данные → согласуем прототип → внедряем на сайт или отдельный хостинг."
+  rs:
+    problem: "Korisnicima je teško da pronađu objekte i rute, a postojeća mapa ne podržava poslovnu logiku i filtere."
+    solution: "Pravim interaktivnu mapu na odgovarajućem steku sa vašim podacima, filterima, karticama objekata i pretragom."
+    result: "Jasna mapa za klijente i tim: brže nalaženje tačaka i veća konverzija ka željenoj akciji."
+    timeline: "Nakon brifa i podataka pripremam radni prototip, zatim završavam funkcije i vizuelni sloj za produkciju."
+    collaboration: "Opisujete scenario u brifu → šaljete podatke → usaglašavamo prototip → ugrađujemo na sajt ili zaseban hosting."
+  en:
+    problem: "Customers struggle to find locations and routes, and the current map does not support your business logic."
+    solution: "I build an interactive map on the right stack with your data, filters, location cards, and search behavior."
+    result: "A clear map experience for users and team operations, with faster discovery and better conversion to target actions."
+    timeline: "After brief and data handoff, I deliver a working prototype first, then finalize features and visual polish."
+    collaboration: "You describe the scenario in the brief → provide data → we align on prototype → deploy on site or standalone hosting."
+
+perl:
+  ru:
+    problem: "Перенос legacy Perl-системы на новый сервер часто ломает зависимости, окружение и критичные бизнес-функции."
+    solution: "Провожу управляемую миграцию: аудит окружения, перенос кода и БД, настройка веб-слоя и проверка совместимости."
+    result: "Система запускается на новом хостинге предсказуемо, с контрольным списком проверенных функций после миграции."
+    timeline: "После брифа и доступов делаю поэтапный план миграции с окном переключения и постпроверкой."
+    collaboration: "Вы заполняете бриф по окружению и критичным функциям → готовлю план → переносим и проверяем → фиксируем результат."
+  rs:
+    problem: "Migracija legacy Perl sistema na novi server često ruši zavisnosti, okruženje i ključne funkcije."
+    solution: "Vodim kontrolisanu migraciju: audit okruženja, prenos koda i baze, podešavanje web sloja i provera kompatibilnosti."
+    result: "Sistem radi predvidivo na novom hostingu uz kontrolnu listu potvrđenih funkcija posle migracije."
+    timeline: "Nakon brifa i pristupa pravim fazni plan migracije sa prozorom prebacivanja i post-proverom."
+    collaboration: "Popunjavate brif o okruženju i kritičnim funkcijama → pripremam plan → migriramo i proveravamo → zaključujemo rezultat."
+  en:
+    problem: "Migrating a legacy Perl system to new hosting often breaks dependencies, runtime setup, and critical functions."
+    solution: "I run a controlled migration: environment audit, code and DB transfer, web stack setup, and compatibility checks."
+    result: "The system runs predictably on new hosting with a verified checklist of critical functions after cutover."
+    timeline: "After brief and access handoff, I prepare a phased migration plan with cutover window and post-check validation."
+    collaboration: "You fill a brief on environment and critical flows → I prepare plan → we migrate and verify → confirm final state."
+
+legacy:
+  ru:
+    problem: "Legacy-код на Perl нестабилен, дорог в сопровождении и тормозит внедрение новых бизнес-функций."
+    solution: "Стабилизирую и оптимизирую систему: исправляю ошибки, ускоряю узкие места и аккуратно внедряю новые возможности."
+    result: "Меньше инцидентов, быстрее изменения и более предсказуемое развитие системы без рискованных переписываний с нуля."
+    timeline: "После брифа определяем приоритетные узлы и делаем поэтапные релизы с контролем влияния на прод."
+    collaboration: "Вы описываете приоритеты в брифе → согласуем дорожную карту → выполняю этап → подтверждаем эффект и идем дальше."
+  rs:
+    problem: "Legacy Perl kod je nestabilan, skup za održavanje i usporava isporuku novih poslovnih funkcija."
+    solution: "Stabilizujem i optimizujem sistem: ispravljam greške, ubrzavam uska grla i pažljivo uvodim nove funkcije."
+    result: "Manje incidenata, brže izmene i predvidiviji razvoj bez rizičnog prepisivanja sistema od nule."
+    timeline: "Posle brifa određujemo prioritetne tačke i isporučujemo fazno uz kontrolu uticaja na produkciju."
+    collaboration: "Opisujete prioritete u brifu → usaglašavamo roadmap → isporučujem fazu → potvrđujemo efekat i nastavljamo."
+  en:
+    problem: "Legacy Perl code is unstable, expensive to maintain, and slows delivery of new business functionality."
+    solution: "I stabilize and optimize the system: fix defects, remove bottlenecks, and introduce new features safely."
+    result: "Fewer incidents, faster change cycles, and predictable evolution without risky full rewrites."
+    timeline: "After the brief, we prioritize hotspots and deliver in phases with production impact control."
+    collaboration: "You define priorities in the brief → we align roadmap → I deliver phase → we confirm impact and continue."
+
+latex:
+  ru:
+    problem: "Материалы нужно оформить по строгим требованиям, но ручная верстка формул и таблиц забирает слишком много времени."
+    solution: "Выполняю набор и верстку в LaTeX: формулы, таблицы, схемы, единый стиль и соблюдение требований издания."
+    result: "Аккуратный документ в нужном формате, готовый к сдаче, публикации или печати без ручных доработок в последний момент."
+    timeline: "После брифа и материалов фиксируем объем и этапы: пробная страница, основной набор, финальная проверка."
+    collaboration: "Вы присылаете бриф и материалы → согласуем требования оформления → делаю набор и ревизию → передаю финальные файлы."
+  rs:
+    problem: "Materijal mora da prati stroge zahteve formatiranja, a ručni prelom formula i tabela oduzima previše vremena."
+    solution: "Radim unos i prelom u LaTeX-u: formule, tabele, šeme, jedinstven stil i poštovanje pravila časopisa."
+    result: "Uredan dokument u traženom formatu, spreman za predaju, objavu ili štampu bez završnih hitnih ispravki."
+    timeline: "Nakon brifa i materijala fiksiramo obim i faze: probna strana, glavni unos, finalna provera."
+    collaboration: "Šaljete brif i materijale → usaglašavamo pravila formatiranja → radim unos i reviziju → predajem finalne fajlove."
+  en:
+    problem: "Your materials must meet strict formatting rules, but manual formula and table typesetting is too time-consuming."
+    solution: "I handle LaTeX typesetting end-to-end: formulas, tables, diagrams, consistent style, and publication requirements."
+    result: "A clean final document in required format, ready for submission, publication, or print without last-minute fixes."
+    timeline: "After brief and source files, we lock scope and phases: sample page, full typesetting, final QA pass."
+    collaboration: "You send the brief and materials → we align formatting requirements → I typeset and revise → deliver final files."

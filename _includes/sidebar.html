@@ -21,11 +21,9 @@
               <ul class="list-unstyled">
                 <li>
                   <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                    class="d-flex flex-column flex-lg-row gap-3 align-items-start py-3 link-body-emphasis text-decoration-none border-top"
                     href="/n8n"
                   >
-            <img src="/img/n8n.png" style="height:96px; width: 96px" class="bd-placeholder-img" alt="...">
-
                   <!--
                     <svg
                       aria-hidden="true"
@@ -52,11 +50,9 @@
                 </li>
                 <li>
                   <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                    class="d-flex flex-column flex-lg-row gap-3 align-items-start py-3 link-body-emphasis text-decoration-none border-top"
                     href="/legacy"
                   >
-                               <img src="/img/legacy.png" style="height:96px; width: 96px" class="bd-placeholder-img" alt="...">
-
                     <div class="col-lg-8">
                       <h6 class="mb-0">
 {% if site.lang == "ru" %}Доработка и оптимизация legacy-системы на Perl{% endif %}
@@ -72,11 +68,9 @@
                 </li>
                 <li>
                   <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                    class="d-flex flex-column flex-lg-row gap-3 align-items-start py-3 link-body-emphasis text-decoration-none border-top"
                     href="/jekyll"
                   >
-                                                   <img src="/img/jekyll.png" style="height:96px; width: 96px" class="bd-placeholder-img" alt="...">
-
                     <div class="col-lg-8">
                       <h6 class="mb-0">
 {% if site.lang == "ru" %}Разработка быстрого статического сайта на Jekyll, бесплатный хостинг{% endif %}
@@ -109,7 +103,7 @@
                 </h4>
               <ol class="list-unstyled mb-0">
 
-{% assign latest_posts = site.posts | where_exp: "post", "post.type != 'kwork'" %}
+{% assign latest_posts = site.posts %}
 {% for post in latest_posts limit:7 %}
                 <li><a href="{{ post.url }}">{{ post.title }}</a></li>
 {% endfor %}

@@ -1,0 +1,422 @@
+bots:
+  ru:
+    intro: "Бот для бизнеса должен снимать рутину с команды, а не добавлять новую сложность. Делаю сценарии, которые помогают клиенту дойти до действия без лишних шагов."
+    when:
+      - "Менеджеры тратят много времени на одинаковые ответы в мессенджерах."
+      - "Лиды теряются между чатами, формами и ручными заметками."
+      - "Нужна единая точка входа для заявок и первичной квалификации."
+    scope:
+      - "Проектирую диалоги под ваш процесс продаж и поддержки."
+      - "Подключаю интеграции с CRM, уведомлениями и внутренними таблицами."
+      - "Настраиваю fallback на оператора там, где нужна живая коммуникация."
+    deliverables:
+      - "Рабочий бот с понятной логикой пользовательских сценариев."
+      - "Маршрутизация обращений и фиксация ключевых данных по заявке."
+      - "Рекомендации по следующему этапу развития бота на основе метрик."
+    closing: "Если у вас пока только идея и нет подробного ТЗ, этого достаточно. Начинаем с брифа и превращаем идею в рабочий сценарий."
+  rs:
+    intro: "Biznis bot treba da ukloni rutinu iz tima, a ne da uvede dodatnu složenost. Pravim scenarije koji vode klijenta do akcije bez suvišnih koraka."
+    when:
+      - "Menadžeri troše mnogo vremena na ista pitanja u mesindžerima."
+      - "Leadovi se gube između chatova, formi i ručnih beleški."
+      - "Potrebna je jedinstvena ulazna tačka za upite i početnu kvalifikaciju."
+    scope:
+      - "Projektujem dijaloge prema vašem prodajnom i support procesu."
+      - "Povezujem CRM, notifikacije i interne tabele."
+      - "Podešavam prebacivanje na operatera tamo gde je potreban live razgovor."
+    deliverables:
+      - "Radni bot sa jasnom logikom korisničkih tokova."
+      - "Rutiranje upita i beleženje ključnih podataka o leadu."
+      - "Preporuke za sledeću fazu razvoja na osnovu realnih metrika."
+    closing: "Ako imate samo ideju bez detaljnog tehničkog zadatka, to je dovoljno. Krećemo od brifa i pretvaramo ideju u radni scenario."
+  en:
+    intro: "A business bot should remove routine work from your team, not add new complexity. I design flows that move users to action without friction."
+    when:
+      - "Your team spends too much time on repetitive chat replies."
+      - "Leads are lost between messengers, forms, and manual notes."
+      - "You need one intake channel for requests and first-line qualification."
+    scope:
+      - "I design dialogue flows for your support and sales process."
+      - "I connect CRM, notifications, and internal data touchpoints."
+      - "I set operator handoff where human communication is required."
+    deliverables:
+      - "A working bot with clear user journey logic."
+      - "Lead routing and structured capture of key request data."
+      - "A roadmap for the next bot iteration based on usage signals."
+    closing: "If you only have a rough idea and no formal spec, that is fine. We start from the brief and turn it into a working flow."
+
+data:
+  ru:
+    intro: "Когда данные живут в десятках файлов, бизнес начинает принимать решения вслепую. Помогаю собрать единый контур, где цифрам можно доверять."
+    when:
+      - "Отчеты собираются вручную и регулярно расходятся с реальностью."
+      - "В выгрузках много дублей, мусора и конфликтующих форматов."
+      - "Команде нужно быстрее готовить данные для CRM, аналитики и маркетинга."
+    scope:
+      - "Объединяю разрозненные источники и выстраиваю обработку по правилам."
+      - "Делаю очистку, нормализацию и обогащение с понятной логикой."
+      - "Готовлю экспорт в нужный формат без ручной доработки после выгрузки."
+    deliverables:
+      - "Чистый и структурированный массив данных под вашу задачу."
+      - "Повторяемый процесс обработки, который легко масштабировать."
+      - "Прозрачные правила, по которым формируется итоговый набор."
+    closing: "Обычно начинаем с тестового фрагмента и быстро проверяем подход. После этого переносим ту же логику на полный объем."
+  rs:
+    intro: "Kada su podaci rasuti kroz desetine fajlova, biznis donosi odluke naslepo. Pomažem da se uspostavi jedinstven tok kome možete verovati."
+    when:
+      - "Izveštaji se rade ručno i često ne odgovaraju realnom stanju."
+      - "Eksporti imaju duplikate, šum i neusklađene formate."
+      - "Tim mora brže pripremati podatke za CRM, analitiku i marketing."
+    scope:
+      - "Spajam različite izvore i uvodim obradu po jasnim pravilima."
+      - "Radim čišćenje, normalizaciju i obogaćivanje sa transparentnom logikom."
+      - "Pripremam izlazni format bez dodatnog ručnog sređivanja."
+    deliverables:
+      - "Čist i strukturiran dataset za konkretnu poslovnu upotrebu."
+      - "Ponovljiv proces obrade koji se lako širi na veći obim."
+      - "Jasna pravila po kojima nastaje finalni rezultat."
+    closing: "Najčešće krećemo od test uzorka da brzo potvrdimo pristup. Zatim istu logiku primenjujemo na ceo obim podataka."
+  en:
+    intro: "When data is spread across many files, business decisions become guesswork. I help you build one trusted data flow."
+    when:
+      - "Reporting is manual and frequently inconsistent with real operations."
+      - "Exports contain duplicates, noise, and conflicting formats."
+      - "Your team needs faster preparation for CRM, analytics, and marketing."
+    scope:
+      - "I unify fragmented sources into a rule-based processing flow."
+      - "I implement cleaning, normalization, and enrichment with clear logic."
+      - "I deliver target-format exports without post-processing pain."
+    deliverables:
+      - "A clean and structured dataset ready for business use."
+      - "A repeatable processing pipeline that scales with volume."
+      - "Transparent transformation rules for every output field."
+    closing: "We usually start with a test sample to validate the approach quickly, then apply the same logic to full volume."
+
+jekyll:
+  ru:
+    intro: "Сайт-витрина должен быть быстрым, простым в поддержке и понятным для SEO. На Jekyll это решается аккуратно и без лишней инфраструктуры."
+    when:
+      - "Нужен сайт без тяжелой CMS и постоянных обновлений плагинов."
+      - "Важно быстро загружать страницы и стабильно проходить Core Web Vitals."
+      - "Нужен прозрачный репозиторий и независимость от подрядчика."
+    scope:
+      - "Проектирую структуру страниц под ваш оффер и сценарии конверсии."
+      - "Собираю адаптивные шаблоны и контентные блоки для RU/RS/EN."
+      - "Настраиваю деплой и базовую SEO-технику для индексации."
+    deliverables:
+      - "Готовый статический сайт с чистой архитектурой."
+      - "Понятная структура файлов и процесс обновления контента."
+      - "Основа для дальнейшего роста блога, кейсов и лидогенерации."
+    closing: "Если не уверены в структуре, начнем с короткого брифа и соберем рабочий каркас, который можно быстро проверить на живой аудитории."
+  rs:
+    intro: "Prezentacioni sajt treba da bude brz, lak za održavanje i jasan za SEO. Sa Jekyll-om to radimo bez nepotrebne infrastrukture."
+    when:
+      - "Potreban je sajt bez teškog CMS-a i stalnih plugin ažuriranja."
+      - "Bitno je brzo učitavanje i stabilan kvalitet performansi."
+      - "Važan je transparentan repozitorijum i nezavisnost od izvođača."
+    scope:
+      - "Projektujem strukturu stranica prema vašem offeru i konverzionim koracima."
+      - "Sastavljam responzivne šablone i blokove sadržaja za RU/RS/EN."
+      - "Podešavam deploy i osnovnu SEO tehniku za indeksiranje."
+    deliverables:
+      - "Gotov statički sajt sa čistom arhitekturom."
+      - "Jasna organizacija fajlova i proces ažuriranja sadržaja."
+      - "Stabilna osnova za dalje širenje bloga i case studija."
+    closing: "Ako struktura još nije definisana, krećemo od kratkog brifa i pravimo radni kostur koji brzo testiramo na realnoj publici."
+  en:
+    intro: "A service website should be fast, easy to maintain, and clear for SEO. Jekyll gives you that without CMS overhead."
+    when:
+      - "You need a site without heavy CMS maintenance and plugin churn."
+      - "Loading speed and technical stability matter for conversion and search."
+      - "You want repo ownership and clear contractor independence."
+    scope:
+      - "I design page structure around offer positioning and conversion paths."
+      - "I build responsive templates and content blocks for RU/RS/EN."
+      - "I configure deployment and essential SEO implementation."
+    deliverables:
+      - "A production-ready static website with clean architecture."
+      - "Clear file structure and maintainable content update workflow."
+      - "A solid base for future blog, cases, and inbound growth."
+    closing: "If structure is still uncertain, we start with a short brief and build a testable skeleton for fast feedback."
+
+n8n:
+  ru:
+    intro: "Автоматизация имеет смысл только тогда, когда сокращает потери времени и ошибок в реальном процессе. В n8n выстраиваю именно такую практичную связку."
+    when:
+      - "Заявки и статусы теряются между CRM, почтой, таблицами и мессенджерами."
+      - "Команда регулярно повторяет однотипные действия вручную."
+      - "Существующие workflow нестабильны и сложно поддерживаются."
+    scope:
+      - "Анализирую процесс и выделяю точки с максимальным бизнес-эффектом."
+      - "Собираю workflow с обработкой ошибок, логированием и уведомлениями."
+      - "Оптимизирую текущие сценарии без остановки ежедневной работы."
+    deliverables:
+      - "Рабочая автоматизация, привязанная к измеримому результату."
+      - "Понятная схема процессов для команды и руководителя."
+      - "Основа для дальнейшего масштабирования интеграций."
+    closing: "Начинаем с приоритетного процесса и быстро показываем эффект. Далее расширяем контур в том же стиле."
+  rs:
+    intro: "Automatizacija ima smisla samo kada smanjuje gubitak vremena i greške u realnom procesu. U n8n gradim baš takve praktične tokove."
+    when:
+      - "Leadovi i statusi se gube između CRM-a, mejla, tabela i mesindžera."
+      - "Tim stalno ponavlja iste ručne korake."
+      - "Postojeći workflow-i su nestabilni i teški za održavanje."
+    scope:
+      - "Analiziram proces i biram tačke sa najvećim poslovnim efektom."
+      - "Gradim workflow sa obradom grešaka, logovanjem i notifikacijama."
+      - "Unapređujem postojeće tokove bez prekida svakodnevnog rada."
+    deliverables:
+      - "Radna automatizacija vezana za merljiv poslovni rezultat."
+      - "Jasna mapa procesa za tim i menadžment."
+      - "Osnova za dalje širenje integracija i procesa."
+    closing: "Krećemo od prioritetnog procesa i brzo pokazujemo rezultat, pa zatim širimo opseg istom metodom."
+  en:
+    intro: "Automation is valuable only when it reduces real operational waste. In n8n, I build flows tied to measurable business outcomes."
+    when:
+      - "Leads and statuses are lost across CRM, email, sheets, and chat tools."
+      - "Your team repeats manual tasks that should be event-driven."
+      - "Existing workflows are brittle and costly to maintain."
+    scope:
+      - "I map the process and prioritize high-impact automation points."
+      - "I implement workflows with error handling, logging, and alerts."
+      - "I optimize existing automations without disrupting operations."
+    deliverables:
+      - "Reliable automation linked to measurable process outcomes."
+      - "A clear process map your team can follow and maintain."
+      - "A scalable base for future integrations and workflows."
+    closing: "We start with one priority process, prove value quickly, and expand in controlled phases."
+
+supabase:
+  ru:
+    intro: "Когда у продукта нет устойчивой data-основы, развитие тормозится уже на первых интеграциях. Настраиваю Supabase как рабочий backend-слой под ваш сценарий."
+    when:
+      - "Нужна облачная база с безопасным доступом и понятной моделью данных."
+      - "Команде требуется единый API-слой для нескольких клиентов и сервисов."
+      - "Текущая структура данных мешает развитию функциональности."
+    scope:
+      - "Проектирую схему данных и связи под реальные процессы."
+      - "Настраиваю роли, политики доступа и ключевые API-маршруты."
+      - "Проверяю типовые сценарии нагрузки и интеграции приложения."
+    deliverables:
+      - "Настроенная облачная БД с рабочими политиками безопасности."
+      - "REST API и документация для подключения команд разработки."
+      - "Техническая основа для стабильного роста проекта."
+    closing: "Если модель данных еще не финальная, это нормальный этап. В брифе фиксируем текущие сущности и выстраиваем эволюционный план."
+  rs:
+    intro: "Kada proizvod nema stabilnu data osnovu, razvoj usporava već na prvim integracijama. Podešavam Supabase kao praktičan backend sloj za vaš slučaj."
+    when:
+      - "Potrebna je cloud baza sa sigurnim pristupom i jasnim modelom podataka."
+      - "Timu je potreban jedinstven API sloj za više servisa i klijenata."
+      - "Trenutna struktura podataka koči razvoj funkcionalnosti."
+    scope:
+      - "Projektujem šemu i veze podataka prema realnim procesima."
+      - "Podešavam role, politike pristupa i ključne API rute."
+      - "Proveravam tipične scenarije opterećenja i integracije."
+    deliverables:
+      - "Podešena cloud baza sa radnim bezbednosnim pravilima."
+      - "REST API i dokumentacija za razvojne timove."
+      - "Tehnička osnova za stabilan rast proizvoda."
+    closing: "Ako model podataka još nije finalan, to je normalno. U brifu fiksiramo trenutne entitete i gradimo evolutivni plan."
+  en:
+    intro: "When product data foundations are weak, scaling slows down early. I set up Supabase as a practical backend layer for your workflow."
+    when:
+      - "You need cloud storage with secure access and a clear data model."
+      - "Your team needs one API surface for multiple clients and tools."
+      - "Current schema design blocks product feature growth."
+    scope:
+      - "I design schema and relationships around real product processes."
+      - "I configure roles, policies, and core API routes."
+      - "I validate key load and integration scenarios."
+    deliverables:
+      - "Configured cloud database with working security policies."
+      - "REST API and implementation-ready documentation."
+      - "A stable technical base for product growth."
+    closing: "If your data model is still evolving, that is expected. We lock the current entities in the brief and plan staged evolution."
+
+maps:
+  ru:
+    intro: "Интерактивная карта должна помогать бизнесу, а не просто красиво выглядеть. Проектирую карту как инструмент поиска, выбора и конверсии."
+    when:
+      - "Пользователям сложно найти нужный объект или маршрут."
+      - "Есть данные по локациям, но нет понятного интерфейса для клиентов."
+      - "Нужны фильтры, категории и быстрая работа на мобильных."
+    scope:
+      - "Подбираю стек под регион, нагрузку и требования к дизайну."
+      - "Подключаю ваши источники данных и настраиваю отображение объектов."
+      - "Реализую фильтрацию, карточки точек, поиск и оптимизацию скорости."
+    deliverables:
+      - "Готовая интерактивная карта для сайта или отдельного размещения."
+      - "Понятный пользовательский сценарий от поиска до целевого действия."
+      - "Техническая основа для расширения карты новыми слоями и данными."
+    closing: "Можно начать даже с неполных данных. На первом этапе собираем рабочий прототип и уточняем логику по ходу."
+  rs:
+    intro: "Interaktivna mapa treba da pomaže biznisu, a ne samo da izgleda lepo. Projektujem mapu kao alat za pretragu, izbor i konverziju."
+    when:
+      - "Korisnicima je teško da pronađu pravu lokaciju ili rutu."
+      - "Imate podatke o lokacijama, ali ne i jasan korisnički interfejs."
+      - "Potrebni su filteri, kategorije i dobra mobilna upotreba."
+    scope:
+      - "Biram tehnologiju prema regionu, opterećenju i dizajn zahtevima."
+      - "Povezujem vaše izvore i podešavam prikaz objekata."
+      - "Implementiram pretragu, filtere, kartice i optimizaciju brzine."
+    deliverables:
+      - "Gotova interaktivna mapa za sajt ili zasebni hosting."
+      - "Jasan korisnički tok od pretrage do ciljne akcije."
+      - "Stabilna osnova za dalje širenje slojeva i podataka."
+    closing: "Možemo krenuti i sa nepotpunim podacima. U prvoj fazi pravimo radni prototip i preciziramo logiku tokom rada."
+  en:
+    intro: "An interactive map should support business outcomes, not just visual appeal. I design maps as tools for discovery and conversion."
+    when:
+      - "Users struggle to find the right location or route quickly."
+      - "You have location data but no clear customer-facing map UX."
+      - "You need filters, categories, and reliable mobile behavior."
+    scope:
+      - "I select the right stack for region, load, and design requirements."
+      - "I connect your data sources and configure object display logic."
+      - "I implement search, filtering, cards, and performance optimization."
+    deliverables:
+      - "A ready interactive map for site embed or standalone hosting."
+      - "A clear user flow from search to target action."
+      - "A scalable base for adding new layers and data."
+    closing: "You can start with incomplete data. We build a working prototype first and refine logic with real usage."
+
+perl:
+  ru:
+    intro: "Миграция старого Perl-проекта требует аккуратности: важно не только перенести код, но и сохранить стабильность бизнес-процесса после переключения."
+    when:
+      - "Нужно переехать на новый сервер без длительного простоя."
+      - "Есть риск несовместимости модулей и старого окружения."
+      - "Важно заранее понять, что именно проверять после миграции."
+    scope:
+      - "Фиксирую состав окружения и критичные точки системы до переноса."
+      - "Переношу код, зависимости и БД с проверкой совместимости."
+      - "Готовлю контрольный прогон и список функций для приемки."
+    deliverables:
+      - "Система, запущенная на новом хостинге в рабочем состоянии."
+      - "План переключения и постмиграционная проверка ключевых сценариев."
+      - "Список технических рисков и рекомендации по стабилизации."
+    closing: "Если документации мало, начнем с технического брифа и быстрых диагностических шагов. Обычно этого достаточно, чтобы снять основные риски."
+  rs:
+    intro: "Migracija starog Perl projekta traži preciznost: nije dovoljno preneti kod, već i sačuvati stabilnost poslovnog procesa nakon prelaska."
+    when:
+      - "Potrebno je prebacivanje na novi server bez dugog zastoja."
+      - "Postoji rizik od nekompatibilnosti modula i starog okruženja."
+      - "Važno je unapred znati šta tačno proveriti posle migracije."
+    scope:
+      - "Fiksiram okruženje i kritične tačke sistema pre prenosa."
+      - "Prenosim kod, zavisnosti i bazu uz provere kompatibilnosti."
+      - "Pripremam kontrolni test i checklist za prihvatanje."
+    deliverables:
+      - "Sistem koji radi na novom hostingu."
+      - "Plan prebacivanja i post-migraciona provera ključnih tokova."
+      - "Spisak tehničkih rizika i preporuke za stabilizaciju."
+    closing: "Ako je dokumentacija slaba, krećemo od tehničkog brifa i brze dijagnostike. To je obično dovoljno da uklonimo glavne rizike."
+  en:
+    intro: "Legacy Perl migration requires precision: moving code is not enough, the business workflow must remain stable after cutover."
+    when:
+      - "You need to move to a new server with minimal downtime."
+      - "Module and runtime compatibility risks are high."
+      - "You need a clear post-migration verification checklist."
+    scope:
+      - "I baseline current environment and critical runtime points."
+      - "I migrate code, dependencies, and database with compatibility checks."
+      - "I run controlled validation of critical functions after cutover."
+    deliverables:
+      - "A working system on the new hosting environment."
+      - "Cutover plan and validated post-migration checklist."
+      - "Risk register with practical stabilization recommendations."
+    closing: "If documentation is limited, we start with a technical brief and focused diagnostics to de-risk migration quickly."
+
+legacy:
+  ru:
+    intro: "Legacy-системы можно развивать без болезненного переписывания с нуля. Ключ в том, чтобы двигаться этапами и не ломать рабочие процессы."
+    when:
+      - "Система падает на нестабильных участках и мешает команде работать."
+      - "Изменения внедряются долго и с риском новых ошибок."
+      - "Нужен план модернизации без остановки бизнеса."
+    scope:
+      - "Локализую узкие места в коде и данных, влияющие на надежность."
+      - "Делаю точечный рефакторинг и оптимизацию критичных сценариев."
+      - "Добавляю новый функционал через безопасные этапы релизов."
+    deliverables:
+      - "Стабильнее работающая система с меньшим числом инцидентов."
+      - "Ускоренный цикл изменений без хаоса в продакшене."
+      - "План дальнейшей модернизации с приоритетами по эффекту."
+    closing: "Работаем не по лозунгу 'переписать все', а по принципу 'улучшать то, что дает максимальный эффект для бизнеса'."
+  rs:
+    intro: "Legacy sistemi mogu da se razvijaju bez bolnog prepisivanja od nule. Ključ je fazni pristup bez rušenja postojećih procesa."
+    when:
+      - "Sistem puca na nestabilnim tačkama i usporava tim."
+      - "Promene se uvode sporo i često donose nove greške."
+      - "Potreban je plan modernizacije bez prekida poslovanja."
+    scope:
+      - "Pronalazim uska grla u kodu i podacima koja ruše pouzdanost."
+      - "Radim ciljano refaktorisanje i optimizaciju kritičnih tokova."
+      - "Dodajem nove funkcije kroz bezbedne faze isporuke."
+    deliverables:
+      - "Stabilniji sistem sa manje incidenata."
+      - "Brži ciklus izmena bez haosa u produkciji."
+      - "Plan naredne modernizacije sa prioritetima po efektu."
+    closing: "Ne radimo po principu 'prepiši sve', već 'unapredi ono što daje najveći poslovni efekat'."
+  en:
+    intro: "Legacy systems can evolve without risky full rewrites. The key is phased improvements that protect current operations."
+    when:
+      - "Instability in key areas is creating recurring incidents."
+      - "Changes are slow and often introduce regressions."
+      - "You need modernization without business interruption."
+    scope:
+      - "I identify reliability bottlenecks in code and data paths."
+      - "I apply targeted refactoring and performance optimization."
+      - "I introduce new functionality through safe release phases."
+    deliverables:
+      - "A more stable system with fewer production incidents."
+      - "Faster delivery cycle with lower regression risk."
+      - "A modernization roadmap prioritized by business impact."
+    closing: "The approach is not 'rewrite everything', but 'improve what creates the highest business value first'."
+
+latex:
+  ru:
+    intro: "LaTeX-верстка ценна там, где важны точность, единый стиль и воспроизводимость результата. Довожу материалы до публикационного качества без ручного хаоса."
+    when:
+      - "Формулы, таблицы и схемы сложно поддерживать в офисных редакторах."
+      - "Нужно соблюсти требования журнала, вуза или стандарта оформления."
+      - "Большой документ требует аккуратного и стабильного шаблона."
+    scope:
+      - "Переношу материалы в структурированный LaTeX-проект."
+      - "Настраиваю оформление формул, таблиц, ссылок и иллюстраций."
+      - "Проверяю финальную сборку и единообразие всего документа."
+    deliverables:
+      - "Готовый документ в PDF и исходники TeX для дальнейшей работы."
+      - "Единый стиль оформления по требованиям вашей площадки."
+      - "Чистая структура файлов для правок и повторного использования."
+    closing: "Даже если исходники разнородные, это не проблема. Начинаем с брифа и примера желаемого результата."
+  rs:
+    intro: "LaTeX prelom je posebno vredan kada su bitni tačnost, jedinstven stil i ponovljiv rezultat. Materijale dovodim do nivoa spremnog za objavu."
+    when:
+      - "Formule, tabele i šeme je teško održavati u office editorima."
+      - "Potrebno je ispuniti zahteve časopisa, fakulteta ili standarda."
+      - "Veliki dokument traži stabilan i uredan šablon."
+    scope:
+      - "Prenosim materijale u strukturiran LaTeX projekat."
+      - "Podešavam formule, tabele, reference i ilustracije."
+      - "Radim finalnu proveru kompajliranja i ujednačenosti."
+    deliverables:
+      - "Finalni PDF i TeX izvornici za dalje izmene."
+      - "Jedinstven stil prema pravilima vaše institucije ili izdanja."
+      - "Čista struktura fajlova za održavanje i reuse."
+    closing: "Ni heterogeni izvori nisu prepreka. Krećemo od brifa i primera željenog izgleda."
+  en:
+    intro: "LaTeX is most useful when precision, consistency, and reproducibility matter. I bring materials to publication-ready quality without formatting chaos."
+    when:
+      - "Formulas, tables, and diagrams are hard to maintain in office editors."
+      - "You must meet strict journal, university, or standard requirements."
+      - "Large documents need a stable and clean template structure."
+    scope:
+      - "I convert source materials into a structured LaTeX project."
+      - "I configure formulas, tables, references, and illustration styling."
+      - "I run final build and consistency checks across the full document."
+    deliverables:
+      - "Final PDF and TeX sources for future edits."
+      - "Consistent style aligned to your publication requirements."
+      - "Clean file structure for maintenance and reuse."
+    closing: "Even mixed-quality source materials are fine. We start with the brief and a target formatting example."

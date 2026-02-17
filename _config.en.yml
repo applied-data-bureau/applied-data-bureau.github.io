@@ -3,3 +3,5 @@ title: "Applied Data Bureau"
 exclude:
   - _posts/ru
   - _posts/rs
+  - _services/ru
+  - _services/rs

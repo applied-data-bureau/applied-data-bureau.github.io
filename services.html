@@ -33,15 +33,21 @@ permalink: /services/
 <div class="strip">
   <div class="container section-wrap">
     <div class="row">
-{% assign all_posts = site.posts %}
-{% for post in all_posts %}
-  {% if post.type == "kwork" %}
+{% assign all_services = site.services | sort: "service_order" %}
+{% for service in all_services %}
       <div class="col-12 col-md-6 service-summary">
-        <h2 class="service-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
-        <p>{{ post.excerpt | strip_html | truncate: 170 }}</p>
+        <h2 class="service-title"><a href="{{ service.url }}">{{ service.title }}</a></h2>
+        <p>{{ service.excerpt | strip_html | truncate: 170 }}</p>
+        <p class="mb-0">
+          <a class="button" href="{{ service.url }}">{% if site.lang == "ru" %}Описание услуги{% endif %}{% if site.lang == "rs" %}Opis usluge{% endif %}{% if site.lang == "en" %}Service details{% endif %}</a>
+        </p>
       </div>
-  {% endif %}
 {% endfor %}
+      <div class="col-12">
+        <div class="mt-4">
+          <a class="button" href="{{ '/brief.html' | relative_url }}">{% if site.lang == "ru" %}Начните с брифа{% endif %}{% if site.lang == "rs" %}Počnite od brifa{% endif %}{% if site.lang == "en" %}Start with the brief{% endif %}</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -16,3 +16,6 @@ exclude:
 collections:
   posts:
     output: true
+  services:
+    output: true
+    permalink: /:slug
