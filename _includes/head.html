@@ -104,6 +104,9 @@
   {% assign en_href = en_base | append: page_path %}
 
   <meta name="description" content="{{ page_description | escape }}">
+  {% if page.name == "index.html" and (site.lang == "en" or site.lang == "rs") and site.google_site_verification %}
+  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+  {% endif %}
   <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
   <link rel="alternate" hreflang="ru" href="{{ ru_href }}">
   <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
