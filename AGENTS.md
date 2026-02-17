@@ -53,6 +53,7 @@
   - `_config.rs.yml`
   - `_config.en.yml`
 - RU/RS/EN — равноправные отдельные публичные представления бюро.
+- Для hreflang `x-default` основной версией считать EN-домен (`https://applied-data-bureau.pages.dev/`).
 
 ## Сборка и запуск (справочно)
 - `bundle install`
@@ -93,9 +94,9 @@
 - `DONE` — сделано
 
 Сводка на сейчас:
-- `DONE`: 7
+- `DONE`: 8
 - `WIP`: 0
-- `TODO`: 15
+- `TODO`: 14
 
 ## Приоритетный бэклог (21 задача)
 
@@ -110,7 +111,7 @@
 | 7 | TODO | Добавить 5-10 полноценных кейсов с измеримыми результатами (время/стоимость/качество/надежность). |
 | 8 | DONE | Ввести уникальные SEO-title/description для ключевых страниц и шаблонов постов. |
 | 9 | TODO | Добавить canonical + OpenGraph + Twitter Cards в общий `head`-шаблон. |
-| 10 | TODO | Добавить hreflang-связки между RU/RS/EN доменами и `x-default`. |
+| 10 | DONE | Добавить hreflang-связки между RU/RS/EN доменами и `x-default`. |
 | 11 | TODO | Подключить structured data (Organization, Service, Article, BreadcrumbList). |
 | 12 | TODO | Настроить `sitemap.xml` и `robots.txt` с учетом трех доменов и индексации целевых страниц. |
 | 13 | TODO | Усилить внутреннюю перелинковку: услуги <-> статьи <-> кейсы по интентам запросов. |

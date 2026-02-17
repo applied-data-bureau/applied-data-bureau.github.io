@@ -95,8 +95,20 @@
     {% if site.lang == "en" %}{% assign page_description = "Applied Data Bureau: automation, integrations, data workflows, and legacy system support." %}{% endif %}
   {% endif %}
 
+  {% assign page_path = page.url | default: "/" %}
+  {% assign ru_base = site.site_url_ru %}
+  {% assign rs_base = site.site_url_rs %}
+  {% assign en_base = site.site_url_en %}
+  {% assign ru_href = ru_base | append: page_path %}
+  {% assign rs_href = rs_base | append: page_path %}
+  {% assign en_href = en_base | append: page_path %}
+
   <meta name="description" content="{{ page_description | escape }}">
   <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
+  <link rel="alternate" hreflang="ru" href="{{ ru_href }}">
+  <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
+  <link rel="alternate" hreflang="en" href="{{ en_href }}">
+  <link rel="alternate" hreflang="x-default" href="{{ en_href }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
