@@ -1,0 +1,46 @@
+---
+layout: null
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% assign site_base = site.site_url_en %}
+{% if site.lang == "ru" %}
+  {% assign site_base = site.site_url_ru %}
+{% elsif site.lang == "rs" %}
+  {% assign site_base = site.site_url_rs %}
+{% endif %}
+{% for page in site.pages %}
+  {% if page.url and page.sitemap != false and page.url != "/sitemap.xml" and page.url != "/robots.txt" %}
+    {% assign extension = page.path | split: "." | last %}
+    {% if extension == "html" or extension == "md" %}
+  <url>
+    <loc>{{ site_base }}{{ page.url }}</loc>
+    {% if page.date %}
+    <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+    {% endif %}
+  </url>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% for page in site.posts %}
+  {% if page.url and page.sitemap != false %}
+  <url>
+    <loc>{{ site_base }}{{ page.url }}</loc>
+    {% if page.date %}
+    <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+    {% endif %}
+  </url>
+  {% endif %}
+{% endfor %}
+{% for page in site.services %}
+  {% if page.url and page.sitemap != false %}
+  <url>
+    <loc>{{ site_base }}{{ page.url }}</loc>
+    {% if page.date %}
+    <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+    {% endif %}
+  </url>
+  {% endif %}
+{% endfor %}
+</urlset>

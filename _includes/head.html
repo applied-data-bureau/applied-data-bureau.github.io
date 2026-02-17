@@ -1,20 +1,114 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ site.title }}">
   <meta name="author" content="Raskumandrin">
-  {% assign page_title = page.title | default: "" %}
+  {% assign page_title = page.seo_title | default: page.title | default: "" %}
+  {% assign page_description = page.seo_description | default: "" %}
+  {% assign page_excerpt = page.excerpt | default: "" | strip_html | strip_newlines | replace: "  ", " " | strip %}
+
+  {% if page.name == "index.html" %}
+    {% if site.lang == "ru" %}
+      {% assign page_title = "Data-first автоматизация и интеграции для бизнеса" %}
+      {% assign page_description = "Бюро прикладных данных: автоматизация процессов, интеграции, обработка данных, n8n, Perl и поддержка legacy-систем для бизнеса." %}
+    {% endif %}
+    {% if site.lang == "rs" %}
+      {% assign page_title = "Data-first automatizacija i integracije za biznis" %}
+      {% assign page_description = "Biro za primenjene podatke: automatizacija procesa, integracije, obrada podataka, n8n, Perl i podrška legacy sistemima." %}
+    {% endif %}
+    {% if site.lang == "en" %}
+      {% assign page_title = "Data-first automation and integrations for business" %}
+      {% assign page_description = "Applied Data Bureau delivers process automation, integrations, data workflows, n8n, Perl, and legacy system support for business operations." %}
+    {% endif %}
+  {% endif %}
+
+  {% if page.name == "services.html" %}
+    {% if site.lang == "ru" %}
+      {% assign page_title = "Услуги: автоматизация, данные, интеграции, legacy" %}
+      {% assign page_description = "Услуги Бюро прикладных данных: от интеграций и data-пайплайнов до поддержки legacy и внедрения n8n под задачи бизнеса." %}
+    {% endif %}
+    {% if site.lang == "rs" %}
+      {% assign page_title = "Usluge: automatizacija, podaci, integracije, legacy" %}
+      {% assign page_description = "Usluge biroa: od integracija i data pipeline-a do podrške legacy sistemima i uvođenja n8n rešenja za biznis." %}
+    {% endif %}
+    {% if site.lang == "en" %}
+      {% assign page_title = "Services: automation, data, integrations, legacy support" %}
+      {% assign page_description = "Explore Applied Data Bureau services: integrations, data pipelines, business automation, n8n workflows, and legacy system support." %}
+    {% endif %}
+  {% endif %}
+
+  {% if page.name == "blog.html" %}
+    {% if site.lang == "ru" %}
+      {% assign page_title = "Блог: кейсы, автоматизация и инженерная практика" %}
+      {% assign page_description = "Практические статьи и кейсы о data-first автоматизации, интеграциях, n8n, Perl и поддержке рабочих процессов." %}
+    {% endif %}
+    {% if site.lang == "rs" %}
+      {% assign page_title = "Blog: studije slučaja, automatizacija i praksa" %}
+      {% assign page_description = "Praktični članci i studije slučaja o data-first automatizaciji, integracijama, n8n, Perl-u i operativnim procesima." %}
+    {% endif %}
+    {% if site.lang == "en" %}
+      {% assign page_title = "Blog: case studies, automation, and engineering practice" %}
+      {% assign page_description = "Read practical posts on data-first automation, integrations, n8n, Perl, and delivery patterns from real client work." %}
+    {% endif %}
+  {% endif %}
+
   {% if page.name == "testimonials.html" %}
-    {% if site.lang == "ru" %}{% assign page_title = "Отзывы клиентов" %}{% endif %}
-    {% if site.lang == "rs" %}{% assign page_title = "Recenzije klijenata" %}{% endif %}
-    {% if site.lang == "en" %}{% assign page_title = "Client Testimonials" %}{% endif %}
+    {% if site.lang == "ru" %}
+      {% assign page_title = "Отзывы клиентов и подтвержденные проекты" %}
+      {% assign page_description = "Публичные отзывы клиентов с внешних платформ и ссылки на проекты: подтвержденные результаты и опыт сотрудничества." %}
+    {% endif %}
+    {% if site.lang == "rs" %}
+      {% assign page_title = "Recenzije klijenata i potvrđeni projekti" %}
+      {% assign page_description = "Javne recenzije sa eksternih platformi i linkovi ka projektima sa potvrđenim rezultatima saradnje." %}
+    {% endif %}
+    {% if site.lang == "en" %}
+      {% assign page_title = "Client testimonials and verified projects" %}
+      {% assign page_description = "Public client feedback from external platforms with project links that validate delivery quality and outcomes." %}
+    {% endif %}
   {% endif %}
+
   {% if page.name == "brief.html" %}
-    {% if site.lang == "ru" %}{% assign page_title = "Бриф по задаче" %}{% endif %}
-    {% if site.lang == "rs" %}{% assign page_title = "Brif zadatka" %}{% endif %}
-    {% if site.lang == "en" %}{% assign page_title = "Task brief" %}{% endif %}
+    {% if site.lang == "ru" %}
+      {% assign page_title = "Бриф: обсудить задачу и получить оценку" %}
+      {% assign page_description = "Опишите задачу в брифе: цели, ограничения, сроки и контекст. Вернемся с оценкой формата работ, сроков и стоимости." %}
+    {% endif %}
+    {% if site.lang == "rs" %}
+      {% assign page_title = "Brif: opišite zadatak i dobijte procenu" %}
+      {% assign page_description = "Pošaljite brif sa ciljevima, ograničenjima, rokovima i kontekstom. Javljamo se sa procenom rokova i troškova." %}
+    {% endif %}
+    {% if site.lang == "en" %}
+      {% assign page_title = "Task brief: discuss your task and get an estimate" %}
+      {% assign page_description = "Submit your brief with goals, constraints, timeline, and context. We reply with a practical delivery and cost estimate." %}
+    {% endif %}
   {% endif %}
+
+  {% if page_description == "" and page.layout == "post" and page_excerpt != "" %}
+    {% assign page_description = page_excerpt | truncate: 160 %}
+  {% endif %}
+
+  {% if page_description == "" and page.layout == "service" and page_excerpt != "" %}
+    {% assign page_description = page_excerpt | truncate: 160 %}
+  {% endif %}
+
+  {% if page_description == "" %}
+    {% if site.lang == "ru" %}{% assign page_description = "Бюро прикладных данных: автоматизация, интеграции, обработка данных и поддержка legacy-систем." %}{% endif %}
+    {% if site.lang == "rs" %}{% assign page_description = "Biro za primenjene podatke: automatizacija, integracije, obrada podataka i podrška legacy sistemima." %}{% endif %}
+    {% if site.lang == "en" %}{% assign page_description = "Applied Data Bureau: automation, integrations, data workflows, and legacy system support." %}{% endif %}
+  {% endif %}
+
+  {% assign page_path = page.url | default: "/" %}
+  {% assign ru_base = site.site_url_ru %}
+  {% assign rs_base = site.site_url_rs %}
+  {% assign en_base = site.site_url_en %}
+  {% assign ru_href = ru_base | append: page_path %}
+  {% assign rs_href = rs_base | append: page_path %}
+  {% assign en_href = en_base | append: page_path %}
+
+  <meta name="description" content="{{ page_description | escape }}">
   <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
+  <link rel="alternate" hreflang="ru" href="{{ ru_href }}">
+  <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
+  <link rel="alternate" hreflang="en" href="{{ en_href }}">
+  <link rel="alternate" hreflang="x-default" href="{{ en_href }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">

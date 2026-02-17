@@ -1,0 +1,19 @@
+---
+layout: null
+permalink: /robots.txt
+---
+{% assign site_base = site.site_url_en %}
+{% if site.lang == "ru" %}
+  {% assign site_base = site.site_url_ru %}
+{% elsif site.lang == "rs" %}
+  {% assign site_base = site.site_url_rs %}
+{% endif %}
+User-agent: *
+Allow: /
+
+# Service and temporary paths that should not be indexed.
+Disallow: /functions/
+Disallow: /workers/
+Disallow: /tmp/
+
+Sitemap: {{ site_base }}/sitemap.xml
