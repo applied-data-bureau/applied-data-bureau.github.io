@@ -107,6 +107,9 @@
   {% if page.name == "index.html" and site.google_site_verification %}
   <meta name="google-site-verification" content="{{ site.google_site_verification }}">
   {% endif %}
+  {% if page.name == "index.html" and site.lang == "ru" %}
+  <meta name="yandex-verification" content="f6e035c9a9e70a62">
+  {% endif %}
   <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
   <link rel="alternate" hreflang="ru" href="{{ ru_href }}">
   <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
