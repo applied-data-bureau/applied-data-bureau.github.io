@@ -4,3 +4,5 @@ title: "Biro za primenjene podatke"
 exclude:
   - _posts/ru
   - _posts/en
+  - _services/ru
+  - _services/en
