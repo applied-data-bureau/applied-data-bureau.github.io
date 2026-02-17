@@ -1,7 +1,18 @@
 <!doctype html>
 <html lang="{{ site.lang }}">
 {% include head.html %}
-<body class="page">
+{% assign page_type = "page" %}
+{% if page.name == "index.html" %}{% assign page_type = "home" %}{% endif %}
+{% if page.name == "services.html" %}{% assign page_type = "services" %}{% endif %}
+{% if page.name == "blog.html" %}{% assign page_type = "blog" %}{% endif %}
+{% if page.name == "brief.html" %}{% assign page_type = "brief" %}{% endif %}
+{% if page.name == "testimonials.html" %}{% assign page_type = "testimonials" %}{% endif %}
+{% if page.layout == "service" %}{% assign page_type = "service_page" %}{% endif %}
+{% if page.layout == "post" %}{% assign page_type = "post" %}{% endif %}
+<body class="page" data-site-lang="{{ site.lang }}" data-page-type="{{ page_type }}">
+{% if site.gtm_container_id and site.gtm_container_id != "" %}
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site.gtm_container_id }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+{% endif %}
 <div class="wrapper">
 {% include header.html %}
 <main>

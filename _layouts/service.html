@@ -34,7 +34,7 @@ layout: default
           <h3>{% if site.lang == "ru" %}Формат взаимодействия{% endif %}{% if site.lang == "rs" %}Format saradnje{% endif %}{% if site.lang == "en" %}Collaboration Format{% endif %}</h3>
           <p>{{ framework.collaboration | default: page.service_collaboration }}</p>
           <p class="mb-0">
-            <a class="button" href="{{ '/brief.html' | relative_url }}">{% if site.lang == "ru" %}Начните с брифа{% endif %}{% if site.lang == "rs" %}Počnite od brifa{% endif %}{% if site.lang == "en" %}Start with the brief{% endif %}</a>
+            <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="service_start_with_brief">{% if site.lang == "ru" %}Начните с брифа{% endif %}{% if site.lang == "rs" %}Počnite od brifa{% endif %}{% if site.lang == "en" %}Start with the brief{% endif %}</a>
           </p>
         </section>
         {% if details %}

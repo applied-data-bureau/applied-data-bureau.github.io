@@ -7,6 +7,7 @@ telegram_contact_url: "https://t.me/raskumas"
 site_url_ru: "https://applied-data-bureau.github.io"
 site_url_rs: "https://biro-za-primenjene-podatke.pages.dev"
 site_url_en: "https://applied-data-bureau.pages.dev"
+gtm_container_id: "GTM-5W8BV647"
 
 permalink: /:slug
 

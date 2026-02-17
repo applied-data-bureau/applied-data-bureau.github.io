@@ -29,16 +29,16 @@ title: Home
 {% if site.lang == "en" %}How to contact{% endif %}
             </h3>
             <ul class="contact-list">
-              <li>Telegram: <a href="https://t.me/raskumas">@raskumas</a></li>
-              <li>Upwork: <a href="https://www.upwork.com/o/profiles/users/_~01d64c6ae8d4d867ff/">Profile</a></li>
+              <li>Telegram: <a href="https://t.me/raskumas" data-track="contact_click" data-contact-channel="telegram">@raskumas</a></li>
+              <li>Upwork: <a href="https://www.upwork.com/o/profiles/users/_~01d64c6ae8d4d867ff/" data-track="contact_click" data-contact-channel="upwork">Profile</a></li>
 {% if site.lang == "ru" %}
-              <li>FL.ru: <a href="https://www.fl.ru/users/raskumandrin2/opinions/">Профиль</a></li>
-              <li>Kwork: <a href="https://kwork.ru/user/raskumandrin">Профиль</a></li>
+              <li>FL.ru: <a href="https://www.fl.ru/users/raskumandrin2/opinions/" data-track="contact_click" data-contact-channel="flru">Профиль</a></li>
+              <li>Kwork: <a href="https://kwork.ru/user/raskumandrin" data-track="contact_click" data-contact-channel="kwork">Профиль</a></li>
 {% endif %}
             </ul>
           </div>
           <div class="contact-box-actions">
-            <a class="button" href="{{ '/brief.html' | relative_url }}">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
+            <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="home_contact_send_task">{% if site.lang == "ru" %}Отправить задачу{% endif %}{% if site.lang == "rs" %}Pošaljite zadatak{% endif %}{% if site.lang == "en" %}Send task{% endif %}</a>
           </div>
         </div>
       </div>
