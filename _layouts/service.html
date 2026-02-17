@@ -21,7 +21,7 @@ layout: default
       <div class="col-12 col-lg-9 content">
         {% assign framework = site.data.service_framework[page.slug][site.lang] %}
         {% assign details = site.data.service_body[page.slug][site.lang] %}
-        <section class="service-framework">
+        <section class="service-framework pb-5">
           <h2>{% if site.lang == "ru" %}Формат услуги{% endif %}{% if site.lang == "rs" %}Format usluge{% endif %}{% if site.lang == "en" %}Service Format{% endif %}</h2>
           <h3>{% if site.lang == "ru" %}Проблема{% endif %}{% if site.lang == "rs" %}Problem{% endif %}{% if site.lang == "en" %}Problem{% endif %}</h3>
           <p>{{ framework.problem | default: page.service_problem }}</p>
@@ -36,7 +36,6 @@ layout: default
           <p class="mb-0">
             <a class="button" href="{{ '/brief.html' | relative_url }}">{% if site.lang == "ru" %}Начните с брифа{% endif %}{% if site.lang == "rs" %}Počnite od brifa{% endif %}{% if site.lang == "en" %}Start with the brief{% endif %}</a>
           </p>
-          <br><br>
         </section>
         {% if details %}
         <section class="service-body">
