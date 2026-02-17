@@ -13,6 +13,8 @@
   var defaultButtonLabel = submitButton ? submitButton.getAttribute("data-submit-label") : "";
   var loadingButtonLabel = submitButton ? submitButton.getAttribute("data-submit-loading") : "";
   var fallbackEndpoint = form.getAttribute("data-endpoint-fallback");
+  var hasStartedBrief = false;
+  var trackEvent = typeof window.adbAnalyticsTrack === "function" ? window.adbAnalyticsTrack : function () {};
 
   if (!contactInput || !taskInput || !statusBox || !submitButton) {
     return;
@@ -70,10 +72,18 @@
 
   contactInput.addEventListener("input", function () {
     clearInvalidState(contactInput);
+    if (!hasStartedBrief) {
+      hasStartedBrief = true;
+      trackEvent("brief_start", { source: "contact_input" });
+    }
   });
 
   taskInput.addEventListener("input", function () {
     clearInvalidState(taskInput);
+    if (!hasStartedBrief) {
+      hasStartedBrief = true;
+      trackEvent("brief_start", { source: "task_input" });
+    }
   });
 
   form.addEventListener("submit", async function (event) {
@@ -90,6 +100,14 @@
     }
 
     var lastErrorMessage = statusBox.getAttribute("data-network-error");
+    var fieldsPayload = {
+      has_files: (formData.getAll("files") || []).some(function (file) {
+        return file && file.name;
+      }),
+      contact_length: (formData.get("contact") || "").trim().length,
+      task_length: (formData.get("task") || "").trim().length
+    };
+    trackEvent("brief_submit", fieldsPayload);
 
     try {
       for (var i = 0; i < endpoints.length; i += 1) {
@@ -114,7 +132,12 @@
           }
 
           showStatus("is-success", statusBox.getAttribute("data-success"));
+          trackEvent("brief_success", {
+            endpoint: endpoint,
+            endpoint_type: endpoint === form.action ? "primary" : "fallback"
+          });
           form.reset();
+          hasStartedBrief = false;
           return;
         } catch (fetchError) {
           lastErrorMessage = statusBox.getAttribute("data-network-error");
@@ -122,6 +145,9 @@
       }
 
       showStatus("is-error", lastErrorMessage);
+      trackEvent("brief_error", {
+        reason: lastErrorMessage
+      });
     } finally {
       setSubmitting(false);
     }
