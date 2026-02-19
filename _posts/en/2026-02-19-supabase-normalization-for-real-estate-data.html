@@ -1,0 +1,67 @@
+---
+layout: post
+title: Supabase (Postgres)&colon; real estate deals mart for Excel and API
+excerpt: We converted raw real estate deals into a practical Supabase schema, linked projects and developers, added time analytics fields, sped up queries with indexes, and prepared a flat mart for Excel and external API use.
+---
+
+<p>Sometimes deal data already exists, but as a long, messy table where it is hard to answer basic questions quickly: how price changes month by month, which projects are growing, where outliers are, and how to compare 1BR vs 2BR.</p>
+
+<p>In this case, the task was practical: clean up real estate deal data in Supabase (Postgres) so the client could export a ready mart into Excel and work with filters without constant developer support.</p>
+
+<h2>What had to be delivered</h2>
+<ul>
+  <li>Normalize table structure (projects, developers, transactions) and data types.</li>
+  <li>Link projects and developers via keys.</li>
+  <li>Prepare time analytics (year/month).</li>
+  <li>Build price aggregates by project and room count.</li>
+  <li>Speed up reporting queries with indexes.</li>
+  <li>Expose ready datasets through Supabase API (input: p_id/d_id or "all").</li>
+</ul>
+
+<h2>1. Import of source data</h2>
+<p>Data was loaded into Supabase "as is": without schema pre-design, with mixed field types and unstable values (texts, dates, numbers, project names).</p>
+<p>The client provided 2 Excel files and 1 CSV file (150 MB).</p>
+<p>This made it possible to start immediately with real data and identify quality and structure issues on a live volume.</p>
+<p>
+  <a href="/assets/posts/2026-02-19-before.png">
+    <img src="/assets/posts/2026-02-19-before.png" class="img-fluid" alt="Raw deals table before normalization in Supabase">
+  </a>
+</p>
+
+<h2>2. Careful normalization and schema cleanup</h2>
+<p>Then came careful work to bring the database into a stable shape:</p>
+<ul>
+  <li>extracting reference entities (projects, developers) into separate tables,</li>
+  <li>creating relations between entities via keys,</li>
+  <li>converting column types (date, numeric instead of text),</li>
+  <li>adding indexes for real reporting queries,</li>
+  <li>enriching data (for example, normalizing room/bedroom values from text to numeric fields),</li>
+  <li>adding dedicated p_year and p_month fields for time analytics.</li>
+</ul>
+<p>Year and month were stored as separate fields to avoid EXTRACT(YEAR/MONTH) on every query and simplify grouping and sorting for Excel exports.</p>
+
+<p>
+  <a href="/assets/posts/2026-02-19-after.png">
+    <img src="/assets/posts/2026-02-19-after.png" class="img-fluid" alt="Normalized schema after Supabase data modeling">
+  </a>
+</p>
+
+<h2>3. Preparing the database for external API</h2>
+<p>The structure and queries were aligned for external consumption: flat datasets, stable fields, predictable key-based filters (p_id, d_id, year, month). The external API itself was out of scope for this task, but the database and data marts are prepared for it.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>After raw import, data occupied about 300 MB in Supabase; after normalization and adding new indexes, it dropped to 237 MB.</li>
+  <li>Even with the new indexes, the database still fit within Supabase Free Tier limits.</li>
+  <li>Analytics queries became noticeably faster due to indexes and precomputed time fields.</li>
+  <li>The database became ready for scale: reports, external API, and BI tools.</li>
+</ul>
+
+<h2>Who this is for</h2>
+<ul>
+  <li>If data already exists but is hard to use without manual cleanup.</li>
+  <li>If you need time-based analytics (month/year) and category comparisons.</li>
+  <li>If the output should be business-ready: Excel/BI + API, not just SQL.</li>
+</ul>
+
+<p>If you need a similar result: I clean up data tables, design analytics-ready schemas, build marts, and prepare API access.</p>
