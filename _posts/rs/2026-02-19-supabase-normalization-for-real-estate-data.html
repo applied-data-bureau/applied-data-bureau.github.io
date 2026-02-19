@@ -1,0 +1,67 @@
+---
+layout: post
+title: Supabase (Postgres)&colon; data mart transakcija nekretnina za Excel i API
+excerpt: Sirove transakcije smo preveli u praktičnu Supabase šemu, povezali projekte i investitore, dodali polja za vremensku analitiku, ubrzali upite indeksima i pripremili ravnu data mart strukturu za Excel i spoljašnji API.
+---
+
+<p>Dešava se da podaci o transakcijama već postoje, ali kao dugačka i nepregledna tabela iz koje je teško brzo odgovoriti na osnovna pitanja: kako se cena menja po mesecima, koji projekti rastu, gde su odstupanja i kako uporediti 1BR i 2BR.</p>
+
+<p>U ovom slučaju zadatak je bio praktičan: srediti podatke o transakcijama nekretnina u Supabase-u (Postgres) tako da klijent može sam da izvozi gotovu mart tabelu u Excel i koristi filtere bez stalnih zahteva ka developeru.</p>
+
+<h2>Šta je trebalo dobiti</h2>
+<ul>
+  <li>Normalizovati strukturu tabela (projekti, investitori, transakcije) i tipove podataka.</li>
+  <li>Povezati projekte i investitore preko ključeva.</li>
+  <li>Pripremiti vremensku analitiku (godina/mesec).</li>
+  <li>Sastaviti agregate cena po projektima i broju soba.</li>
+  <li>Ubrzati izveštajne upite indeksima.</li>
+  <li>Izložiti gotove skupove kroz Supabase API (ulaz: p_id/d_id ili "sve").</li>
+</ul>
+
+<h2>1. Uvoz izvornih podataka</h2>
+<p>Podaci su učitani u Supabase "kakvi jesu": bez prethodno pripremljene šeme, sa mešovitim tipovima polja i nestabilnim vrednostima (tekstovi, datumi, brojevi, nazivi projekata).</p>
+<p>Od klijenta su stigla 2 Excel fajla i 1 CSV fajl veličine 150 MB.</p>
+<p>To je omogućilo brz početak rada sa realnim podacima i identifikaciju problema kvaliteta i strukture na živom obimu.</p>
+<p>
+  <a href="/assets/posts/2026-02-19-before.png">
+    <img src="/assets/posts/2026-02-19-before.png" class="img-fluid" alt="Izvorna tabela transakcija pre normalizacije u Supabase-u">
+  </a>
+</p>
+
+<h2>2. Pažljiva normalizacija i sređivanje šeme</h2>
+<p>Zatim je usledio pažljiv rad na dovođenju baze u stabilno stanje:</p>
+<ul>
+  <li>izdvajanje referentnih entiteta (projekti, investitori) u zasebne tabele,</li>
+  <li>postavljanje veza između entiteta preko ključeva,</li>
+  <li>usklađivanje tipova kolona (date, numeric umesto text),</li>
+  <li>dodavanje indeksa za realne izveštajne upite,</li>
+  <li>obogaćivanje podataka (na primer, normalizacija room/bedroom vrednosti iz teksta u numerička polja),</li>
+  <li>dodavanje posebnih polja p_year i p_month za vremensku analitiku.</li>
+</ul>
+<p>Godina i mesec su izdvojeni u posebna polja da se izbegne EXTRACT(YEAR/MONTH) u svakom upitu i pojednostave grupisanje i sortiranje pri izvozu u Excel.</p>
+
+<p>
+  <a href="/assets/posts/2026-02-19-after.png">
+    <img src="/assets/posts/2026-02-19-after.png" class="img-fluid" alt="Normalizovana šema podataka nakon dorade u Supabase-u">
+  </a>
+</p>
+
+<h2>3. Priprema baze za spoljašnji API</h2>
+<p>Struktura i upiti su dovedeni u oblik pogodan za spoljašnju potrošnju: ravni skupovi podataka, stabilna polja, predvidivi filteri po ključevima (p_id, d_id, godina, mesec). Sam spoljašnji API nije bio deo ovog zadatka, ali su baza i data mart slojevi pripremljeni za to.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Posle raw importa podaci su zauzimali oko 300 MB u Supabase-u; nakon normalizacije i dodavanja novih indeksa, veličina je smanjena na 237 MB.</li>
+  <li>I sa novim indeksima, baza je ostala u okvirima Supabase Free Tier limita.</li>
+  <li>Analitički upiti su postali primetno brži zahvaljujući indeksima i predizračunatim vremenskim poljima.</li>
+  <li>Baza je postala spremna za skaliranje: izveštaji, spoljašnji API i BI alati.</li>
+</ul>
+
+<h2>Kome ovo odgovara</h2>
+<ul>
+  <li>Ako podaci već postoje, ali su teški za korišćenje bez ručnog čišćenja.</li>
+  <li>Ako je potrebna vremenska analitika (mesec/godina) i poređenja po kategorijama.</li>
+  <li>Ako rezultat treba da bude poslovno upotrebljiv: Excel/BI + API, a ne samo SQL.</li>
+</ul>
+
+<p>Ako vam treba sličan rezultat: sređujem tabele, projektujem šemu za analitiku, gradim data mart slojeve i pripremam pristup kroz API.</p>
