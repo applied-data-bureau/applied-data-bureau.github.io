@@ -1,20 +1,35 @@
 <div class="header">
   <div class="container">
-    <div class="logo">
-      <a href="/">
-        {% assign title_parts = site.title | split: " " %}
-        {% if site.lang == "en" %}
-          {% assign highlight_word = title_parts | last %}
-          {% assign base_title = site.title | remove: highlight_word | strip %}
-          {% if base_title != "" %}<span class="logo-rest">{{ base_title }}</span> {% endif %}<span class="logo-first">{{ highlight_word }}</span>
-        {% else %}
-          {% assign highlight_word = title_parts | first %}
-          {% assign base_title = site.title | remove_first: highlight_word | strip %}
-          <span class="logo-first">{{ highlight_word }}</span>{% if base_title != "" %} <span class="logo-rest">{{ base_title }}</span>{% endif %}
-        {% endif %}
-      </a>
+    <div class="header-main">
+      <div class="logo">
+        <a href="/">
+          {% assign title_parts = site.title | split: " " %}
+          {% if site.lang == "en" %}
+            {% assign highlight_word = title_parts | last %}
+            {% assign base_title = site.title | remove: highlight_word | strip %}
+            {% if base_title != "" %}<span class="logo-rest">{{ base_title }}</span> {% endif %}<span class="logo-first">{{ highlight_word }}</span>
+          {% else %}
+            {% assign highlight_word = title_parts | first %}
+            {% assign base_title = site.title | remove_first: highlight_word | strip %}
+            <span class="logo-first">{{ highlight_word }}</span>{% if base_title != "" %} <span class="logo-rest">{{ base_title }}</span>{% endif %}
+          {% endif %}
+        </a>
+      </div>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-controls="main-menu-list"
+        aria-expanded="false"
+      >
+        <span class="menu-toggle-label">{% if site.lang == "ru" %}Меню{% elsif site.lang == "rs" %}Meni{% else %}Menu{% endif %}</span>
+        <span class="menu-toggle-bars" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
     </div>
-    <nav class="main-menu">
+    <nav class="main-menu" id="main-menu-list">
       <ul>
         <li><a href="/services/">{% if site.lang == "ru" %}Услуги{% endif %}{% if site.lang == "rs" %}Usluge{% endif %}{% if site.lang == "en" %}Services{% endif %}</a></li>
         <li><a href="/blog/">{% if site.lang == "ru" %}Блог{% endif %}{% if site.lang == "rs" %}Blog{% endif %}{% if site.lang == "en" %}Blog{% endif %}</a></li>
