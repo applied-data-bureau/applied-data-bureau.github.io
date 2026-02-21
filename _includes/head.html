@@ -145,6 +145,168 @@
   <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
   <link rel="alternate" hreflang="en" href="{{ en_href }}">
   <link rel="alternate" hreflang="x-default" href="{{ en_href }}">
+  {% assign language_code = "en-US" %}
+  {% if site.lang == "ru" %}{% assign language_code = "ru-RU" %}{% endif %}
+  {% if site.lang == "rs" %}{% assign language_code = "sr-RS" %}{% endif %}
+  {% assign organization_description = "Applied Data Bureau: automation, integrations, data workflows, and legacy system support." %}
+  {% if site.lang == "ru" %}{% assign organization_description = "Бюро прикладных данных: автоматизация, интеграции, обработка данных и поддержка legacy-систем." %}{% endif %}
+  {% if site.lang == "rs" %}{% assign organization_description = "Biro za primenjene podatke: automatizacija, integracije, obrada podataka i podrška legacy sistemima." %}{% endif %}
+  {% assign organization_id = en_base | append: "/#organization" %}
+  {% assign organization_image = en_base | append: "/img/og/pointing-og-1200x630.png" %}
+  {% assign breadcrumb_home = "Home" %}
+  {% assign breadcrumb_services = "Services" %}
+  {% assign breadcrumb_blog = "Blog" %}
+  {% if site.lang == "ru" %}
+    {% assign breadcrumb_home = "Главная" %}
+    {% assign breadcrumb_services = "Услуги" %}
+    {% assign breadcrumb_blog = "Блог" %}
+  {% endif %}
+  {% if site.lang == "rs" %}
+    {% assign breadcrumb_home = "Početna" %}
+    {% assign breadcrumb_services = "Usluge" %}
+    {% assign breadcrumb_blog = "Blog" %}
+  {% endif %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": {{ organization_id | jsonify }},
+      "name": {{ site.title | jsonify }},
+      "url": {{ canonical_base | jsonify }},
+      "description": {{ organization_description | jsonify }},
+      "image": {{ organization_image | jsonify }},
+      "sameAs": [
+        {{ ru_base | jsonify }},
+        {{ rs_base | jsonify }},
+        {{ en_base | jsonify }}
+        {% if site.telegram_contact_url and site.telegram_contact_url != "" %},{{ site.telegram_contact_url | jsonify }}{% endif %}
+      ]
+    }
+  </script>
+  {% assign breadcrumb_items = "" %}
+  {% if page.name == "services.html" %}
+    {% capture breadcrumb_items %}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ breadcrumb_home | jsonify }},
+        "item": {{ canonical_base | append: "/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ breadcrumb_services | jsonify }},
+        "item": {{ canonical_href | jsonify }}
+      }
+    {% endcapture %}
+  {% elsif page.layout == "service" %}
+    {% capture breadcrumb_items %}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ breadcrumb_home | jsonify }},
+        "item": {{ canonical_base | append: "/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ breadcrumb_services | jsonify }},
+        "item": {{ canonical_base | append: "/services/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ page.title | jsonify }},
+        "item": {{ canonical_href | jsonify }}
+      }
+    {% endcapture %}
+  {% elsif page.name == "blog.html" %}
+    {% capture breadcrumb_items %}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ breadcrumb_home | jsonify }},
+        "item": {{ canonical_base | append: "/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ breadcrumb_blog | jsonify }},
+        "item": {{ canonical_href | jsonify }}
+      }
+    {% endcapture %}
+  {% elsif page.layout == "post" %}
+    {% capture breadcrumb_items %}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ breadcrumb_home | jsonify }},
+        "item": {{ canonical_base | append: "/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ breadcrumb_blog | jsonify }},
+        "item": {{ canonical_base | append: "/blog/" | jsonify }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ page.title | jsonify }},
+        "item": {{ canonical_href | jsonify }}
+      }
+    {% endcapture %}
+  {% endif %}
+  {% if breadcrumb_items != "" %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{{ breadcrumb_items | strip_newlines | strip }}]
+    }
+  </script>
+  {% endif %}
+  {% if page.layout == "service" %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": {{ canonical_href | append: "#service" | jsonify }},
+      "name": {{ page.title | jsonify }},
+      "description": {{ page_description | jsonify }},
+      "url": {{ canonical_href | jsonify }},
+      "provider": {
+        "@type": "Organization",
+        "@id": {{ organization_id | jsonify }}
+      },
+      "inLanguage": {{ language_code | jsonify }}
+    }
+  </script>
+  {% endif %}
+  {% if page.layout == "post" %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "@id": {{ canonical_href | append: "#article" | jsonify }},
+      "headline": {{ page.title | jsonify }},
+      "description": {{ page_description | jsonify }},
+      "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+      "dateModified": {{ page.date | date_to_xmlschema | jsonify }},
+      "mainEntityOfPage": {{ canonical_href | jsonify }},
+      "inLanguage": {{ language_code | jsonify }},
+      "author": {
+        "@type": "Person",
+        "name": {{ "Raskumandrin" | jsonify }}
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": {{ organization_id | jsonify }}
+      },
+      "image": {{ og_image_href | jsonify }}
+    }
+  </script>
+  {% endif %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
