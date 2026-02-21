@@ -65,3 +65,43 @@ excerpt: We converted raw real estate deals into a practical Supabase schema, li
 </ul>
 
 <p>If you need a similar result: I clean up data tables, design analytics-ready schemas, build marts, and prepare API access.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_supabase_submit_brief">Submit brief</a>
+</p>
+
+<h2>Technical Details: how to upload a large local CSV to Supabase</h2>
+<p>Below is a practical flow for when the CSV file is large and stored locally on your machine.</p>
+
+<h3>1) Get the IPv4 connection string in Supabase</h3>
+<ol>
+  <li>Open your Supabase project: <strong>Project Settings -> Database -> Connection string</strong>.</li>
+  <li>Select <strong>URI</strong> mode and the <strong>IPv4</strong> option (Direct connection).</li>
+  <li>Copy a string in this format:</li>
+</ol>
+
+<pre><code>postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require</code></pre>
+
+<h3>2) Run a Docker container with Postgres client and mount your CSV folder</h3>
+<pre><code class="language-bash">docker run --rm -it \
+  -v "$(pwd)":/work \
+  postgres:16 \
+  psql "postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require"</code></pre>
+
+<p>This is a single command: it opens <code>psql</code> immediately, and your current terminal folder is mounted into the container as <code>/work</code>.</p>
+
+<h3>3) Create the table in Supabase (before import)</h3>
+<p>Before import, just create the target table in Supabase (via SQL Editor or beforehand in the same <code>psql</code> session).</p>
+
+<h3>4) Import the CSV into the table</h3>
+<p>You are already inside Docker and connected to the DB in <code>psql</code>, so run this command directly:</p>
+<pre><code class="language-sql">\copy import.deals_raw
+from '/work/deals.csv'
+with (format csv, header true, delimiter ',', quote '"', null '');</code></pre>
+<p><code>null ''</code> means empty CSV values are loaded as <code>NULL</code>. If your file uses the literal <code>NULL</code> text, use <code>null 'NULL'</code>.</p>
+
+<h3>5) Quick check</h3>
+<pre><code class="language-sql">select count(*) as rows_loaded from import.deals_raw;
+select * from import.deals_raw limit 5;</code></pre>
+
+<p>If the file is very large, load it in batches (chunks), then add indexes after import - this is usually faster and more stable.</p>
