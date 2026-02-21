@@ -102,6 +102,22 @@
   {% assign ru_href = ru_base | append: page_path %}
   {% assign rs_href = rs_base | append: page_path %}
   {% assign en_href = en_base | append: page_path %}
+  {% assign canonical_base = en_base %}
+  {% if site.lang == "ru" %}{% assign canonical_base = ru_base %}{% endif %}
+  {% if site.lang == "rs" %}{% assign canonical_base = rs_base %}{% endif %}
+  {% assign canonical_href = canonical_base | append: page_path %}
+  {% assign og_image_name = "reading-og-1200x630.png" %}
+  {% if page.name == "services.html" or page.layout == "service" %}
+    {% assign og_image_name = "pointing-og-1200x630.png" %}
+  {% elsif page.name == "blog.html" or page.layout == "post" %}
+    {% assign og_image_name = "meditate-og-1200x630.png" %}
+  {% endif %}
+  {% assign og_image_href = canonical_base | append: "/img/og/" | append: og_image_name %}
+  {% if page_title != "" %}
+    {% assign meta_title = page_title | append: " · " | append: site.title %}
+  {% else %}
+    {% assign meta_title = site.title %}
+  {% endif %}
 
   <meta name="description" content="{{ page_description | escape }}">
   {% if page.name == "index.html" and site.google_site_verification %}
@@ -110,7 +126,21 @@
   {% if page.name == "index.html" and site.lang == "ru" %}
   <meta name="yandex-verification" content="f6e035c9a9e70a62">
   {% endif %}
-  <title>{% if page_title != "" %}{{ page_title }} · {% endif %}{{ site.title }}</title>
+  <title>{{ meta_title }}</title>
+  <link rel="canonical" href="{{ canonical_href }}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  <meta property="og:title" content="{{ meta_title | escape }}">
+  <meta property="og:description" content="{{ page_description | escape }}">
+  <meta property="og:url" content="{{ canonical_href }}">
+  <meta property="og:image" content="{{ og_image_href }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ site.title | escape }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta_title | escape }}">
+  <meta name="twitter:description" content="{{ page_description | escape }}">
+  <meta name="twitter:image" content="{{ og_image_href }}">
   <link rel="alternate" hreflang="ru" href="{{ ru_href }}">
   <link rel="alternate" hreflang="sr" href="{{ rs_href }}">
   <link rel="alternate" hreflang="en" href="{{ en_href }}">
