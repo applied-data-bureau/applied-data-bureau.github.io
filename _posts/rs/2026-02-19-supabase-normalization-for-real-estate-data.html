@@ -65,3 +65,43 @@ excerpt: Sirove transakcije smo preveli u praktičnu Supabase šemu, povezali pr
 </ul>
 
 <p>Ako vam treba sličan rezultat: sređujem tabele, projektujem šemu za analitiku, gradim data mart slojeve i pripremam pristup kroz API.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_supabase_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Tehnički detalji: kako da učitate veliki lokalni CSV u Supabase</h2>
+<p>Ispod je praktičan scenario kada je CSV fajl veliki i nalazi se lokalno na vašem računaru.</p>
+
+<h3>1) Uzmite IPv4 connection string u Supabase-u</h3>
+<ol>
+  <li>Otvorite projekat u Supabase-u: <strong>Project Settings -> Database -> Connection string</strong>.</li>
+  <li>Izaberite režim <strong>URI</strong> i opciju <strong>IPv4</strong> (Direct connection).</li>
+  <li>Kopirajte string ovog oblika:</li>
+</ol>
+
+<pre><code>postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require</code></pre>
+
+<h3>2) Pokrenite Docker container sa Postgres klijentom i mapirajte folder sa CSV fajlom</h3>
+<pre><code class="language-bash">docker run --rm -it \
+  -v "$(pwd)":/work \
+  postgres:16 \
+  psql "postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require"</code></pre>
+
+<p>Ovo je jedna komanda: odmah otvara <code>psql</code>, a trenutni folder iz terminala mapira se u container kao <code>/work</code>.</p>
+
+<h3>3) Kreirajte tabelu u Supabase-u (pre importa)</h3>
+<p>Pre importa samo kreirajte potrebnu tabelu u Supabase-u (kroz SQL Editor ili unapred u istom <code>psql</code>).</p>
+
+<h3>4) Uvezite CSV u tabelu</h3>
+<p>Već ste unutar Docker-a i povezani na bazu u <code>psql</code>, pa komandu pokrećete direktno:</p>
+<pre><code class="language-sql">\copy import.deals_raw
+from '/work/deals.csv'
+with (format csv, header true, delimiter ',', quote '"', null '');</code></pre>
+<p><code>null ''</code> znači: prazne vrednosti u CSV-u učitaće se kao <code>NULL</code>. Ako je u fajlu NULL obeležen tekstom <code>NULL</code>, koristite <code>null 'NULL'</code>.</p>
+
+<h3>5) Brza provera</h3>
+<pre><code class="language-sql">select count(*) as rows_loaded from import.deals_raw;
+select * from import.deals_raw limit 5;</code></pre>
+
+<p>Ako je fajl veoma veliki, učitavajte ga u batch-evima (po delovima), a indekse dodajte nakon importa - tako je obično brže i stabilnije.</p>

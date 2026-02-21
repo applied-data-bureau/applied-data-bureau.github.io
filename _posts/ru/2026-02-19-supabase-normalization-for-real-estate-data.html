@@ -67,3 +67,43 @@ excerpt: Привели сырые сделки к удобной схеме в 
 </ul>
 
 <p>Если нужен похожий результат: привожу таблицы в порядок, проектирую схему под аналитику, собираю витрины и готовлю доступ через API.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_supabase_submit_brief">Отправить бриф</a>
+</p>
+
+<h2>Технические детали: как загрузить большой локальный CSV в Supabase</h2>
+<p>Ниже рабочий сценарий, когда CSV-файл большой и лежит локально на вашем компьютере.</p>
+
+<h3>1) Берём IPv4-строку подключения в Supabase</h3>
+<ol>
+  <li>Откройте проект в Supabase: <strong>Project Settings -> Database -> Connection string</strong>.</li>
+  <li>Выберите режим <strong>URI</strong> и вариант для <strong>IPv4</strong> (Direct connection).</li>
+  <li>Скопируйте строку вида:</li>
+</ol>
+
+<pre><code>postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require</code></pre>
+
+<h3>2) Запускаем контейнер с Postgres-клиентом и пробрасываем папку с CSV</h3>
+<pre><code class="language-bash">docker run --rm -it \
+  -v "$(pwd)":/work \
+  postgres:16 \
+  psql "postgresql://postgres.&lt;project-ref&gt;:&lt;password&gt;@&lt;host&gt;:5432/postgres?sslmode=require"</code></pre>
+
+<p>Это одна команда: она сразу открывает <code>psql</code>, а текущая папка из терминала монтируется в контейнер как <code>/work</code>.</p>
+
+<h3>3) Создаём таблицу в Supabase (через psql)</h3>
+<p>Перед импортом просто создайте нужную таблицу в Supabase (через SQL Editor или заранее в том же <code>psql</code>).</p>
+
+<h3>4) Импортируем CSV в таблицу</h3>
+<p>Вы уже внутри Docker и подключены к БД в <code>psql</code>, поэтому выполняем команду напрямую:</p>
+<pre><code class="language-sql">\copy import.deals_raw
+from '/work/deals.csv'
+with (format csv, header true, delimiter ',', quote '"', null '');</code></pre>
+<p><code>null ''</code> означает: пустые значения в CSV будут загружены как <code>NULL</code>. Если в файле NULL помечен строкой <code>NULL</code>, используйте <code>null 'NULL'</code>.</p>
+
+<h3>5) Быстрая проверка</h3>
+<pre><code class="language-sql">select count(*) as rows_loaded from import.deals_raw;
+select * from import.deals_raw limit 5;</code></pre>
+
+<p>Если файл очень большой, загружайте его батчами (по частям) и после импорта добавляйте индексы — так обычно быстрее и стабильнее.</p>
