@@ -3,7 +3,12 @@ layout: post
 title: "UTF Perl Practice / как использовать UTF-8 в перле"
 type: post
 excerpt: "Практическая памятка по Unicode и UTF-8 в Perl: базовые принципы, кодировки, работа с Encode и типичные ошибки при обработке текста."
+og: /assets/posts/2021-01-27-og.jpg
 ---
+
+<p>Этот материал лежит здесь не только как «архивная» памятка. На практике Perl до сих пор очень удобен, когда нужно быстро перемолоть большие объёмы данных, собрать конвертер, почистить выгрузку или склеить legacy-интеграцию.</p>
+
+<p>И как только в таких задачах появляются данные не в ASCII (кириллица, европейские языки, смешанные кодировки, старые CSV/DB dumps), очень легко наступить на юникодные грабли: double-encoding, mojibake, wide character и поломанные регулярки.</p>
 
 <p>Лучшая статья по юникоду в перле, которую встречал, и которая, к сожалению, осталась только на веб-архиве:
 <a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">http://www.nestor.minsk.by/sr/2008/09/sr80902.html</a>.</p>
@@ -22,17 +27,21 @@ excerpt: "Практическая памятка по Unicode и UTF-8 в Perl:
 
 <p>Для начала определим неясности с терминологией. Многие так или иначе сталкивались с понятиями Unicode, UTF-8, UTF-16, UTF-32, UCS-2, UCS-4, и все они так обозначали юникод. Что же значит каждый из них?</p>
 
-<h3>Unicode — Character Encoding Standart</h3>
-<p>Стандарт для цифрового представления символов использующихся во всех языках. Поддерживается и развивается Консорциумом юникода (unicode.org).</p>
+<dl>
+<dt>Unicode — Character Encoding Standart</dt>
+<dd>Стандарт для цифрового представления символов использующихся во всех языках. Поддерживается и развивается Консорциумом юникода (unicode.org).</dd>
 
-<h3>UCS — Universal Character Set</h3>
-<p>Международный стандарт ISO/IEC 10646, который идентичен стандарту Unicode.</p>
+<dt>UCS — Universal Character Set</dt>
+<dd>Международный стандарт ISO/IEC 10646, который идентичен стандарту Unicode.</dd>
 
-<h3>UTF — Unicode (or UCS) Transformation Format</h3>
-<p>Способ представления символов Unicode в виде последовательности целых положительных чисел. - UTF-8, UTF-16, UTF-32 — различные UTF-трансформации, которые оперируют числами, занимающими соответственно 8, 16 и 32 бита. В UTF-8 минимальный размер символа — один октет (байт), максимальный — шесть. В UTF-16 минимальный размер — два октета, максимальный — четыре. В UTF-32 любой символ представляется в виде четырех октетов.</p>
 
-<h3>UCS-2, UCS-4</h3>
-<p>Способы кодирования по ISO/IEC 10646. Универсальный набор символов, закодированный двумя или четырьмя октетами (байтами) соответственно. UCS-2 полностью входит в UTF-16, но в UTF-16 есть составные символы (из четырех октетов), которые не входят в UCS-2. UCS-4 тождественна UTF-32.</p>
+<dt>UTF — Unicode (or UCS) Transformation Format</dt>
+<dd>Способ представления символов Unicode в виде последовательности целых положительных чисел. - UTF-8, UTF-16, UTF-32 — различные UTF-трансформации, которые оперируют числами, занимающими соответственно 8, 16 и 32 бита. В UTF-8 минимальный размер символа — один октет (байт), максимальный — шесть. В UTF-16 минимальный размер — два октета, максимальный — четыре. В UTF-32 любой символ представляется в виде четырех октетов.</dd>
+
+<dt>UCS-2, UCS-4</dt>
+<dd>Способы кодирования по ISO/IEC 10646. Универсальный набор символов, закодированный двумя или четырьмя октетами (байтами) соответственно. UCS-2 полностью входит в UTF-16, но в UTF-16 есть составные символы (из четырех октетов), которые не входят в UCS-2. UCS-4 тождественна UTF-32.</dd>
+
+</dl>
 
 <p>Итог: Unicode — набор символов, определенным образом упорядоченных: каждому символу поставлена в соответствие кодовая позиция. Любая из кодировок UTF — это представление символов Unicode в виде последовательности чисел. Поэтому, говоря, например, о переводе проекта на юникод, в большинстве случаев мы подразумеваем поддержку какой-либо из трансформаций. При необходимости за уточнениями можно обратиться к словарю терминов www.unicode.org/glossary и документации на сайте unicode.org.</p>
 
@@ -46,7 +55,7 @@ excerpt: "Практическая памятка по Unicode и UTF-8 в Perl:
 
 <p>Возьмем любой текстовый редактор с поддержкой UTF-8, напишем в нем простой кириллический символ А и сохраним в файл. Посмотрим шестнадцатеричное представление этого файла. В нем будет два байта: 0xD090. Это и есть представление символа CYRILLIC CAPITAL LETTER A, закодированное при помощи UTF-8. Но считывая в программе на Perl UTF-данные из различных источников, мы получаем совершенно различные их представления. Если взять Data::Dumper и сделать дамп таких строк, то возможны следующие варианты:</p>
 
-<pre><code>"А"
+<pre><code class="language-perl">"А"
 "\x{410}"
 "\x{d0}\x{90}"</code></pre>
 
@@ -58,23 +67,23 @@ excerpt: "Практическая памятка по Unicode и UTF-8 в Perl:
 
 <p>utf8::downgrade снимает флаг со строки:</p>
 
-<pre><code>utf8::downgrade("\x{d0}\x{90}") :'А'</code></pre>
+<pre><code class="language-perl">utf8::downgrade("\x{d0}\x{90}") :'А'</code></pre>
 
 <p>utf8::upgrade выставляет флаг на строку:</p>
 
-<pre><code>utf8::upgrade('А') : "\x{d0}\x{90}"</code></pre>
+<pre><code class="language-perl">utf8::upgrade('А') : "\x{d0}\x{90}"</code></pre>
 
 <p>utf8::encode преобразует символы в октеты, снимает флаг:</p>
 
-<pre><code>utf8::encode("\x{410}") : "А"</code></pre>
+<pre><code class="language-perl">utf8::encode("\x{410}") : "А"</code></pre>
 
 <p>utf8::decode преобразует октеты в символы, выставляет флаг (флаг выставляется только в том случае, если строка содержит символы с кодами, большими 255; см. perunicode).</p>
 
-<pre><code>utf8::decode("А") : "\x{410}"</code></pre>
+<pre><code class="language-perl">utf8::decode("А") : "\x{410}"</code></pre>
 
 <p>utf8::is_utf8 проверяет состояние флага. возвращает 1 в том случае, если на строке установлен utf-флаг:</p>
 
-<pre><code>utf8::is_utf8("\x{410}") = 1
+<pre><code class="language-perl">utf8::is_utf8("\x{410}") = 1
 utf8::is_utf8("\x{d0}\x{90}") = 1
 utf8::is_utf8('А') = undef</code></pre>
 
@@ -84,11 +93,11 @@ utf8::is_utf8('А') = undef</code></pre>
 
 <p>_utf8_off снимает флаг со строки. _utf8_on выставляет флаг на строку. encode_utf8 преобразует символы в октеты, снимает флаг. decode_utf8 преобразует преобразует октеты в символы, выставляет флаг (см. комментарий по поводу utf8::decode). encode преобразует символы в октеты указанной кодировки, снимает флаг:</p>
 
-<pre><code>encode("cp1251","\x{410}") = chr(0xC0)</code></pre>
+<pre><code class="language-perl">encode("cp1251","\x{410}") = chr(0xC0)</code></pre>
 
 <p>decode преобразует октеты указанной кодировки в символы, выставляет флаг (см. упомянутый комментарий).</p>
 
-<pre><code>decode("cp1251",chr(0xC0)) = "\x{410}"
+<pre><code class="language-perl">decode("cp1251",chr(0xC0)) = "\x{410}"
 decode("MIME-Header", "=?iso-8859-1?Q?Belgi=eb?=")
 = "Belgi\x{451}" (Belgiё)</code></pre>
 
@@ -98,7 +107,7 @@ decode("MIME-Header", "=?iso-8859-1?Q?Belgi=eb?=")
 
 <p>Напишем простую программу в кодировке UTF-8, запустим ее и посмотрим на вывод.</p>
 
-<pre><code>$_ = "А";
+<pre><code class="language-perl">$_ = "А";
 
 print Dumper $_; # "А"
 print lc; # А
@@ -107,7 +116,7 @@ print /(а)/i; # nothing</code></pre>
 
 <p>Как мы видим, строка оказалась без флага, встроенные функции (lc) не работают, регулярные выражения не работают. Воспользуемся уже известной нам функцией utf8::decode:</p>
 
-<pre><code>$_ = "А";
+<pre><code class="language-perl">$_ = "А";
 utf8::decode($_);
 print Dumper $_; # "\x{410}"
 print lc; # а
@@ -116,22 +125,22 @@ print /(а)/i; # nothing ?</code></pre>
 
 <p>Теперь эта строка юникодная, встроенные функции работают, первое регулярное выражение работает. Что же не так со вторым? Проблема в том, что символ, находящийся в регулярном выражении, — тоже кириллический, и он остался без флага. Возможны достаточно сложные варианты, которые я встречал в различном коде:</p>
 
-<pre><code>print /(\x{430})/i;</code></pre>
+<pre><code class="language-perl">print /(\x{430})/i;</code></pre>
 
 <p>или</p>
 
-<pre><code>use charnames ':full';
+<pre><code class="language-perl">use charnames ':full';
 print /(\N{CYRILLIC SMALL LETTER A})/i;</code></pre>
 
 <p>или даже</p>
 
-<pre><code>$a = ''.qr/(а)/i;
+<pre><code class="language-perl">$a = ''.qr/(а)/i;
 utf8::decode($a);
 print /$a/;</code></pre>
 
 <p>Но есть более удобный способ. Директива use utf8 «выполняет» utf8::decode( &lt;SRC&gt; ).</p>
 
-<pre><code>use utf8;
+<pre><code class="language-perl">use utf8;
 $_ = "А";
 print Dumper $_; # "\x{410}"
 print lc; # а
@@ -146,38 +155,38 @@ print /(а)/i; # А</code></pre>
 
 <p>Итак, все работает, но при этом мы получаем странное предупреждение, которого раньше не было:</p>
 
-<pre><code>Wide character in print at...</code></pre>
+<pre><code class="language-perl">Wide character in print at...</code></pre>
 
 <p>Проблема заключается в том, что перл не знает, поддерживается ли utf-8 данным дескриптором. Мы можем ему об этом сообщить:</p>
 
-<pre><code>binmode(STDOUT,':utf8'); # binmode используется
+<pre><code class="language-perl">binmode(STDOUT,':utf8'); # binmode используется
 # с уже открытым дескриптором</code></pre>
 
 <p>Точно так же возможно указать, что некоторый, открываемый нами файл — в кодировке UTF-8 через так называемые PerlIO Layers:</p>
 
-<pre><code>open my $f, '<:utf8', 'file.txt';</code></pre>
+<pre><code class="language-perl">open my $f, '<:utf8', 'file.txt';</code></pre>
 
 <p>Также мы можем снять флаг со строки перед выводом (utf8::encode) и отдать дескриптору поток байтов. Но есть простая директива use open, которая поможет решить данные вопросы:</p>
 
-<pre><code>use open ':utf8'; # только для файлов
+<pre><code class="language-perl">use open ':utf8'; # только для файлов
 use open qw(:std :utf8); # файлы и STD*
 # подробнее - perldoc open</code></pre>
 
 <p>Еще мы можем при помощи PerlIO указать поддерживаемую кодировку, если, например, хотим писать некоторый лог-файл в cp1251.</p>
 
-<pre><code>binmode($log, ':encoding(cp1251)');</code></pre>
+<pre><code class="language-perl">binmode($log, ':encoding(cp1251)');</code></pre>
 
 <p>Строки с флагом при работе с этим дескриптором будут автоматически переведены в указанную кодировку средствами PerlIO.
 <br>В результате вышеизложенного мы можем делать даже так:</p>
 
-<pre><code>use strict; use utf8; use open qw(:std :utf8);
+<pre><code class="language-perl">use strict; use utf8; use open qw(:std :utf8);
 my $все = "тест";
 sub печатать (@) { print @_ }
 печатать $все;</code></pre>
 
 <p>Для простоты можно сделать очень простой «прагматический» модуль, который будет для нас выполнять сразу все три действия, чтоб не писать трижды use:</p>
 
-<pre><code>package unistrict;
+<pre><code class="language-perl">package unistrict;
 use strict(); use utf8(); use open();
 sub import {
 $^H |= $utf8::hint_bits;
@@ -188,7 +197,7 @@ goto &open;::import;
 
 <p>И в дальнейшем:</p>
 
-<pre><code>use unistrict;</code></pre>
+<pre><code class="language-perl">use unistrict;</code></pre>
 
 <p>Что касается самого перла — это все, что нужно знать, для того, чтобы успешно использовать utf-8. Но еще мы рассмотрим на примерах, как скорректировать работу того или иного модуля, если он не соответствует нашим требованиям.</p>
 
@@ -200,19 +209,19 @@ goto &open;::import;
 
 <p>По умолчанию большинство DBD возвращают данные без флага.</p>
 
-<pre><code>my $dbh = DBI->connect('DBI:mysql:test');
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:mysql:test');
 ($a) = $dbh->selectrow_array('select "А"');
 print '$a = ',Dumper $a; # 'А'</code></pre>
 
 <p>Но опять же, для большинства DBD уже сделана поддержка utf-8.</p>
 
-<pre><code>DBD::mysql : mysql_enable_utf8 (требует DBD::mysql >= 4.004)
+<pre><code class="language-perl">DBD::mysql : mysql_enable_utf8 (требует DBD::mysql >= 4.004)
 DBD::Pg : pg_enable_utf8 (требует DBD::Pg >= 1.31)
 DBI:SQLite : unicode (требует DBD::SQLite >= 1.10)</code></pre>
 
 <p>Пример использования:</p>
 
-<pre><code>my $dbh = DBI->connect('DBI:Pg:dbname=test');
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:Pg:dbname=test');
 $dbh->{pg_enable_utf8} = 1;
 ($a) = $dbh->selectrow_array('select "А"');
 print '$a = ',Dumper $a; # "\x{410}"</code></pre>
@@ -221,7 +230,7 @@ print '$a = ',Dumper $a; # "\x{410}"</code></pre>
 
 <p>В TT заявлена поддержка UTF-8, но при этом имеются некоторые особенности. Чтобы файл шаблона был воспринят и перекодирован в строки с флагом, в начале каждого файла должен быть так называемый BOM-header. BOM расшифровывается как Byte Order Mark (порядок следования байт). Но получается, что BOM имеет значение только для UTF-16 и UTF-32, у которых минимальная единица — два или четыре октета (байта). Для UTF-8 BOM по спецификациям признается опциональным. А если учесть, что в шелл-скриптах наличие BOM перед шебангом (например, #!/usr/bin/perl) «ломает» скрипт, то его использование зачастую вообще сомнительно. Для UTF-8 BOM — это три байта 0xEFBBBF или \x{feff}. Соответственно, если вы хотите, чтобы TT читал файлы без BOM, но при этом все корректно работало, предлагаю воспользоваться одним из двух вариантов решения проблемы:</p>
 
-<pre><code>package Template::Provider::UTF8;
+<pre><code class="language-perl">package Template::Provider::UTF8;
 use base 'Template::Provider';
 use bytes;
 our $bom = "\x{feff}"; our $len = length($bom);
@@ -240,7 +249,7 @@ my $tt = Template->new( 'file',{ CONTEXT => $context }, ... );</code></pre>
 
 <p>или</p>
 
-<pre><code>package Template::Utf8Fix;
+<pre><code class="language-perl">package Template::Utf8Fix;
 BEGIN {
 use Template::Provider;
 use bytes; no warnings 'redefine';
@@ -265,7 +274,7 @@ my $tt = Template->new( 'file', ... );</code></pre>
 
 <p>Для версии ниже 3.21 рабочим способом может быть только переопределение метода param (аналогично примерам про TT). Начиная с версии 3.21 до 3.31 нужно указать кодировку раньше, чем будет обращение к методу param():</p>
 
-<pre><code># Запрос: test.cgi?utf=%d0%90
+<pre><code class="language-perl"># Запрос: test.cgi?utf=%d0%90
 use CGI 3.21;
 
 $cgi->charset('utf-8');
@@ -275,7 +284,7 @@ print Dumper $a; # "\x{410}"</code></pre>
 
 <p>Начиная с версии 3.31 данный способ перестает работать, но появляется другой способ: указание тега :utf8 при импорте:</p>
 
-<pre><code># Запрос: test.cgi?utf=%d0%90
+<pre><code class="language-perl"># Запрос: test.cgi?utf=%d0%90
 use CGI 3.31 qw(:utf8);
 
 $a = $cgi->param('utf');
@@ -304,7 +313,7 @@ print Dumper $a; # "\x{410}"</code></pre>
 
 <p>Также встречаются крайне странные и неприятные ошибки:</p>
 
-<pre><code>use strict;use utf8;
+<pre><code class="language-perl">use strict;use utf8;
 my $str = 'тест'; my $dbs = 'это тестовая строка';
 for ($str,$dbs) {
 sprintf "%-8s : %-8s\n", $_, uc;
@@ -317,11 +326,11 @@ print ++$a;
 
 <p>Результат:</p>
 
-<pre><code>123panic: memory wrap at test.pl line 12.</code></pre>
+<pre><code class="language-perl">123panic: memory wrap at test.pl line 12.</code></pre>
 
 или
 
-<pre><code>use strict;
+<pre><code class="language-perl">use strict;
 my $str = "\x{442}";
 my $dbs = "\x{43e} \x{442}\x{435}\x{441}".
 "\x{442} \x{43e}\x{432}\x{430}".
@@ -330,18 +339,18 @@ sprintf "%1s\n",lc for ($dbs,$str);</code></pre>
 
 <p>Результат:</p>
 
-<pre><code>Out of memory!</code></pre>
+<pre><code class="language-perl">Out of memory!</code></pre>
 
 <p>Также есть не совсем адекватное поведение:</p>
 
-<pre><code>use strict; use utf8;
+<pre><code class="language-perl">use strict; use utf8;
 print "1234567890123456780\n";
 printf "%-4.4s:%-4.4s\n", 'itstest','itstest';
 printf "%-4.4s:%-4.4s\n", "этотест","этотест";</code></pre>
 
 <p>Результат:</p>
 
-<pre><code>1234567890123456780
+<pre><code class="language-perl">1234567890123456780
 itst:itst
 этот :этот</code></pre>
 
@@ -351,7 +360,7 @@ itst:itst
 
 <p>Расскажу о паре интересных вещей, которые можно сделать, когда у нас имеются строки с UTF-флагом. Для начала упомяну достаточно интересный модуль Text::Unidecode:</p>
 
-<pre><code>use utf8;
+<pre><code class="language-perl">use utf8;
 use Text::Unidecode;
 print unidecode "\x{5317}\x{4EB0}";
 # That prints: Bei Jing
@@ -362,7 +371,7 @@ print unidecode "Это тест";
 
 <p>Еще одно достаточно интересное применение юникоду я нашел в проекте, который целиком работает на koi8-r. Нижеприведенный пример показывает, как можно пользоваться возможностями регулярных выражений с функционалом юникода, не переводя весь проект на UTF-8:</p>
 
-<pre><code>sub filter_koi ($) {
+<pre><code class="language-perl">sub filter_koi ($) {
 # передем koi8-r в строку
 local $_ = Encode::decode('koi8-r', shift);
 # заменим все html-entity
@@ -395,7 +404,7 @@ return Encode::encode('koi8-r',$_);
 
 <p>Ответы на многие вопросы можно найти в документации к перлу:
 
-<pre><code>perldoc perluniintro
+<pre><code class="language-perl">perldoc perluniintro
 perldoc perlunicode
 perldoc Encode
 perldoc encoding</code></pre>
