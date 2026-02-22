@@ -442,6 +442,14 @@ h3 {
   margin: 20px 0;
 }
 
+.content a.glightbox {
+  display: inline-block;
+}
+
+.content a.glightbox img {
+  cursor: zoom-in;
+}
+
 .content p {
   font-size: 1.1rem;
 }
