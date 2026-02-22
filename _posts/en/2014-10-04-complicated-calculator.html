@@ -1,22 +1,74 @@
 ---
 layout: post
-title: "Complex JavaScript Calculator"
+title: "Complex Sales Calculator: Moving from Excel to a Web App"
 type: post
-excerpt: "A browser-based calculator for complex sales estimates with many interdependent parameters and discount rules."
+excerpt: "A practical example from 2014: moving a complex ceiling-sales pricing workflow from manual calculations/Excel to a browser calculator with instant recalculation, hints, and fewer errors."
+og: /assets/posts/2014-10-04-complicated-calculator-en.jpg
 ---
 
-<p>This calculator automated a complicated ceiling-sales pricing workflow where manual calculations could take up to 30 minutes per client.</p>
+<p>This is an archival but still useful example from practice: the project was built on <strong>October 4, 2014</strong> (as of February 2026, that is <strong>11+ years ago</strong>). Today I would typically use more modern and more expressive web frameworks for this kind of task, but the project still shows well <strong>why businesses move from Excel to a web application</strong>.</p>
 
-<p>The model had many dependent parameters and discount interactions, so manual work was slow and error-prone.</p>
+<h2>1. The Project from a Business Perspective</h2>
 
-<h3>Why web instead of Excel</h3>
+<p>The calculator was built to automate sales estimates for stretch ceilings. The pricing logic was complicated: many parameters, dependencies, and discount rules affecting both intermediate and final totals.</p>
 
-<p>The client initially considered Excel. I proposed a web version to avoid version/install issues, centralize logic, and deliver instant recalculation for sales agents.</p>
+<p>Before the calculator, preparing an estimate for one client could take up to 30 minutes, which led to typical problems:</p>
+<ul>
+  <li>slow sales work and lost momentum during client conversations,</li>
+  <li>manual calculation errors affecting margin and customer trust,</li>
+  <li>difficult onboarding for new sales staff due to many exceptions and rules.</li>
+</ul>
 
-<p>Frontend stack: JavaScript computation + Bootstrap UI.</p>
+<p>Initially, the client considered implementing this in Excel. That is a common first idea, but for this workflow it quickly runs into limitations.</p>
 
-<p style="text-align: center;"><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/calc.png"><img style="border: solid 1px #f9f9f9; padding: 4px; border-radius: 3px;" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/calc.th.png" class="img-fluid" alt="Complex calculator UI"></a></p>
+<p class="pb-4">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_complicated_calculator_en_submit_brief">Send Brief</a>
+</p>
 
-<p>The final solution reduced estimation time, lowered onboarding complexity, and improved consistency of sales quotes.</p>
+<h2>2. Why a Web App Instead of Excel</h2>
 
-<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/src/complicated-calculator-ru-layout.html">Interactive version</a></p>
+<p>A web version of the calculator was proposed instead of Excel. The key idea was to move business logic into a single interface that works the same way for the whole team.</p>
+
+<p>Practical advantages of a web app over Excel in this project:</p>
+<ul>
+  <li>no dependency on specific Excel versions or local setup on each computer,</li>
+  <li>one calculation logic for all employees instead of diverging spreadsheets,</li>
+  <li>instant recalculation when parameters change,</li>
+  <li>centralized updates of pricing and discount rules,</li>
+  <li>easier storage and reuse of estimate variants,</li>
+  <li>lower onboarding friction thanks to UI hints.</li>
+</ul>
+
+<p>All calculations were implemented in frontend JavaScript, which provided immediate feedback in the UI without waiting for server responses and made future rule changes simpler.</p>
+
+<h2>3. Final Result</h2>
+
+<p>The interface was built with <a href="http://getbootstrap.com">Bootstrap</a> (a pragmatic choice at the time to reach a working tool quickly). In this publication the demo is preserved <strong>as is</strong> on an old Bootstrap stack, without refactoring, so clients can click through the logic and behavior.</p>
+
+<p>
+  <a href="/assets/posts/2014-10-04-complicated-calculator-en.jpg">
+    <img src="/assets/posts/2014-10-04-complicated-calculator-en.jpg" class="img-fluid" style="max-height: 420px; width: auto;" alt="Stretch ceiling sales calculator interface">
+  </a>
+</p>
+
+<p><a href="{{ '/demos/ceilcalc/en/' | relative_url }}"><strong>Interactive demo version of the stretch ceiling calculator</strong></a></p>
+
+<p>After rollout, a sales agent only needed to enter parameters and the estimate updated immediately. The agent no longer had to memorize all exceptions, because the interface included contextual hints and notes.</p>
+
+<h2>4. What the Calculator Handled</h2>
+
+<ul>
+  <li>multiple ceilings in a single estimate (for example kitchen, living room, bathroom),</li>
+  <li>different ceiling types (PVC and fabric) with shared and type-specific logic,</li>
+  <li>discount rules and interdependent parameters,</li>
+  <li>stateful estimate data with recalculation on change,</li>
+  <li>export of the final estimate to Excel.</li>
+</ul>
+
+<p>Implementation-wise, there was a shared “ceiling” entity for common calculations plus specialized descendants for type-specific behavior.</p>
+
+<h2>5. Why This Example Is Still Useful</h2>
+
+<p>Although the implementation is historical (2014), the scenario is still current: when sales relies on a complex formula with exceptions and discounts, moving from Excel/manual calculations to a web tool usually gives a fast payoff in speed, quality, and team onboarding.</p>
+
+<p>Today I would usually choose a modern framework (depending on context: React, Vue, Svelte, etc.) and a more modern UI architecture. But as a demonstration of <strong>practical business impact</strong>, this example is still representative.</p>

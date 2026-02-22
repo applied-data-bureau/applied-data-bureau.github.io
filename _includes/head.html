@@ -113,6 +113,19 @@
     {% assign og_image_name = "meditate-og-1200x630.png" %}
   {% endif %}
   {% assign og_image_href = canonical_base | append: "/img/og/" | append: og_image_name %}
+  {% assign custom_og = page.og | default: "" | strip %}
+  {% if custom_og != "" %}
+    {% if custom_og contains "://" %}
+      {% assign og_image_href = custom_og %}
+    {% else %}
+      {% assign custom_og_prefix = custom_og | slice: 0, 1 %}
+      {% if custom_og_prefix == "/" %}
+        {% assign og_image_href = canonical_base | append: custom_og %}
+      {% else %}
+        {% assign og_image_href = canonical_base | append: "/" | append: custom_og %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
   {% if page_title != "" %}
     {% assign meta_title = page_title | append: " · " | append: site.title %}
   {% else %}
@@ -134,8 +147,10 @@
   <meta property="og:description" content="{{ page_description | escape }}">
   <meta property="og:url" content="{{ canonical_href }}">
   <meta property="og:image" content="{{ og_image_href }}">
+  {% if custom_og == "" %}
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  {% endif %}
   <meta property="og:image:alt" content="{{ site.title | escape }}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ meta_title | escape }}">
@@ -312,6 +327,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="{{ '/assets/bootstrap.min.css' | relative_url }}" rel="stylesheet">
   <link href="{{ '/assets/serif-theme.css' | relative_url }}" rel="stylesheet">
+  {% if page.layout == "post" %}
+  <link href="{{ '/assets/glightbox.min.css' | relative_url }}" rel="stylesheet">
+  {% endif %}
   <link href="{{ '/assets/prism.css' | relative_url }}" rel="stylesheet">
   {% if site.gtm_container_id and site.gtm_container_id != "" %}
   <script>

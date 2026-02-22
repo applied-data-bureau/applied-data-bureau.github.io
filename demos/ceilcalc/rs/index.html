@@ -1,0 +1,1459 @@
+---
+---
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+	<title>Kalkulator zategnutih plafona</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/non-responsive.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/style.css"/>
+</head>
+
+<body style="padding-top: 70px; padding-bottom: 40px;">
+
+<input type="hidden" name="id" value="1">
+<input type="hidden" name="date" value="2014.10.04">
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Navigacija</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ '/complicated-calculator' | relative_url }}" style="color: #fff;">&larr; Nazad na objavu <span style="color: #ed2a23;">Biroa</span>: složeni kalkulator</a>
+		</div>
+
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<p class="navbar-text navbar-right">
+				<button type="button" class="btn btn-xs btn-danger btn-save" disabled="disabled">Sačuvaj</button>
+			</p>
+			<p class="navbar-text navbar-right" style="color: #f99">
+				Ukupno: <span class="main-total-sum">0</span> €
+			</p>
+			<p class="active navbar-text navbar-right">Obračun 8430 &bull; Ivanov</p>
+		</div><!-- /.navbar-collapse -->
+	</div> <!-- div.container -->
+</nav>
+
+<div class="container">
+
+<form role="form">
+
+<div class="row">
+	<div class="col-xs-7">
+		
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Klijent</span>
+				</label>
+			</div>
+			<div class="col-xs-4 control-group">
+				<input class="form-control" name="surname" type="text" placeholder="Prezime" value="Ivanov" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="name" type="text" placeholder="Ime" value="Ivan" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="patronymic" type="text" placeholder="Srednje ime" value="Ivanovič" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Telefon</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="phone" type="text" value="123-45-67" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Adresa</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="address" type="text" value="" />
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="col-xs-5">
+		
+		<label class="control-label" style="font-weight: normal">Komentar uz obračun</label>
+		
+		<textarea class="form-control" name="comment" rows="5">Pokloniti klijentu mali poklon od firme</textarea>
+		
+	</div>
+</div>
+
+<hr>
+
+<div class="ajax-data">
+
+<div class="header-parameters">
+
+<div class="row">
+	<div class="col-xs-12 start-help">
+		
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-xs-2 align-right company control-group error">
+		<label class="custom-label control-label">
+			<span class="popover-label control-label" data-ref="company">Kompanija</span>
+		</label>
+	</div>
+	<div class="col-xs-4 company control-group error">
+		<select class="form-control" name="company">
+			<option value=""           ></option>
+			<option value="firm1"  >Pravno lice 1</option>
+			<option value="firm2"     >Pravno lice 2</option>
+			<option value="dealer"     >Diler</option>
+		</select>
+	</div>
+	<div class="col-xs-6 dealer">
+		<input class="form-control" name="dealer" type="text"/>
+	</div>
+</div>
+
+<div class="row form-group error-firm">
+	<div class="col-xs-2 align-right">
+		<label class="custom-label">
+			<span class="popover-label" data-ref="ceiling-addition">Dodavanje plafona</span>
+		</label>
+	</div>
+	<div class="col-xs-4">
+		<input class="form-control" name="ceiling-name" type="text" placeholder="Naziv" />
+	</div>
+	<div class="col-xs-6">
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_pvc" type="button">Dodaj PVC plafon</button>
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_tex" type="button">Dodaj plafon od tkanine</button>
+    </div>
+</div>
+
+</div> <!-- div.header-parameters -->
+
+
+<div class="row no-seilings">
+	<div class="col-xs-12 text-center muted" style="padding: 2em 0; font-size: 130%;">
+		U obračun nije dodat nijedan plafon
+		<br><br><span style="color: #c9302c; font-weight: bold;">Kliknite „Dodaj PVC plafon“ ili „Dodaj plafon od tkanine“ iznad<br>da započnete obračun njihove cene</span>
+	</div>
+</div>
+
+<div class="seilings-list">
+
+<legend>Lista plafona <small class="seiling-alert">Plafoni sa crvenom oznakom (neobračunati) ne ulaze u ukupnu cenu obračuna.</small></legend>
+
+<ul class="nav nav-tabs">
+<!--
+    <li><a href="#pvc1" data-toggle="tab">Kupatilo PVC</a></li>
+    <li class="active"><a href="#textile1" data-toggle="tab">Dnevna soba tkanina</a></li>
+-->
+</ul>
+
+<br>
+
+<div class="tab-content">
+
+</div> <!-- .tab-content -->
+
+</div> <!-- div.seilings-list -->
+
+</div> <!-- div.ajax-data -->
+
+</form>
+
+</div> <!-- .containter -->
+
+<!-- Kонтейнер для хранения шаблонов форм потолков -->
+<div class="seiling-data" style="display: none;">
+
+
+	<!-- Tab 1 -->
+	<div class="tab-pane" id="pvc">
+
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Platno: <strong class="texture-discount-sum">32 440</strong> €
+			sa popustom <strong class="discount-value">0</strong>%
+			(<strong class="discount-type">prvi/parni plafon</strong>);
+			bez popusta: <strong class="texture-sum">32 440</strong> €
+			Opcije: <strong class="options-sum">32 440</strong> €
+		</div>
+
+		<div class="alert alert-danger main-alert-error">
+			Za obračun cene plafona popunite obavezne parametre.
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Naziv</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Naziv" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Uklanjanje plafona iz obračuna</span>
+				<span class="muted">(pri kliku će biti tražena potvrda)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Ukloni plafon iz obračuna</button>
+				<span class="danger" style="padding-left: 2em;">Pažnja! Obrisane podatke nije moguće vratiti!</span>
+			</div>
+		</div>
+
+		<div class="row control-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Maks. visina</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="pvc-max-height" checked>od 2 do 3,6 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="pvc-max-height">od 3,6 do 5 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="pvc-max-height">od 5 do 7 m
+				</label>  
+				<span class="danger falsework">Pažnja! Skelu obezbeđuje klijent!</span>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Dužina prostorije</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-length" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Širina prostorije</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-width" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right area control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="area">Površina</span>
+				</label>
+			</div>
+			<div class="col-xs-2 area control-group error">
+				<div class="input-group">
+					<input class="form-control" name="pvc-area" type="number" step="0.01" />
+					<span class="input-group-addon">m²</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Obim</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group pvc-perimeter">
+			<div class="col-xs-5">
+				<p class="dt perimeter-type">Obim na osnovu površine, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-perimeter"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Konačni obim za obračun, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+		<div class="row form-group pvc-area">
+			<div class="col-xs-5">
+				<p class="dt">Površina na osnovu dužine i širine, m²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-area"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Konačna površina za obračun, m²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-area"></p>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Tekstura</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="pvc-texture">
+					<option value="0" selected>Nije izabrano</option>
+					<option value="101">M mat bela 218<span class="text-info">; 1 m²: <span style="color:red;">650<span> €, ukupno: <span>3 600</span> €</span></option>
+					<option value="102">M mat u boji 218</option>
+					<option value="103">M mat bela 300/350</option>
+					<option value="104">M mat u boji 300</option>
+					<option value="105">M mat bela 560</option>
+					<option value="106">S saten bela 218</option>
+					<option value="107">S saten u boji 218</option>
+					<option value="108">S saten bela 300/350</option>
+					<option value="109">S saten u boji 300</option>
+					<option value="110">S saten bela 560</option>
+					<option value="111">L sjaj bela 165</option>
+					<option value="112">L sjaj u boji 165</option>
+					<option value="113">SL sjaj bela 194</option>
+					<option value="114">SL sjaj u boji 194</option>
+					<option value="115">L sjaj bela 300/350</option>
+					<option value="116">L sjaj u boji 300/350</option>
+					<option value="117">L sjaj bela 500</option>
+					<option value="118">OT transparentna 142</option>
+					<option value="119">stil, mermer 142</option>
+					<option value="120">fantazija-antilop 142</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Pun cenovnik platna</button>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="baguette">Tip bagete</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="1" checked>Plastika
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="2">Aluminijum
+				</label>  
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="masking-tape">Maskirna traka</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="1" checked>Bez trake
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="2">Bela
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="3">Crna
+				</label> 
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="4">U boji
+				</label> 
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right bypassing-tube control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="bypassing-tube">Obilaženje cevi</span>
+				</label>
+			</div>
+			<div class="col-xs-2 bypassing-tube control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right corners control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="corners">Uglovi</span>
+				</label>
+			</div>
+			<div class="col-xs-2 corners control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group chandelier">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="chandelier">Luster</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group chandelier">
+				<div class="input-group">
+					<input class="form-control" name="pvc-chandelier" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right control-group luminaire">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="luminaire">Montaža svetiljke</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group luminaire">
+				<div class="input-group">
+					<input class="form-control" name="pvc-luminaire" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Svetiljka</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="pvc-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>nije izabrano</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Količina</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-lamp" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Sijalica</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="pvc-light-bulb" class="form-control">
+					<option value="0" selected>nije izabrano</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Dodatni parametri</span>
+			</div>
+		</div>
+
+</div>
+
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group keramogranit">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="keramogranit">Keramogranit</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group keramogranit">
+				<div class="input-group">
+					<input class="form-control" name="pvc-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group soffit-space">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="soffit-space">Prostor iza garnišne</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group soffit-space">
+				<div class="input-group">
+					<input class="form-control" name="pvc-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group timber">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="timber">Greda</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group timber">
+				<div class="input-group">
+					<input class="form-control" name="pvc-timber" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-moldings">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Plafonska bageta</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-moldings">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group led-strip">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="led-strip">Ugradnja LED trake</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group led-strip">
+				<div class="input-group">
+					<input class="form-control" name="pvc-led-strip" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group curvilinearity">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="curvilinearity">Krivolinijski deo</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group curvilinearity">
+				<div class="input-group">
+					<input class="form-control" name="pvc-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group inner-cut">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="inner-cut">Unutrašnji izrez</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group inner-cut">
+				<div class="input-group">
+					<input class="form-control" name="pvc-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ventilation">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ventilation">Otvor za ventilaciju</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ventilation">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ventilation" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+						
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group air-vent">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="air-vent">Montaža ostrvskog aspiratora</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group air-vent">
+				<div class="input-group">
+					<input class="form-control" name="pvc-air-vent" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-cornice">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Plafonska garnišna (tačka pričvršćivanja)</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-cornice">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group transformer">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="transformer">Ugradnja transformatora / kontrolera</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group transformer">
+				<div class="input-group">
+					<input class="form-control" name="pvc-transformer" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group sensor">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="sensor">Ugradnja senzora</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group sensor">
+				<div class="input-group">
+					<input class="form-control" name="pvc-sensor" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group separator">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="separator">Razdelnik</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group separator">
+				<div class="input-group">
+					<input class="form-control" name="pvc-separator" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group art-prints">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="art-prints">Art štampa</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group art-prints">
+				<div class="input-group">
+					<input id="ceiling-pvc-square" class="form-control" name="pvc-art-prints" type="number" step="0.01" />
+					<span class="input-group-addon">m²</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="seam-alignment">Centriranje šava</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="pvc-seam-alignment">
+				</label>  
+			</div>
+		</div>
+</div> <!-- collapse -->
+			
+	</div> <!-- /Tab 1 -->
+
+	<!-- Tab 2 -->
+	<div class="tab-pane" id="tex">
+		
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Platno: <strong class="texture-discount-sum">32 440</strong> €
+<!--			sa popustom <strong class="discount-value">0</strong>%
+			(первый/чётный потолок);
+			bez popusta: <strong class="texture-sum">32 440</strong> €
+-->
+			Opcije: <strong class="options-sum">32 440</strong> €
+		</div>
+	
+		<div class="alert alert-danger main-alert-error">
+			Za obračun cene plafona popunite obavezne parametre.
+		</div>
+	
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Naziv</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Naziv" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Uklanjanje plafona iz obračuna</span>
+				<span class="muted">(pri kliku će biti tražena potvrda)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Ukloni plafon iz obračuna</button>
+				<span class="danger" style="padding-left: 2em;">Pažnja! Obrisane podatke nije moguće vratiti!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Maks. visina</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="tex-max-height" checked>od 2 do 3,6 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="tex-max-height">od 3,6 do 5 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="tex-max-height">od 5 do 7 m
+				</label>  
+				<span class="danger falsework">Pažnja! Skelu obezbeđuje klijent!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Tekstura</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="tex-texture">
+					<option value="0" selected>Nije izabrano</option>
+					<option value="200">Clipso klasični 705S Bela 300/400/500; 1 m²: 1'080 €, ukupno: 3'600 €</option>
+					<option value="201">Clipso klasični 705C U boji 300/400/500</option>
+					<option value="202">Clipso akustični 705A Bela 300/400/500</option>
+					<option value="203">Clipso akustični 705A U boji 300/400/500</option>
+					<option value="204">Clipso akustični ekonomični 495D Bela 300/400/500</option>
+					<option value="205">Clipso akustični ekonomični 495D U boji 300/400/500</option>
+					<option value="206">Clipso svetlopropusna 507PT Bela 300/400/500</option>
+					<option value="207">Clipso antibakterijska 705H Bela 300/400/500</option>
+					<option value="208">Clipso vodoodbojna 705Nosweat Bela 300/400/500</option>
+					<option value="209">Clipso otporna na mrlje 705Nostain Bela 300/400/500</option>
+					<option value="210">Clipso MONBLAN 607M Bela 300/400/500</option>
+					<option value="211">Descor topli Bela 310/410/510</option>
+					<option value="212">Descor hladni Bela 310/410/510</option>
+					<option value="213">Clipso klasični 705S Bela 300/400/500</option>
+					<option value="214">Clipso klasični 705C U boji 300/400/500</option>
+					<option value="215">Clipso akustični 705A Bela 300/400/500</option>
+					<option value="216">Clipso akustični 705A U boji 300/400/500</option>
+					<option value="217">Clipso akustični ekonomični 495D Bela 300/400/500</option>
+					<option value="218">Clipso akustični ekonomični 495D U boji 300/400/500</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Pun cenovnik platna</button>
+			</div>
+		</div>
+
+		<div class="alert alert-error tex-calc-error">
+			<p class="text-danger">
+				Za izabrano platno i maksimalne dimenzije nije moguće izvesti rez.
+			</p>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions">Maks. dužina prost.</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-length" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions" data-title="Maksimalna širina prostorije">Maks. širina prost.</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-width" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Obim</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group tex-calc">
+			<div class="col-xs-4">
+				<p class="dt">Dužina sa dodatkom, m:</p>
+				<p class="dt">Širina sa dodatkom, m:</p>
+				<p class="dt">Širina izabranog rolna, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd length-margin"></p>
+				<p class="dd width-margin"></p>
+				<p class="dd tex-width"></p>
+			</div>
+			<div class="col-xs-2">
+				<p class="length-cut"></p> <!-- (dužina reza) -->
+				<p class="width-cut"></p> <!-- (dužina reza) -->
+			</div>
+			<div class="col-xs-4">
+				<p class="dt">Površina reza, m²:</p>
+				<p class="dt">Obim po širini i dužini, m:</p>
+				<p class="dt">Obim za obračun, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd cut-area"></p>
+				<p class="dd calc-perimeter"></p>
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="bypassing-tube">Obilaženje cevi</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="corners">Uglovi</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="chandelier">Luster</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-chandelier" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="luminaire">Montaža svetiljke</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-luminaire" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Svetiljka</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="tex-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>nije izabrano</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Količina</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-lamp" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Sijalica</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="tex-light-bulb" class="form-control">
+					<option value="0" selected>nije izabrano</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Dodatni parametri</span>
+			</div>
+		</div>
+		
+</div>
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="keramogranit">Keramogranit</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="soffit-space">Prostor iza garnišne</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="timber">Greda</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-timber" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Plafonska bageta</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="led-strip">Ugradnja LED trake</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-led-strip" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="curvilinearity">Krivolinijski deo</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="inner-cut">Unutrašnji izrez</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ventilation">Otvor za ventilaciju</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ventilation" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="air-vent">Montaža ostrvskog aspiratora</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-air-vent" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Plafonska garnišna (tačka pričvršćivanja)</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="transformer">Ugradnja transformatora / kontrolera</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-transformer" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="sensor">Ugradnja senzora</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-sensor" type="number" step="1" />
+					<span class="input-group-addon">kom</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="tex-canvas-timber">Umetanje 2 platna u 1 bagetu sa gredom</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="tex-canvas-timber">
+				</label>  
+			</div>
+		</div>
+		
+</div> <!--  collapse -->
+
+	</div> <!-- /Tab 2 -->
+</div>
+<!-- // Kонтейнер для хранения шаблонов форм потолков -->
+
+
+<!-- Kонтейнер для хранения всплывающих плашек со справочной информацией -->
+<div class="popover-data" style="display: none;">
+
+<!-- Kompanija -->
+<div class="company">
+	<p>Od izbora kompanije zavisi sistem obračuna popusta i akcija.</p>
+	<dl>
+		<dt>Pravno lice 1</dt>
+		<dd>Neparni PVC plafoni: 10%+10%; parni PVC plafoni: 50%+10%. Svetiljke po punoj ceni.</dd>
+		<dt>Pravno lice 2, dileri</dt>
+		<dd>Neparni PVC plafoni: 10%+5%; parni PVC plafoni: 50%+5%. Plastične svetiljke su gratis uz kupovinu sijalice.</dd>
+	</dl>
+	<p>Popust za PVC plafone je prikazan direktno iznad forme sa parametrima plafona (ispod).</p>
+	<p>Ako je izabran „Diler“, navedite o kom dileru je reč.</p>
+</div>
+<!-- Подарочная карта -->
+<div class="discount">
+	<p>Ako postoji kartica, primenjuje se odgovarajući popust na konačnu cenu narudžbine.</p>
+</div>
+<!-- Kомментарии -->
+<div class="comment">
+	<p>Bilo koja dodatna informacija o klijentu.</p>
+</div>
+<!-- Dodavanje plafona -->
+<div class="ceiling-addition">
+	<p>Plafoni se dodaju kao kartice ispod.</p>
+	<p>Redosled kartica: prvo su PVC plafoni po opadajućoj ceni platna, zatim plafoni od tkanine.</p>
+	<p>Naziv je poželjno navesti prema klijentu kada se računa više od 3 plafona u jednoj porudžbini. Svaki plafon se obračunava posebno čak i ako su u istoj prostoriji.</p>
+</div>
+
+
+<!-- ПВХ ТKАНЬ Naziv и удаление -->
+<div class="ceiling-name" title="Naziv i brisanje">
+	<p>Naziv plafona treba navesti radi boljeg razumevanja sa klijentom i bez zabune u listi plafona. Pri promeni naziva odmah se menja tekst na kartici iznad.</p>
+	<p>Brisanje plafona ga potpuno isključuje iz obračuna. Obrisani plafon nije moguće vratiti (bolje napraviti kopiju obračuna i tu izračunati varijantu bez nekog plafona). Brisanje menja redosled, što utiče na parne/neparne popuste.</p>
+</div>
+
+<!-- ПВХ ТKАНЬ Maksimalna visina prostorije -->
+<div class="max-height" title="Maksimalna visina prostorije">
+	<p>Ako se plafon montira iznad stepeništa, visina se računa od najniže stepenice do najviše tačke osnovnog plafona.</p>
+	<p>Ako je izabrana nestandardna visina (ne od 2 do 3,6 m), cena plafona (platno, lusteri, svetiljke i svi dodaci) se povećava:</p>
+	<dl>
+		<dt>od 3,6 do 5 m</dt>
+		<dd>+20% na konačan iznos ovog plafona.</dd>
+		<dt>od 5 do 7 m</dt>
+		<dd>+30% na konačan iznos ovog plafona.</dd>
+	</dl>
+	<p>Pored toga, kod nestandardne visine klijentu treba reći da on obezbeđuje skelu.</p>
+</div>
+<!-- ПВХ Dužina i širina prostorije -->
+<div class="ceiling-dimensions" title="Dužina i širina prostorije">
+	<p>Unesite dužinu i širinu ako površina i obim nisu poznati. Posle klika na „Izračunaj površinu i obim“, površina i obim će biti izračunati i upisani ispod.</p>
+	<p>Kod PVC plafona vrednosti dužine i širine se ne koriste direktno u obračunu cene i služe samo za izračunavanje obima i površine (klik na „Izračunaj površinu i obim“).</p>
+</div>
+<!-- ТKАНЬ Maksimalna dužina i širina prostorije -->
+<div class="max-ceiling-dimensions" title="Maksimalna dužina i širina prostorije">
+	<p>Maksimalna dužina i širina prostorije, bez dodataka.</p>
+	<p>Posle klika na „Izračunaj površinu reza i obim“, površina i obim će biti izračunati i upisani ispod.</p>
+	<p>Kod plafona od tkanine maksimalna dužina i maksimalna širina prostorije (ili samo dužina i širina ako je prostorija pravougaona) koriste se za izračunavanje potrebnih dodataka.</p>
+</div>
+<!-- ПВХ ТKАНЬ Površina -->
+<div class="area">
+	<p>Stvarna površina plafona sa svim izrezima.</p>
+	<p>Vrednost se čuva sa dve decimale, ali se u proračunu koristi zaokružena celobrojna vrednost. Decimalni deo do 0,24 (uključivo) zaokružuje se naniže, a preko 0,24 naviše.</p>
+</div>
+<!-- ПВХ ТKАНЬ Obim -->
+<div class="perimeter">
+	<p>Vrednost se čuva sa dve decimale, ali se u proračunu koristi vrednost zaokružena naviše na ceo broj.</p>
+	<p>Ako obim nije unet, sistem ga računa <i>približno (!)</i> po formuli [kvadratni koren površine]×4.</p>
+	<p>Tačan obim se računa na osnovu dužine i širine prostorije ili se unosi ručno.</p>
+</div>
+<!-- ПВХ ТKАНЬ Uglovi -->
+<div class="corners">
+	<p>Svi unutrašnji i spoljašnji uglovi prostorije. Na krivolinijskim delovima uglovi se računaju i u tačkama preloma radijusa.</p>
+	<p>Podrazumevana vrednost je 4. Do četiri komada svaki košta 90 €, a pet i više po 150 €.</p>
+</div>
+<!-- ПВХ ТKАНЬ Tekstura -->
+<div class="texture">
+	<p>Cena metra platna zavisi od površine prostorije. Što je površina veća, manja je cena po kvadratnom metru.</p>
+	<p>Tekstura i površina prostorije utiču na cenu. Sve varijante cena su na stranici „Pun cenovnik platna“.</p>
+	<p>Ako je površina već zadata, prikazuje se cena za svaku teksturu.</p>
+</div>
+<!-- ПВХ Tip bagete -->
+<div class="baguette">
+	<p>Plastična bageta je besplatna. Aluminijumska bageta je 40 €/m.</p>
+	<p>Podrazumevano se računa zidna bageta. Ako je potrebna montaža na plafonsku bagetu, pogledajte „Dodatni parametri“.</p>
+</div>
+<!-- ПВХ Maskirna traka -->
+<div class="masking-tape" title="Maskirna traka">
+	<p>Kod izbora trake u boji količina koja ulazi u predračun mora se zaokružiti naviše na broj deljiv sa pet. Bela i crna traka zaokružuju se naviše na ceo broj.</p>
+</div>
+<!-- ПВХ ТKАНЬ Luster -->
+<div class="chandelier">
+	<p>Montaža svakog lustera ili viseće svetiljke košta 500 € bez obzira na tip pričvršćivanja.</p>
+</div>
+<!-- ПВХ ТKАНЬ Montaža svetiljke -->
+<div class="luminaire" title="Montaža svetiljke">
+	<p>Montaža jedne svetiljke košta 500 €.</p>
+	<p>U cenu su uključeni kablovi po plafonu, obeležavanje, kleme, termo-prstenovi i montaža svetiljke. Ovo polje NIJE vezano za broj samih svetiljki ispod.</p>
+</div>
+<!-- ПВХ ТKАНЬ Obilaženje cevi -->
+<div class="bypassing-tube">
+	<p>Obilaženje jedne cevi standardnog prečnika košta 300 €.</p>
+</div>
+<!-- ПВХ ТKАНЬ Svetiljka -->
+<div class="lamp">
+	<p>Ako je izabrana svetiljka, pojavljuje se obavezno polje za količinu.</p>
+	<p>U nekim slučajevima svetiljka je gratis, ali samo uz izbor sijalice (broj sijalica tada mora biti jednak broju svetiljki).</p>
+</div>
+<!-- ПВХ ТKАНЬ Sijalica -->
+<div class="light-bulb">
+	<p>Ako je izabrana sijalica, pojavljuje se obavezno polje za količinu.</p>
+	<p>2700 K, 2800 K — toplo belo svetlo.</p>
+	<p>4100 K — hladno belo svetlo.</p>
+</div>
+<!-- ПВХ ТKАНЬ Keramogranit -->
+<div class="keramogranit">
+	<p>Cena je uslovljena složenošću radova.</p>
+</div>
+<!-- ПВХ ТKАНЬ Prostor iza garnišne -->
+<div class="soffit-space">
+	<p>Montaža plafona u prostor iza garnišne ili teško dostupnom prostoru.</p>
+</div>
+<!-- ПВХ ТKАНЬ Greda -->
+<div class="timber">
+	<p>Koristi se za različite potrebe pri montaži plafona.</p>
+</div>
+<!-- ПВХ ТKАНЬ Plafonska bageta -->
+<div class="ceiling-moldings">
+	<p>Montaža plafona na plafonsku bagetu. Vrednost nije algoritamski vezana za obim.</p>
+</div>
+<!-- ПВХ ТKАНЬ Ugradnja LED trake -->
+<div class="led-strip">
+	<p>Samo rad na montaži LED trake: 200 €/m. Traka se kupuje i plaća posebno.</p>
+</div>
+<!-- ПВХ ТKАНЬ Krivolinijski deo -->
+<div class="curvilinearity">
+	<p>Dužina krivolinijskog dela plafona.</p>
+</div>
+<!-- ПВХ ТKАНЬ Unutrašnji izrez -->
+<div class="inner-cut">
+	<p>Unutrašnji izrez u PVC platnu (u proizvodnji) ili na platnu od tkanine (radi se na licu mesta).</p>
+</div>
+<!-- ПВХ ТKАНЬ Otvor za ventilaciju -->
+<div class="ventilation">
+	<p>U cenu je uključena montaža prstena potrebnog prečnika i povezivanje postojeće ventilacione cevi.</p>
+</div>
+<!-- ПВХ ТKАНЬ Montaža ostrvskog aspiratora -->
+<div class="air-vent">
+	<p>Naplaćuje se ako aspirator treba da ugradimo mi. U cenu su uključeni svi radovi.</p>
+</div>
+<!-- ПВХ ТKАНЬ Plafonska garnišna (tačka pričvršćivanja) -->
+<div class="ceiling-cornice" title="Plafonska garnišna (tačka pričvršćivanja)">
+	<p>Montaža jedne tačke pričvršćivanja plafonske garnišne.</p>
+</div>
+<!-- ПВХ ТKАНЬ Установка трансфорmatора, констроллера -->
+<div class="transformer">
+	<p>Samo rad na montaži transformatora ili kontrolera; uređaji se kupuju i plaćaju posebno.</p>
+</div>
+<!-- ПВХ ТKАНЬ Ugradnja senzora -->
+<div class="sensor">
+	<p>Montaža bilo kog bezbednosnog ili protivpožarnog senzora.</p>
+</div>
+<!-- ТKАНЬ Umetanje 2 platna u 1 bagetu sa gredom -->
+<div class="tex-canvas-timber">
+	<p>Umetanje dva platna od tkanine u jednu bagetu. Cena uključuje montažu noseće konstrukcije za plafonsku bagetu za tkaninu.</p>
+</div>
+<!-- ПВХ Razdelnik -->
+<div class="separator">
+	<p>Montaža razdelnika (separatora); noseća konstrukcija (greda) se obračunava posebno.</p>
+</div>
+<!-- ПВХ Art štampa -->
+<div class="art-prints">
+	<p>Površina foto-štampe računa se kao proizvod maksimalne dužine i maksimalne širine crteža. Cena po metru zavisi od ukupne površine platna i teksture.</p>
+	<p>Površina art štampe ne sme biti veća od površine prostorije.</p>
+	<p>Art štampa se ne radi na teksturama „stil, mermer 142“ i „fantazija-antilop 142“.</p>
+</div>
+<!-- ПВХ Centriranje šava -->
+<div class="seam-alignment">
+	<p>Centriranje ili zadati položaj šava. Dodaje se 15% na cenu platna.</p>
+</div>
+
+
+</div>
+<!-- / Kонтейнер для хранения всплывающих плашек со справочной информацией -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:90%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Cena platna u zavisnosti od površine</h4>
+      </div>
+      <div class="modal-body">
+		  <h1>PVC</h1>
+		  <table class="table table-bordered price-list-pvh table-condensed">
+			  <tr class="text-center">
+			    <th>Tekstura</th>
+			    <th>21.00 m² i više</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² i manje</th>
+			  </tr>
+
+		  </table>
+		  
+		  <h1>Art štampa</h1>
+		  <table class="table table-bordered price-list-art table-condensed">
+			  <tr class="text-center">
+			    <th>Tekstura</th>
+			    <th>21.00 m² i više</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² i manje</th>
+			  </tr>
+
+		  </table>
+		  <h1>Tkanina</h1>
+		  <table class="table table-bordered price-list-tex table-condensed">
+			  <tr class="text-center">
+			    <th>Tekstura</th>
+			    <th>21.00 m² i više</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² i manje</th>
+			  </tr>
+			
+		  </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="../shared/jquery-2.0.3.min.js"></script>
+<script src="../shared/bootstrap/js/bootstrap.min.js"></script>
+<script src="./price.js"></script>
+<script src="./calc.js"></script>
+<script>
+
+seilingList = JSON.parse( '[]' );
+//console.log(seilingList);
+
+var i;
+for (i = 0; i < seilingList.length; ++i) {
+	if ( seilingList[i].type == 'ПВХ' ) {
+		seilingList[i].__proto__ = PVCSeiling.prototype;
+	};
+	if ( seilingList[i].type == 'Ткань' ) {
+		seilingList[i].__proto__ = TexSeiling.prototype;
+	};
+//	console.log(seilingList[i].type);
+	
+//	seilingList[i].textureDiscountSum = seilingList[i].textureSum;
+//	seilingList[i].totalSum = seilingList[i].textureDiscountSum + seilingList[i].optionsSum;
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .texture-sum').text( numberWithCommas( seilingList[i].textureSum ) );
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .options-sum').text( numberWithCommas( seilingList[i].optionsSum ) );
+}
+<!-- tmpl_if name="sindex" -->
+Seiling.index = <!-- tmpl_var name="sindex" -->;
+<!-- tmpl_else -->
+Seiling.index = 0;
+<!-- /tmpl_if  -->
+
+///console.log(seilingList);
+
+//console.log(Seiling.index);
+
+</script>
+
+<script>
+// заполняем прайс в диалоговом окне
+
+pvhTexture.forEach(function(entry) {
+	$('table.price-list-pvh tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Mat, saten</td>'
+	+'<td>' + artPrint.gloss.a21 + '</td>'
+	+'<td>' + artPrint.gloss.a10 + '</td>'
+	+'<td>' + artPrint.gloss.a5  + '</td>'
+	+'<td>' + artPrint.gloss.a0  + '</td>'
+	+'</tr>');
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Sjaj</td>'
+	+'<td>' + artPrint.matt.a21 + '</td>'
+	+'<td>' + artPrint.matt.a10 + '</td>'
+	+'<td>' + artPrint.matt.a5  + '</td>'
+	+'<td>' + artPrint.matt.a0  + '</td>'
+	+'</tr>');
+
+texTexture.forEach(function(entry) {
+	$('table.price-list-tex tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+</script>
+<script>
+$('select[name="company"] option[value="firm1"]').attr('selected','selected');
+$('select[name="company"]').change();
+
+</script>
+
+</body>
+</html>

@@ -2,49 +2,433 @@
 layout: post
 title: "UTF Perl Practice / How to Use UTF-8 in Perl"
 type: post
-excerpt: "Practical notes on Unicode in Perl: terminology, UTF flag behavior, Encode vs utf8::* APIs, and common data-flow mistakes."
+excerpt: "Practical notes on Unicode and UTF-8 in Perl: core concepts, encodings, Encode APIs, and common pitfalls when processing text."
+og: /assets/posts/2021-01-27-og.jpg
 ---
 
-<p>This post preserves and updates a valuable long-form Unicode article for Perl developers:</p>
+<p>This material is here not only as an "archival" note. In practice, Perl is still very convenient when you need to quickly grind through large volumes of data, build a converter, clean an export, or glue together a legacy integration.</p>
 
-<p><a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">archived source</a>.</p>
+<p>And as soon as such tasks involve data beyond ASCII (Cyrillic, European languages, mixed encodings, old CSV/DB dumps), it becomes very easy to step on Unicode rakes: double-encoding, mojibake, wide-character warnings, and broken regexes.</p>
 
-<h2>Why this still matters</h2>
+<p>The best article on Unicode in Perl that I have seen, and which unfortunately survived only in the web archive:
+<a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">http://www.nestor.minsk.by/sr/2008/09/sr80902.html</a>.</p>
 
-<p>Even today, UTF-related bugs are common in legacy scripts and integrations: double-encoding, mojibake, and wide-character warnings.</p>
+<p>I reposted it here so that, on one hand, it can be found via search, and on the other hand, so I can collect feedback, because the problem is still relevant and people keep running into it again and again.</p>
 
-<h2>Core Terms</h2>
+<p>In the <a href="https://t.me/modernperl">Perl chat</a> people say:</p>
 
-<ul>
-<li><b>Unicode</b>: character standard</li>
-<li><b>UCS</b>: ISO/IEC 10646 set, aligned with Unicode</li>
-<li><b>UTF-8/16/32</b>: transformation formats for encoding code points</li>
-</ul>
+<div class="weight100 quote">it is indeed outdated in at least several places by now</div>
 
-<h2>Practical Perl Model</h2>
+<hr>
 
-<p>In real systems, the safest rule is:</p>
+<h2>Introduction</h2>
 
-<ul>
-<li>decode external bytes at input boundaries</li>
-<li>work with characters internally</li>
-<li>encode at output boundaries</li>
-</ul>
+<p>It is no secret that 8-bit encodings are now largely outdated. The main reason is the inability of a single encoding to contain enough symbols. When you only need a limited set of character groups (for example, Cyrillic and Latin), you can use koi8-r, cp1251, or iso-8859-5. But if you need several languages or special symbols, one encoding quickly becomes insufficient. This is where Unicode can help.</p>
 
-<p>The post discusses how Perl's UTF flag affects operations and why blindly toggling it leads to corrupted data representations.</p>
+<p>Let us first clear up the terminology. Many people encounter the terms Unicode, UTF-8, UTF-16, UTF-32, UCS-2, UCS-4, and all of them may be loosely called "Unicode". What does each one actually mean?</p>
 
-<h2>Useful APIs</h2>
+<dl>
+<dt>Unicode — Character Encoding Standard</dt>
+<dd>A standard for digital representation of characters used in all languages. It is maintained and developed by the Unicode Consortium (unicode.org).</dd>
 
-<p>The article compares two toolsets:</p>
+<dt>UCS — Universal Character Set</dt>
+<dd>An international ISO/IEC 10646 standard, effectively aligned with Unicode.</dd>
 
-<ul>
-<li><code>utf8::*</code> helpers for UTF-8 byte/flag transformations</li>
-<li><code>Encode::*</code> for explicit charset conversion pipelines</li>
-</ul>
+<dt>UTF — Unicode (or UCS) Transformation Format</dt>
+<dd>A way to represent Unicode characters as a sequence of positive integers. UTF-8, UTF-16, and UTF-32 are different transformation formats operating on 8, 16, and 32-bit units respectively. In UTF-8, the minimum character size is one octet (byte), maximum is six. In UTF-16, minimum is two octets, maximum is four. In UTF-32, every character is represented by four octets.</dd>
 
-<pre><code>perldoc perluniintro
+<dt>UCS-2, UCS-4</dt>
+<dd>Encoding forms defined in ISO/IEC 10646. UCS-2 and UCS-4 represent the universal character set in two or four octets (bytes) respectively. UCS-2 is fully contained within UTF-16, but UTF-16 also has surrogate pairs (four octets) not present in UCS-2. UCS-4 is equivalent to UTF-32.</dd>
+
+</dl>
+
+<p>Summary: Unicode is a character set arranged in a specific way: each character has a code point. Any UTF encoding is a representation of Unicode characters as sequences of numbers. Therefore, when we talk about moving a project to Unicode, in most cases we mean supporting one of the transformation formats. For clarifications, see www.unicode.org/glossary and the Unicode documentation.</p>
+
+<p>From a programmer's perspective, UTF-32 looks the most comfortable to work with because character width is fixed. But in practical terms, in the simplest Latin-only case, storage cost becomes four times larger compared to an ordinary 8-bit encoding. Another issue with switching to UTF-32 is the need to fully replace source code and all texts. Therefore UTF-8 was developed as a transition-friendly alternative. Its key feature is that the ASCII subset keeps the same codes and representations. As a result, if your source code was written in latin-1, moving to UTF-8 may require no source changes. Today UTF-8 is by far the most popular encoding, as the smoothest migration path, and it is supported by most software and development tools.</p>
+
+<p>A common argument against migrating to Unicode is the false belief that Perl does not support it, or supports it poorly. Most often this opinion comes from incorrect use of the tools that already exist. I will try to dispel the myth that Perl cannot work with Unicode. Another argument is extra size compared to 8-bit encodings. But if you estimate it, the amount of text that actually grows in size is usually tiny compared to the total project code size. By the task of migrating to Unicode (specifically UTF-8), I will mean: source code in UTF-8, correct behavior of built-in functions and regular expressions with Unicode features, and correct interaction with the environment.</p>
+
+<h2>Root Cause, or the Core of the Problem</h2>
+
+<p>Historically, Perl could not introduce an explicit UTF-8 switch because of backward compatibility with 8-bit encodings. So the concept of the UTF flag was introduced. Let us sort it out with examples.</p>
+
+<p>Take any text editor with UTF-8 support, type a simple Cyrillic letter А, and save it to a file. Its hex representation will contain two bytes: 0xD090. This is the representation of CYRILLIC CAPITAL LETTER A encoded in UTF-8. But when reading UTF data from different sources in a Perl program, we can get very different internal representations. If we dump such strings with Data::Dumper, the following variants are possible:</p>
+
+<pre><code class="language-perl">"А"
+"\x{410}"
+"\x{d0}\x{90}"</code></pre>
+
+<p>In the first variant we have a string that Perl does not know is a string; for Perl it is just a byte sequence. In the second case we have a Unicode character with code 0410. Looking it up in the Unicode table, we find it is CYRILLIC CAPITAL LETTER A. The third case is two Unicode characters with codes 00d0 and 0090. The first string is a sequence of octets without the flag. The second is a Unicode character with the flag on. The third is, from our point of view, "broken" data: a UTF flag was forcibly turned on for an octet string, and each octet became a separate character. In most tasks, we should strive for the second variant.</p>
+
+<p>First we need to decide how to convert data between these representations. For this task there are at least two good approaches, each with pros and cons: <code>utf8::*</code> and <code>Encode::*</code>.</p>
+
+<p><code>utf8::*</code> is good when the input data already came into the program in UTF-8.</p>
+
+<p><code>utf8::downgrade</code> removes the flag from a string:</p>
+
+<pre><code class="language-perl">utf8::downgrade("\x{d0}\x{90}") :'А'</code></pre>
+
+<p><code>utf8::upgrade</code> sets the flag on a string:</p>
+
+<pre><code class="language-perl">utf8::upgrade('А') : "\x{d0}\x{90}"</code></pre>
+
+<p><code>utf8::encode</code> converts characters to octets and removes the flag:</p>
+
+<pre><code class="language-perl">utf8::encode("\x{410}") : "А"</code></pre>
+
+<p><code>utf8::decode</code> converts octets to characters and sets the flag (the flag is set only if the string contains characters with code points greater than 255; see <code>perunicode</code>).</p>
+
+<pre><code class="language-perl">utf8::decode("А") : "\x{410}"</code></pre>
+
+<p><code>utf8::is_utf8</code> checks the flag state. It returns 1 if the UTF flag is set on the string:</p>
+
+<pre><code class="language-perl">utf8::is_utf8("\x{410}") = 1
+utf8::is_utf8("\x{d0}\x{90}") = 1
+utf8::is_utf8('А') = undef</code></pre>
+
+<p>You do not need <code>use utf8;</code> to use these functions; this module is always loaded and does not export its functions, so you must call them explicitly as <code>utf8::...</code>.</p>
+
+<p><code>Encode::*</code> is useful when source data exists in different encodings. It is also good for explicit conversions between encodings. Some functions are analogous to <code>utf8::*</code>.</p>
+
+<p><code>_utf8_off</code> removes the flag. <code>_utf8_on</code> sets it. <code>encode_utf8</code> converts characters to octets and removes the flag. <code>decode_utf8</code> converts octets to characters and sets the flag (see the note above on <code>utf8::decode</code>). <code>encode</code> converts characters to octets of the specified encoding and removes the flag:</p>
+
+<pre><code class="language-perl">encode("cp1251","\x{410}") = chr(0xC0)</code></pre>
+
+<p><code>decode</code> converts octets in the specified encoding to characters and sets the flag (see the same caveat mentioned above).</p>
+
+<pre><code class="language-perl">decode("cp1251",chr(0xC0)) = "\x{410}"
+decode("MIME-Header", "=?iso-8859-1?Q?Belgi=eb?=")
+= "Belgi\x{451}" (Belgiё)</code></pre>
+
+<p>Now we know how to convert data. Let us use that knowledge in practice.</p>
+
+<h2>Source Code</h2>
+
+<p>Let us write a simple program in UTF-8, run it, and look at the output.</p>
+
+<pre><code class="language-perl">$_ = "А";
+
+print Dumper $_; # "А"
+print lc; # А
+print /(\w)/; # nothing
+print /(а)/i; # nothing</code></pre>
+
+<p>As we can see, the string has no flag; built-in functions (<code>lc</code>) do not work correctly and regular expressions do not work. Let us use the already known <code>utf8::decode</code>:</p>
+
+<pre><code class="language-perl">$_ = "А";
+utf8::decode($_);
+print Dumper $_; # "\x{410}"
+print lc; # а
+print /(\w)/; # А
+print /(а)/i; # nothing ?</code></pre>
+
+<p>Now the string is Unicode, built-ins work, and the first regex works. What is wrong with the second one? The problem is that the character inside the regex is also Cyrillic, and it still has no flag. I have seen fairly complicated variants of this in real code:</p>
+
+<pre><code class="language-perl">print /(\x{430})/i;</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-perl">use charnames ':full';
+print /(\N{CYRILLIC SMALL LETTER A})/i;</code></pre>
+
+<p>or even</p>
+
+<pre><code class="language-perl">$a = ''.qr/(а)/i;
+utf8::decode($a);
+print /$a/;</code></pre>
+
+<p>But there is a more convenient way. The <code>use utf8</code> directive effectively performs <code>utf8::decode(&lt;SRC&gt;)</code>.</p>
+
+<pre><code class="language-perl">use utf8;
+$_ = "А";
+print Dumper $_; # "\x{410}"
+print lc; # а
+print /(\w)/; # А
+print /(а)/i; # А</code></pre>
+
+<p>Everything works, no black magic.</p>
+
+<p>It is also worth noting the similar directive <code>use encoding 'utf8'</code>. It does almost the same thing, but first, <code>use encoding</code> is not lexical (its effect is not limited to a block and remains after leaving the block), and second, it has "magical" behavior similar to source filters. In general, using <code>use encoding</code> for UTF-8 is not recommended.</p>
+
+<h2>Input and Output</h2>
+
+<p>So everything works, but now we get a strange warning that we did not have before:</p>
+
+<pre><code class="language-perl">Wide character in print at...</code></pre>
+
+<p>The problem is that Perl does not know whether this filehandle supports UTF-8. We can tell it explicitly:</p>
+
+<pre><code class="language-perl">binmode(STDOUT,':utf8'); # binmode is used
+# with an already opened handle</code></pre>
+
+<p>Likewise, we can specify that a file we open is in UTF-8 using so-called PerlIO layers:</p>
+
+<pre><code class="language-perl">open my $f, '&lt;:utf8', 'file.txt';</code></pre>
+
+<p>We can also remove the flag before output (<code>utf8::encode</code>) and give the handle a byte stream. But there is a simple <code>use open</code> directive that helps solve these issues:</p>
+
+<pre><code class="language-perl">use open ':utf8'; # files only
+use open qw(:std :utf8); # files and STD*
+# details: perldoc open</code></pre>
+
+<p>We can also use PerlIO to specify a supported encoding if, for example, we want to write a log file in cp1251.</p>
+
+<pre><code class="language-perl">binmode($log, ':encoding(cp1251)');</code></pre>
+
+<p>Strings with the flag will be automatically converted to the specified encoding for this handle by PerlIO.
+<br>As a result, we can even do this:</p>
+
+<pre><code class="language-perl">use strict; use utf8; use open qw(:std :utf8);
+my $все = "тест";
+sub печатать (@) { print @_ }
+печатать $все;</code></pre>
+
+<p>For convenience, you can make a very simple "pragmatic" module that performs all three actions at once, so you do not have to write three <code>use</code> lines:</p>
+
+<pre><code class="language-perl">package unistrict;
+use strict(); use utf8(); use open();
+sub import {
+$^H |= $utf8::hint_bits;
+$^H |= $strict::bitmask{$_} for qw(refs subs vars);
+@_ = qw(open :std :utf8);
+goto &open;::import;
+}</code></pre>
+
+<p>And then:</p>
+
+<pre><code class="language-perl">use unistrict;</code></pre>
+
+<p>As far as Perl itself is concerned, that is basically all you need to know to use UTF-8 successfully. But we will also look at examples of how to adjust the behavior of specific modules when they do not match our needs.</p>
+
+<h2>Environment</h2>
+
+<p>By environment I mean various modules (both from the core distribution and from CPAN) that the application interacts with. For example, a business-logic module is considered part of the application and assumed to run in a prepared environment with correct strings (flagged), while modules responsible for input/output are part of the environment.</p>
+
+<h3>DBI.pm</h3>
+
+<p>By default, most DBD drivers return data without the flag.</p>
+
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:mysql:test');
+($a) = $dbh->selectrow_array('select "А"');
+print '$a = ',Dumper $a; # 'А'</code></pre>
+
+<p>But again, most DBD drivers already have UTF-8 support.</p>
+
+<pre><code class="language-perl">DBD::mysql : mysql_enable_utf8 (requires DBD::mysql &gt;= 4.004)
+DBD::Pg : pg_enable_utf8 (requires DBD::Pg &gt;= 1.31)
+DBI:SQLite : unicode (requires DBD::SQLite &gt;= 1.10)</code></pre>
+
+<p>Usage example:</p>
+
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:Pg:dbname=test');
+$dbh->{pg_enable_utf8} = 1;
+($a) = $dbh->selectrow_array('select "А"');
+print '$a = ',Dumper $a; # "\x{410}"</code></pre>
+
+<h3>Template Toolkit</h3>
+
+<p>TT declares UTF-8 support, but there are some nuances. To make a template file be recognized and decoded into flagged strings, each file must begin with a so-called BOM header. BOM stands for Byte Order Mark. However, BOM only matters for UTF-16 and UTF-32, where the minimum unit is two or four octets. For UTF-8, BOM is optional by specification. And if you consider that a BOM before a shebang (for example, <code>#!/usr/bin/perl</code>) breaks shell scripts, using it is often questionable. For UTF-8, BOM is three bytes: 0xEFBBBF or <code>\x{feff}</code>. So if you want TT to read files without BOM and still work correctly, here are two possible solutions:</p>
+
+<pre><code class="language-perl">package Template::Provider::UTF8;
+use base 'Template::Provider';
+use bytes;
+our $bom = "\x{feff}"; our $len = length($bom);
+sub _decode_unicode {
+my ($self,$s) = @_;
+# if we have bom, strip it
+$s = substr($s, $len) if substr($s, 0, $len) eq $bom;
+# then decode the string to chars representation
+utf8::decode($s);
+return $s;
+}
+package main;
+my $context = Template::Context->new({
+LOAD_TEMPLATES => [ Template::Provider::UTF8->new(), ] });
+my $tt = Template->new( 'file',{ CONTEXT => $context }, ... );</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-perl">package Template::Utf8Fix;
+BEGIN {
+use Template::Provider;
+use bytes; no warnings 'redefine';
+my $bom = "\x{feff}"; my $len = length($bom);
+*Template::Provider::_decode_unicode = sub {
+my ($self,$s) = @_;
+# if we have bom, strip it
+$s = substr($s, $len) if substr($s, 0, $len) eq $bom;
+# then decode the string to chars representation
+utf8::decode($s);
+return $s;
+}
+}
+
+package main;
+use Template::Utf8Fix; # once anywhere in the project
+my $tt = Template->new( 'file', ... );</code></pre>
+
+<h3>CGI.pm</h3>
+
+<p>The most commonly used module for basic CGI applications is CGI.pm. It has many shortcomings (see Anatoly Sharifulin's YAPC::Russia 2008 talk for details: http://event.perlrussia.ru/yr2008/media/video.html), but it is still extremely popular. Let us see what you need to do to get passed arguments from it as flagged strings.</p>
+
+<p>For versions below 3.21, the only working method may be overriding <code>param</code> (similar to the TT examples). From 3.21 through 3.31, you need to set the charset before any call to <code>param()</code>:</p>
+
+<pre><code class="language-perl"># Request: test.cgi?utf=%d0%90
+use CGI 3.21;
+
+$cgi->charset('utf-8');
+$a = $cgi->param('utf');
+print $cgi->header();
+print Dumper $a; # "\x{410}"</code></pre>
+
+<p>Starting with 3.31 this method stops working, but another one appears: specifying the <code>:utf8</code> tag on import:</p>
+
+<pre><code class="language-perl"># Request: test.cgi?utf=%d0%90
+use CGI 3.31 qw(:utf8);
+
+$a = $cgi->param('utf');
+print $cgi->header();
+print Dumper $a; # "\x{410}"</code></pre>
+
+<h2>Notes</h2>
+
+<p>It is also worth paying attention to terms related to UTF-8. The official encoding name is UTF-8. On the web, the name often appears in lowercase as utf-8. In Perl, the encoding name is <code>utf8</code>. The differences are:</p>
+
+<p>* <code>utf8</code> — unrestricted UTF-8 encoding. Non-strict UTF-8. It may contain any sequence of numbers in the range 0..FFFFFFFF.</p>
+
+<p>* <code>utf-8</code> — strict UTF-8 encoding. It may contain only sequences in the range 0..10FFFF as defined by the Unicode standard (see unicode.org/versions/Unicode5.0.0).</p>
+
+<p>Therefore:
+<br>- <code>utf-8</code> is a subset of <code>utf8</code>;
+<br>- Perl supports arbitrary sequences, including so-called ill-formed ones.</p>
+
+<p>I also want to point out that the regex metacharacter <code>\w</code> behaves differently depending on context. For example, in <code>qr/[\w]/</code>, it is interpreted with byte semantics (because enumerating all Unicode <code>\w</code> characters inside a character class would make the pattern huge and therefore slow).</p>
+
+<h2>Problems</h2>
+
+<p>In UTF-8 mode, do not use locales (see <code>perldoc perlunicode</code>). They may lead to non-obvious results.</p>
+
+<p>Built-in functions are significantly slower on flagged strings.</p>
+
+<p>Also, some very strange and unpleasant errors can occur:</p>
+
+<pre><code class="language-perl">use strict;use utf8;
+my $str = 'тест'; my $dbs = 'это тестовая строка';
+for ($str,$dbs) {
+sprintf "%-8s : %-8s\n", $_, uc;
+print ++$a;
+}
+for ($dbs,$str) {
+sprintf "%-8s : %-8s\n", $_, uc;
+print ++$a;
+}</code></pre>
+
+<p>Result:</p>
+
+<pre><code class="language-perl">123panic: memory wrap at test.pl line 12.</code></pre>
+
+or
+
+<pre><code class="language-perl">use strict;
+my $str = "\x{442}";
+my $dbs = "\x{43e} \x{442}\x{435}\x{441}".
+"\x{442} \x{43e}\x{432}\x{430}".
+"\x{44f} \x{441}\x{442}\x{440}";
+sprintf "%1s\n",lc for ($dbs,$str);</code></pre>
+
+<p>Result:</p>
+
+<pre><code class="language-perl">Out of memory!</code></pre>
+
+<p>There is also some less-than-adequate behavior:</p>
+
+<pre><code class="language-perl">use strict; use utf8;
+print "1234567890123456780\n";
+printf "%-4.4s:%-4.4s\n", 'itstest','itstest';
+printf "%-4.4s:%-4.4s\n", "этотест","этотест";</code></pre>
+
+<p>Result:</p>
+
+<pre><code class="language-perl">1234567890123456780
+itst:itst
+этот :этот</code></pre>
+
+<p>These issues are caused by implementation bugs in the built-in <code>sprintf</code>. So formatting Unicode strings with <code>%*.*s</code> in <code>sprintf</code> will not work properly. A fix has been under development.</p>
+
+<h2>Additionally</h2>
+
+<p>Here are a couple of interesting things you can do once you have strings with the UTF flag. First, a very interesting module: <code>Text::Unidecode</code>.</p>
+
+<pre><code class="language-perl">use utf8;
+use Text::Unidecode;
+print unidecode "\x{5317}\x{4EB0}";
+# That prints: Bei Jing
+print unidecode "Это тест";
+# That prints: Eto tiest</code></pre>
+
+<p>This module provides a phonetic transliteration of most Unicode characters into ASCII. By the way, it is used on pause.perl.org when transliterating names containing characters outside latin-1.</p>
+
+<p>I found another interesting use of Unicode in a project that runs entirely in koi8-r. The example below shows how to use Unicode-powered regular expressions without migrating the whole project to UTF-8:</p>
+
+<pre><code class="language-perl">sub filter_koi ($) {
+# decode koi8-r bytes into a string
+local $_ = Encode::decode('koi8-r', shift);
+# replace all html entities
+# with corresponding Unicode characters
+s{&#(\d+);}{chr($1)}ge;
+# perform a few replacements
+# whitespace classes to plain spaces
+s{(?:\p{WhiteSpace}|\p{Z})}{ }g;
+
+# normalize all quotation marks to double quotes
+s{\p{QuotationMark}}{"}g;
+
+# normalize dashes, hyphens, em/en dashes, etc. to hyphen
+s{\p{Dash}}{-}g;
+
+# normalize the hyphen character as well
+s{\p{Hyphen}}{-}g;
+
+# normalize ellipsis to three dots
+s{\x{2026}}{...}g;
+
+# replace the numero sign with N
+s{\x{2116}}{N}g;
+# return the string back in koi8-r encoding
+return Encode::encode('koi8-r',$_);
+}</code></pre>
+
+<p>As is known, on a page served, for example, in koi8-r, users can enter symbols that do not exist in that encoding. They arrive on the server side as HTML entities <code>&amp;#....;</code>. Storing data in that form is inconvenient, and output is not always HTML. This function converts characters missing in the target encoding into visual analogs. The search-and-replace uses Unicode character classes such as <code>QuotationMark</code>, which includes many kinds of quotation marks from many languages.</p>
+
+<p>Answers to many questions can be found in Perl documentation:</p>
+
+<pre><code class="language-perl">perldoc perluniintro
 perldoc perlunicode
 perldoc Encode
 perldoc encoding</code></pre>
 
-<p>There is also a practical section on transliteration (<code>Text::Unidecode</code>) and normalization in mixed-encoding environments (including koi8-r).</p>
+<p><i>The author will gladly answer any questions about working with Unicode in Perl by email or on the Moscow.pm mailing list.</i>
+<br><b>Vladimir Perepelitsa, Moscow, mons@cpan.org</b></p>
+
+<hr>
+
+<p>More from the <a href="https://t.me/modernperl/">Perl chat</a> on this topic, starting from comment <a href="https://t.me/modernperl/178819">https://t.me/modernperl/178819</a>:</p>
+
+<div class="weight100 quote">Oleg Pronin, [22 Jan 2021 02:05:22]:
+<br>I noticed many people get very confused by utf8 and end up with wide-character warnings or mojibake (double-encoding, etc.). But the topic is actually very simple.
+<br>All you need to know:
+<br>1) In Perl a string can represent two things: a byte stream and a string of characters. <code>is_utf8</code> tells you which mode is enabled. In string mode, some functions (<code>substr</code>, <code>length</code>, etc.) switch behavior from byte-wise to character-wise, which naturally costs extra CPU time, because the in-memory representation is still utf8 bytes.
+<br>2) The internal representation does not change when switching modes. <code>decode_utf8</code> basically does nothing except checking there are no invalid utf8 sequences and flipping the mode.
+<br>3) To avoid confusion about modes, use a simple rule: everything that comes from outside (socket/file/stdin reads, ...) is always bytes. Accordingly, everything sent there should also be bytes (otherwise you get wide-character warnings, although because the internal representation matches, it may appear to work).
+<br>4) Another simple rule: except for very rare cases, <code>is_utf8</code> should not be used. You should always know where you have bytes and where you have characters. Typically you decode at input and use characters in the app (except truly binary data), then encode right before writing to a channel.
+<br>5) Some libraries save you from manual encoding/decoding. For example, <code>json::xs::decode_json()</code> expects a binary stream and returns a structure with characters. On encode it expects characters and returns bytes. Usually this is intuitive and expected.
+<br>In the object style <code>JSON::XS-&gt;new-&gt;utf8-&gt;</code>,
+<br>the <code>utf8</code> method makes it return/expect characters instead. If you do not set it, decoded structures may contain bytes (better not do that unless you are sure it is English-only). But decode input and encode output are always bytes; otherwise it makes no sense.
+<br>Template Toolkit is similar: it reads bytes from disk, decodes to characters, expects your variables as characters, renders, and encodes the final result to bytes.
+<br>6) Many people think utf8 means characters. No. It is bytes. Utf8 is a way to serialize Unicode code points, i.e. a binary mode. In Perl there is no true character mode; it is virtual (done at runtime by parsing bytes). For example, in character mode, if you ask <code>substr</code> for the 10th character, Perl cannot jump straight there like in binary mode; it has to walk linearly from the start counting characters out of bytes.
+<br>A true character mode would be if Perl stored strings as utf32 Unicode code points in memory (using 2-4x more memory but running faster). In Perl, "character mode" is always utf8 bytes underneath plus virtual runtime emulation.</div>
+
+<div class="weight100 quote">And one more thing I forgot.
+<br>7) <code>use utf8;</code>
+<br>It has nothing to do with runtime data recoding; it is just a helper that automatically does <code>decode_utf8</code> on literals written in this file / scope. Thus literals become strings. But data read at runtime does not!
+<br>Usually there are not many hardcoded non-English strings in a program, so it is not that useful.</div>

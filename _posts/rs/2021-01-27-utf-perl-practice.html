@@ -2,49 +2,433 @@
 layout: post
 title: "UTF Perl Practice / kako koristiti UTF-8 u Perl-u"
 type: post
-excerpt: "Praktične beleške o Unicode-u u Perl-u: terminologija, ponašanje UTF flag-a, Encode vs utf8::* API i tipične greške u toku podataka."
+excerpt: "Praktična beleška o Unicode-u i UTF-8 u Perl-u: osnovni pojmovi, kodiranja, Encode API i tipične greške pri obradi teksta."
+og: /assets/posts/2021-01-27-og.jpg
 ---
 
-<p>Ovaj post čuva i osavremenjuje vrlo koristan opširan tekst o Unicode-u za Perl programere:</p>
+<p>Ovaj materijal je ovde ne samo kao "arhivska" beleška. U praksi je Perl i dalje veoma zgodan kada treba brzo samleti velike količine podataka, napraviti konverter, očistiti eksport ili spojiti legacy integraciju.</p>
 
-<p><a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">arhivirani izvor</a>.</p>
+<p>A čim se u takvim zadacima pojave podaci koji nisu ASCII (ćirilica, evropski jezici, mešovita kodiranja, stari CSV/DB dump-ovi), vrlo lako se naleti na Unicode grabulje: double-encoding, mojibake, wide-character upozorenja i polomljeni regex-i.</p>
 
-<h2>Zašto je tema i dalje aktuelna</h2>
+<p>Najbolji tekst o Unicode-u u Perl-u koji sam video, a koji je nažalost ostao samo u web arhivi:
+<a href="https://web.archive.org/web/20200215211621/http://www.nestor.minsk.by/sr/2008/09/sr80902.html">http://www.nestor.minsk.by/sr/2008/09/sr80902.html</a>.</p>
 
-<p>I danas se u legacy skriptama i integracijama redovno javljaju UTF problemi: double-encoding, mojibake i wide-character upozorenja.</p>
+<p>Prebacio sam ga ovde da bi, s jedne strane, mogao da se pronađe preko pretrage, a s druge strane da sakupim povratne informacije, jer je problem i dalje aktuelan i ljudi stalno ponovo nailaze na njega.</p>
 
-<h2>Osnovni pojmovi</h2>
+<p>U <a href="https://t.me/modernperl">Perl četu</a> pišu:</p>
 
-<ul>
-<li><b>Unicode</b>: standard za skup znakova</li>
-<li><b>UCS</b>: ISO/IEC 10646 skup, usklađen sa Unicode-om</li>
-<li><b>UTF-8/16/32</b>: formati za transformaciju kodnih pozicija u bajtove</li>
-</ul>
+<div class="weight100 quote">usput, tekst je već zastareo bar na nekoliko mesta</div>
 
-<h2>Praktičan Perl model</h2>
+<hr>
 
-<p>U praksi se najbolje pokazuje sledeće pravilo:</p>
+<h2>Uvod</h2>
 
-<ul>
-<li>dekodirati spoljne bajtove na ulazu</li>
-<li>interno raditi sa karakterima</li>
-<li>na izlazu eksplicitno enkodirati</li>
-</ul>
+<p>Nije tajna da su osmobitna kodiranja danas u velikoj meri zastarela. Glavni razlog je to što jedno kodiranje ne može da obuhvati dovoljno simbola. Kada treba podržati ograničen broj grupa znakova (na primer, ćirilicu i latinicu), možemo koristiti koi8-r, cp1251 ili iso-8859-5. Ali kada postoji potreba za više jezika ili specijalnim simbolima, kapacitet jednog kodiranja postaje nedovoljan. Tu pomaže upotreba Unicode-a.</p>
 
-<p>Post detaljno objašnjava kako UTF flag utiče na operacije nad stringovima i zašto nekontrolisano menjanje flag-a dovodi do oštećenih podataka.</p>
+<p>Za početak razjasnimo terminologiju. Mnogi su se susretali sa pojmovima Unicode, UTF-8, UTF-16, UTF-32, UCS-2, UCS-4, i sve to su često zvali "Unicode". Šta tačno znači svaki od tih pojmova?</p>
 
-<h2>Korisni API-jevi</h2>
+<dl>
+<dt>Unicode — Character Encoding Standard</dt>
+<dd>Standard za digitalno predstavljanje znakova koji se koriste u svim jezicima. Održava ga i razvija Unicode Consortium (unicode.org).</dd>
 
-<p>Upoređuju se dva pristupa:</p>
+<dt>UCS — Universal Character Set</dt>
+<dd>Međunarodni standard ISO/IEC 10646, praktično usklađen sa Unicode-om.</dd>
 
-<ul>
-<li><code>utf8::*</code> pomoćne funkcije za rad sa UTF-8 bajtovima i flag-om</li>
-<li><code>Encode::*</code> za eksplicitne pipeline-ove konverzije kodiranja</li>
-</ul>
+<dt>UTF — Unicode (or UCS) Transformation Format</dt>
+<dd>Način predstavljanja Unicode znakova kao niza pozitivnih celih brojeva. UTF-8, UTF-16 i UTF-32 su različiti transformacioni formati koji rade sa jedinicama od 8, 16 i 32 bita. U UTF-8 minimalna veličina znaka je jedan oktet (bajt), maksimalna šest. U UTF-16 minimalna veličina je dva okteta, maksimalna četiri. U UTF-32 svaki znak se predstavlja sa četiri okteta.</dd>
 
-<pre><code>perldoc perluniintro
+<dt>UCS-2, UCS-4</dt>
+<dd>Načini kodiranja iz ISO/IEC 10646. UCS-2 i UCS-4 predstavljaju univerzalni skup znakova u dva odnosno četiri okteta (bajta). UCS-2 je u potpunosti sadržan u UTF-16, ali UTF-16 ima i surrogate parove (četiri okteta) kojih nema u UCS-2. UCS-4 je ekvivalentan UTF-32.</dd>
+
+</dl>
+
+<p>Zaključak: Unicode je skup znakova uređen na određeni način, gde svaki znak ima svoju kodnu poziciju. Svako UTF kodiranje je predstavljanje Unicode znakova kao nizova brojeva. Zato, kada govorimo o prelasku projekta na Unicode, u većini slučajeva mislimo na podršku za neki od transformacionih formata. Za preciznija objašnjenja pogledajte www.unicode.org/glossary i dokumentaciju na unicode.org.</p>
+
+<p>Iz perspektive programera, UTF-32 deluje najudobnije za rad jer je veličina znaka konstantna. Ali praktično, u najjednostavnijem slučaju (samo latinica), dobijamo četiri puta veći prostor u odnosu na obična osmobitna kodiranja. Drugi problem prelaska na UTF-32 je potreba za potpunom zamenom izvornog koda i svih tekstova. Zato je UTF-8 razvijen kao prelazna alternativa. Njegova posebnost je da deo znakova koji spada u ASCII zadržava iste kodove i predstave. Kao rezultat, ako je izvorni kod bio napisan u latin-1, pri prelasku na UTF-8 često nije potrebno menjati sam kod. Danas je UTF-8 najpopularnije kodiranje, kao najudobnije za postepen prelaz, i podržava ga ogromna većina softvera i razvojnih alata.</p>
+
+<p>Čest argument protiv prelaska na Unicode je pogrešno mišljenje da ga Perl ne podržava, ili da ga podržava loše. Najčešće se takvo mišljenje formira zbog pogrešne upotrebe postojećih alata. Pokušaću da razbijem mit da Perl ne ume da radi sa Unicode-om. Drugi argument je veći obim u odnosu na osmobitna kodiranja. Ali ako se realno proceni, količina teksta koja se zaista uveća u odnosu na ukupnu veličinu koda projekta je obično veoma mala. Pod zadatkom prelaska na Unicode (konkretno na UTF-8) podrazumevaću: izvorni kod u UTF-8, korektan rad ugrađenih funkcija i regularnih izraza sa Unicode mogućnostima, kao i korektnu interakciju sa okruženjem.</p>
+
+<h2>Koren zla ili suština problema</h2>
+
+<p>Istorijski gledano, Perl nije mogao da uvede eksplicitan prelaz na UTF-8 zbog očuvanja kompatibilnosti sa osmobitnim kodiranjima. Zato je uveden pojam UTF flag-a. Hajde da na primerima razjasnimo šta se dešava.</p>
+
+<p>Uzmimo bilo koji editor sa podrškom za UTF-8, upišimo prosto ćirilično slovo А i sačuvajmo ga u fajl. Heksadekadna reprezentacija tog fajla sadržaće dva bajta: 0xD090. To je predstava simbola CYRILLIC CAPITAL LETTER A kodiranog pomoću UTF-8. Ali kada u Perl programu čitamo UTF podatke iz različitih izvora, dobijamo sasvim različite interne predstave. Ako uradimo dump takvih stringova sa Data::Dumper, mogući su sledeći slučajevi:</p>
+
+<pre><code class="language-perl">"А"
+"\x{410}"
+"\x{d0}\x{90}"</code></pre>
+
+<p>U prvom slučaju imamo string za koji Perl ne zna da je string; za njega je to samo niz bajtova. U drugom slučaju imamo Unicode znak sa kodom 0410. Ako pogledamo Unicode tabelu, videćemo da je to CYRILLIC CAPITAL LETTER A. Treći slučaj su dva Unicode znaka sa kodovima 00d0 i 0090. Prvi string je niz okteta bez flag-a. Drugi string je Unicode znak sa uključenim flag-om. Treći slučaj su, iz naše perspektive, "polomljeni" podaci: na string okteta je nasilno uključen UTF flag, pa je svaki oktet postao poseban znak. U većini zadataka treba da težimo drugom slučaju.</p>
+
+<p>Najpre treba da odlučimo kako možemo da pretvaramo podatke iz jedne predstave u drugu. Za to postoje bar dva dobra pristupa, svaki sa svojim prednostima i manama: <code>utf8::*</code> i <code>Encode::*</code>.</p>
+
+<p><code>utf8::*</code> je dobro koristiti kada su ulazni podaci već stigli u program u UTF-8 kodiranju.</p>
+
+<p><code>utf8::downgrade</code> skida flag sa stringa:</p>
+
+<pre><code class="language-perl">utf8::downgrade("\x{d0}\x{90}") :'А'</code></pre>
+
+<p><code>utf8::upgrade</code> uključuje flag na stringu:</p>
+
+<pre><code class="language-perl">utf8::upgrade('А') : "\x{d0}\x{90}"</code></pre>
+
+<p><code>utf8::encode</code> pretvara znakove u oktete i skida flag:</p>
+
+<pre><code class="language-perl">utf8::encode("\x{410}") : "А"</code></pre>
+
+<p><code>utf8::decode</code> pretvara oktete u znakove i uključuje flag (flag se uključuje samo ako string sadrži znakove sa kodnim pozicijama većim od 255; vidi <code>perunicode</code>).</p>
+
+<pre><code class="language-perl">utf8::decode("А") : "\x{410}"</code></pre>
+
+<p><code>utf8::is_utf8</code> proverava stanje flag-a. Vraća 1 ako je UTF flag postavljen na stringu:</p>
+
+<pre><code class="language-perl">utf8::is_utf8("\x{410}") = 1
+utf8::is_utf8("\x{d0}\x{90}") = 1
+utf8::is_utf8('А') = undef</code></pre>
+
+<p>Za korišćenje ovih funkcija nije potrebno <code>use utf8;</code>; ovaj modul je uvek učitan i ne eksportuje funkcije, pa ih treba pozivati eksplicitno kao <code>utf8::...</code>.</p>
+
+<p><code>Encode::*</code> je dobro koristiti kada ulazni podaci postoje u različitim kodiranjima. Ovaj modul je takođe odličan za eksplicitne konverzije između kodiranja. Neke funkcije su analogne <code>utf8::*</code>.</p>
+
+<p><code>_utf8_off</code> skida flag. <code>_utf8_on</code> ga uključuje. <code>encode_utf8</code> pretvara znakove u oktete i skida flag. <code>decode_utf8</code> pretvara oktete u znakove i uključuje flag (vidi napomenu iznad za <code>utf8::decode</code>). <code>encode</code> pretvara znakove u oktete zadatog kodiranja i skida flag:</p>
+
+<pre><code class="language-perl">encode("cp1251","\x{410}") = chr(0xC0)</code></pre>
+
+<p><code>decode</code> pretvara oktete iz zadatog kodiranja u znakove i uključuje flag (uz isti gore pomenuti komentar).</p>
+
+<pre><code class="language-perl">decode("cp1251",chr(0xC0)) = "\x{410}"
+decode("MIME-Header", "=?iso-8859-1?Q?Belgi=eb?=")
+= "Belgi\x{451}" (Belgiё)</code></pre>
+
+<p>Sada znamo kako da pretvaramo podatke. Hajde da to znanje primenimo u praksi.</p>
+
+<h2>Izvorni kod</h2>
+
+<p>Napišimo jednostavan program u UTF-8, pokrenimo ga i pogledajmo izlaz.</p>
+
+<pre><code class="language-perl">$_ = "А";
+
+print Dumper $_; # "А"
+print lc; # А
+print /(\w)/; # nista
+print /(а)/i; # nista</code></pre>
+
+<p>Kao što vidimo, string je bez flag-a; ugrađene funkcije (<code>lc</code>) ne rade kako treba, a regularni izrazi ne rade. Iskoristimo već poznatu funkciju <code>utf8::decode</code>:</p>
+
+<pre><code class="language-perl">$_ = "А";
+utf8::decode($_);
+print Dumper $_; # "\x{410}"
+print lc; # а
+print /(\w)/; # А
+print /(а)/i; # nista ?</code></pre>
+
+<p>Sada je string Unicode, ugrađene funkcije rade, i prvi regex radi. Šta nije u redu sa drugim? Problem je u tome što je znak unutar regex-a takođe ćirilični i ostao je bez flag-a. Mogući su i prilično komplikovani načini, koje sam viđao u raznom kodu:</p>
+
+<pre><code class="language-perl">print /(\x{430})/i;</code></pre>
+
+<p>ili</p>
+
+<pre><code class="language-perl">use charnames ':full';
+print /(\N{CYRILLIC SMALL LETTER A})/i;</code></pre>
+
+<p>ili čak</p>
+
+<pre><code class="language-perl">$a = ''.qr/(а)/i;
+utf8::decode($a);
+print /$a/;</code></pre>
+
+<p>Ali postoji praktičniji način. Direktiva <code>use utf8</code> efektivno "radi" <code>utf8::decode(&lt;SRC&gt;)</code>.</p>
+
+<pre><code class="language-perl">use utf8;
+$_ = "А";
+print Dumper $_; # "\x{410}"
+print lc; # а
+print /(\w)/; # А
+print /(а)/i; # А</code></pre>
+
+<p>Sve radi, bez crne magije.</p>
+
+<p>Vredi pomenuti i sličnu direktivu <code>use encoding 'utf8'</code>. Ona radi skoro isto, ali prvo, <code>use encoding</code> nije leksička direktiva (dejstvo nije ograničeno na blok i ostaje i po izlasku iz bloka), a drugo, ima "magično" ponašanje slično source filter-ima. U opštem slučaju, korišćenje <code>use encoding</code> za UTF-8 se ne preporučuje.</p>
+
+<h2>Ulaz i izlaz</h2>
+
+<p>Dakle, sve radi, ali sada dobijamo čudno upozorenje koje ranije nije postojalo:</p>
+
+<pre><code class="language-perl">Wide character in print at...</code></pre>
+
+<p>Problem je u tome što Perl ne zna da li dati filehandle podržava UTF-8. To možemo eksplicitno da kažemo:</p>
+
+<pre><code class="language-perl">binmode(STDOUT,':utf8'); # binmode se koristi
+# sa vec otvorenim deskriptorom</code></pre>
+
+<p>Isto tako možemo navesti da je fajl koji otvaramo u UTF-8 kodiranju preko tzv. PerlIO layer-a:</p>
+
+<pre><code class="language-perl">open my $f, '&lt;:utf8', 'file.txt';</code></pre>
+
+<p>Takođe možemo skinuti flag sa stringa pre izlaza (<code>utf8::encode</code>) i predati deskriptoru tok bajtova. Ali postoji jednostavna direktiva <code>use open</code> koja pomaže da se ovo reši:</p>
+
+<pre><code class="language-perl">use open ':utf8'; # samo za fajlove
+use open qw(:std :utf8); # fajlovi i STD*
+# detaljnije - perldoc open</code></pre>
+
+<p>Uz PerlIO možemo navesti i podržano kodiranje ako, na primer, želimo da pišemo log fajl u cp1251.</p>
+
+<pre><code class="language-perl">binmode($log, ':encoding(cp1251)');</code></pre>
+
+<p>Stringovi sa flag-om će pri radu sa tim deskriptorom biti automatski prevedeni u zadato kodiranje pomoću PerlIO-a.
+<br>Kao rezultat, možemo raditi čak i ovo:</p>
+
+<pre><code class="language-perl">use strict; use utf8; use open qw(:std :utf8);
+my $все = "тест";
+sub печатать (@) { print @_ }
+печатать $все;</code></pre>
+
+<p>Radi jednostavnosti možete napraviti vrlo prost "pragmatični" modul koji će odmah uraditi sve tri stvari, da ne pišete tri puta <code>use</code>:</p>
+
+<pre><code class="language-perl">package unistrict;
+use strict(); use utf8(); use open();
+sub import {
+$^H |= $utf8::hint_bits;
+$^H |= $strict::bitmask{$_} for qw(refs subs vars);
+@_ = qw(open :std :utf8);
+goto &open;::import;
+}</code></pre>
+
+<p>I dalje:</p>
+
+<pre><code class="language-perl">use unistrict;</code></pre>
+
+<p>Što se samog Perl-a tiče, to je praktično sve što treba da znate da biste uspešno koristili UTF-8. Ali ćemo još pogledati primere kako da korigujemo rad određenih modula kada ne odgovaraju našim zahtevima.</p>
+
+<h2>Okruženje</h2>
+
+<p>Pod okruženjem podrazumevam različite module (i iz standardne distribucije i sa CPAN-a) sa kojima aplikacija komunicira. Na primer, modul poslovne logike se smatra delom aplikacije i podrazumeva se da radi u pripremljenom okruženju sa korektnim stringovima (sa flag-om), dok su moduli odgovorni za ulaz/izlaz deo okruženja.</p>
+
+<h3>DBI.pm</h3>
+
+<p>Podrazumevano, većina DBD drajvera vraća podatke bez flag-a.</p>
+
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:mysql:test');
+($a) = $dbh->selectrow_array('select "А"');
+print '$a = ',Dumper $a; # 'А'</code></pre>
+
+<p>Ali opet, za većinu DBD drajvera podrška za UTF-8 već postoji.</p>
+
+<pre><code class="language-perl">DBD::mysql : mysql_enable_utf8 (zahteva DBD::mysql &gt;= 4.004)
+DBD::Pg : pg_enable_utf8 (zahteva DBD::Pg &gt;= 1.31)
+DBI:SQLite : unicode (zahteva DBD::SQLite &gt;= 1.10)</code></pre>
+
+<p>Primer upotrebe:</p>
+
+<pre><code class="language-perl">my $dbh = DBI->connect('DBI:Pg:dbname=test');
+$dbh->{pg_enable_utf8} = 1;
+($a) = $dbh->selectrow_array('select "А"');
+print '$a = ',Dumper $a; # "\x{410}"</code></pre>
+
+<h3>Template Toolkit</h3>
+
+<p>TT deklarativno podržava UTF-8, ali postoje neke specifičnosti. Da bi fajl šablona bio prepoznat i dekodiran u stringove sa flag-om, na početku fajla mora da stoji tzv. BOM header. BOM znači Byte Order Mark. Međutim, BOM je važan samo za UTF-16 i UTF-32, gde je minimalna jedinica dva ili četiri okteta. Za UTF-8 je BOM po specifikaciji opcion. Ako uzmemo u obzir da BOM ispred shebang-a (na primer, <code>#!/usr/bin/perl</code>) kvari shell skripte, njegova upotreba je često sumnjiva. Za UTF-8, BOM su tri bajta: 0xEFBBBF ili <code>\x{feff}</code>. Ako želite da TT čita fajlove bez BOM-a, a da sve i dalje radi ispravno, predlažem jedno od dva rešenja:</p>
+
+<pre><code class="language-perl">package Template::Provider::UTF8;
+use base 'Template::Provider';
+use bytes;
+our $bom = "\x{feff}"; our $len = length($bom);
+sub _decode_unicode {
+my ($self,$s) = @_;
+# ako imamo bom, ukloni ga
+$s = substr($s, $len) if substr($s, 0, $len) eq $bom;
+# zatim dekodiraj string u reprezentaciju znakova
+utf8::decode($s);
+return $s;
+}
+package main;
+my $context = Template::Context->new({
+LOAD_TEMPLATES => [ Template::Provider::UTF8->new(), ] });
+my $tt = Template->new( 'file',{ CONTEXT => $context }, ... );</code></pre>
+
+<p>ili</p>
+
+<pre><code class="language-perl">package Template::Utf8Fix;
+BEGIN {
+use Template::Provider;
+use bytes; no warnings 'redefine';
+my $bom = "\x{feff}"; my $len = length($bom);
+*Template::Provider::_decode_unicode = sub {
+my ($self,$s) = @_;
+# ako imamo bom, ukloni ga
+$s = substr($s, $len) if substr($s, 0, $len) eq $bom;
+# zatim dekodiraj string u reprezentaciju znakova
+utf8::decode($s);
+return $s;
+}
+}
+
+package main;
+use Template::Utf8Fix; # jednom bilo gde u projektu
+my $tt = Template->new( 'file', ... );</code></pre>
+
+<h3>CGI.pm</h3>
+
+<p>Najčešće korišćen modul za osnovne CGI aplikacije je CGI.pm. Ima dosta mana (više detalja u predavanju Anatolija Šarifulina sa YAPC::Russia 2008: http://event.perlrussia.ru/yr2008/media/video.html), ali je i dalje veoma popularan. Pogledajmo šta treba uraditi da bi argumenti koje šalje stizali kao stringovi sa flag-om.</p>
+
+<p>Za verzije ispod 3.21 jedini radni način može biti redefinisanje metode <code>param</code> (slično TT primerima). Od 3.21 do 3.31 potrebno je zadati kodiranje pre prvog poziva <code>param()</code>:</p>
+
+<pre><code class="language-perl"># Zahtev: test.cgi?utf=%d0%90
+use CGI 3.21;
+
+$cgi->charset('utf-8');
+$a = $cgi->param('utf');
+print $cgi->header();
+print Dumper $a; # "\x{410}"</code></pre>
+
+<p>Počev od 3.31 ovaj način prestaje da radi, ali se pojavljuje drugi: navođenje taga <code>:utf8</code> pri importu:</p>
+
+<pre><code class="language-perl"># Zahtev: test.cgi?utf=%d0%90
+use CGI 3.31 qw(:utf8);
+
+$a = $cgi->param('utf');
+print $cgi->header();
+print Dumper $a; # "\x{410}"</code></pre>
+
+<h2>Napomene</h2>
+
+<p>Treba obratiti pažnju i na termine povezane sa UTF-8. Zvanični naziv kodiranja je UTF-8. Na web-u se često piše malim slovima kao utf-8. U Perl-u se kodiranje zove <code>utf8</code>. Razlike su sledeće:</p>
+
+<p>* <code>utf8</code> — unrestricted UTF-8 encoding. Nestriktni UTF-8. To može biti bilo koji niz brojeva iz opsega 0..FFFFFFFF.</p>
+
+<p>* <code>utf-8</code> — strict UTF-8 encoding. Striktni UTF-8. To može biti samo niz brojeva iz opsega 0..10FFFF definisan Unicode standardom (vidi unicode.org/versions/Unicode5.0.0).</p>
+
+<p>Dakle:
+<br>- <code>utf-8</code> je podskup od <code>utf8</code>;
+<br>- Perl podržava proizvoljne, uključujući tzv. ill-formed sekvence.</p>
+
+<p>Takođe želim da skrenem pažnju da metaznak <code>\w</code> u regularnim izrazima radi različito u zavisnosti od konteksta. Na primer, pri korišćenju <code>qr/[\w]/</code>, metaznak će biti protumačen u bajt semantici (jer bi eksplicitno nabrajanje svih Unicode znakova iz klase <code>\w</code> učinilo obrazac prevelikim i samim tim sporim).</p>
+
+<h2>Problemi</h2>
+
+<p>U UTF-8 režimu nemojte koristiti locale (vidi <code>perldoc perlunicode</code>). Njihova upotreba može dovesti do neočekivanih rezultata.</p>
+
+<p>Ugrađene funkcije rade znatno sporije nad stringovima sa flag-om.</p>
+
+<p>Takođe se javljaju vrlo čudne i neprijatne greške:</p>
+
+<pre><code class="language-perl">use strict;use utf8;
+my $str = 'тест'; my $dbs = 'это тестовая строка';
+for ($str,$dbs) {
+sprintf "%-8s : %-8s\n", $_, uc;
+print ++$a;
+}
+for ($dbs,$str) {
+sprintf "%-8s : %-8s\n", $_, uc;
+print ++$a;
+}</code></pre>
+
+<p>Rezultat:</p>
+
+<pre><code class="language-perl">123panic: memory wrap at test.pl line 12.</code></pre>
+
+ili
+
+<pre><code class="language-perl">use strict;
+my $str = "\x{442}";
+my $dbs = "\x{43e} \x{442}\x{435}\x{441}".
+"\x{442} \x{43e}\x{432}\x{430}".
+"\x{44f} \x{441}\x{442}\x{440}";
+sprintf "%1s\n",lc for ($dbs,$str);</code></pre>
+
+<p>Rezultat:</p>
+
+<pre><code class="language-perl">Out of memory!</code></pre>
+
+<p>Postoji i ne baš adekvatno ponašanje:</p>
+
+<pre><code class="language-perl">use strict; use utf8;
+print "1234567890123456780\n";
+printf "%-4.4s:%-4.4s\n", 'itstest','itstest';
+printf "%-4.4s:%-4.4s\n", "этотест","этотест";</code></pre>
+
+<p>Rezultat:</p>
+
+<pre><code class="language-perl">1234567890123456780
+itst:itst
+этот :этот</code></pre>
+
+<p>Ovi problemi su povezani sa greškama u implementaciji ugrađene funkcije <code>sprintf</code>. Zato formatiranje izlaza Unicode stringova pomoću <code>%*.*s</code> u <code>sprintf</code> neće raditi kako treba. Rešenje je bilo (i delom ostalo) predmet razvoja.</p>
+
+<h2>Pored toga</h2>
+
+<p>Pomenuću nekoliko zanimljivih stvari koje možete raditi kada imate stringove sa UTF flag-om. Za početak, vrlo zanimljiv modul <code>Text::Unidecode</code>:</p>
+
+<pre><code class="language-perl">use utf8;
+use Text::Unidecode;
+print unidecode "\x{5317}\x{4EB0}";
+# Ispisuje: Bei Jing
+print unidecode "Это тест";
+# Ispisuje: Eto tiest</code></pre>
+
+<p>Ovaj modul omogućava fonetsku transliteraciju većine Unicode znakova u ASCII. Usput, koristi se i na pause.perl.org pri transliteraciji imena koja sadrže znakove van latin-1.</p>
+
+<p>Još jednu zanimljivu primenu Unicode-a našao sam u projektu koji u potpunosti radi u koi8-r. Primer ispod pokazuje kako koristiti mogućnosti regularnih izraza sa Unicode funkcionalnošću bez prebacivanja celog projekta na UTF-8:</p>
+
+<pre><code class="language-perl">sub filter_koi ($) {
+# prebaci koi8-r bajtove u string
+local $_ = Encode::decode('koi8-r', shift);
+# zameni sve html entitete
+# odgovarajucim Unicode znakovima
+s{&#(\d+);}{chr($1)}ge;
+# uradi nekoliko zamena
+# sve razmake/white-space u obican razmak
+s{(?:\p{WhiteSpace}|\p{Z})}{ }g;
+
+# sve navodnike normalizuj na duple navodnike
+s{\p{QuotationMark}}{"}g;
+
+# minus, crtice, dash itd. normalizuj na minus
+s{\p{Dash}}{-}g;
+
+# i znak hyphen normalizuj na minus
+s{\p{Hyphen}}{-}g;
+
+# trotačku zameni sa tri tačke
+s{\x{2026}}{...}g;
+
+# znak broja zameni sa N
+s{\x{2116}}{N}g;
+# vrati string nazad u koi8-r kodiranju
+return Encode::encode('koi8-r',$_);
+}</code></pre>
+
+<p>Kao što je poznato, na stranici posluženoj, na primer, u koi8-r kodiranju, moguće je uneti simbole koji ne postoje u tom kodiranju. Oni na server stižu kao HTML entiteti <code>&amp;#....;</code>. Nezgodno ih je čuvati u tom obliku, a izlaz nije uvek HTML. Ova funkcija pretvara znakove koji ne postoje u ciljnom kodiranju u vizuelne analoge. Za pretragu i zamenu koriste se Unicode klase znakova (character class), kao što je <code>QuotationMark</code>, koja uključuje mnoge vrste navodnika iz različitih jezika.</p>
+
+<p>Odgovori na mnoga pitanja mogu se naći u Perl dokumentaciji:</p>
+
+<pre><code class="language-perl">perldoc perluniintro
 perldoc perlunicode
 perldoc Encode
 perldoc encoding</code></pre>
 
-<p>U tekstu je prikazana i praktična transliteracija (<code>Text::Unidecode</code>) i normalizacija u mešovitim kodnim okruženjima (uključujući koi8-r).</p>
+<p><i>Autor će rado odgovoriti na pitanja o radu sa Unicode-om u Perl-u putem e-maila ili na mailing listi grupe Moscow.pm.</i>
+<br><b>Vladimir Perepelica, Moskva, mons@cpan.org</b></p>
+
+<hr>
+
+<p>Još iz <a href="https://t.me/modernperl/">Perl četa</a> na ovu temu, počev od komentara <a href="https://t.me/modernperl/178819">https://t.me/modernperl/178819</a>:</p>
+
+<div class="weight100 quote">Oleg Pronin, [22 Jan 2021 02:05:22]:
+<br>Primetio sam da se mnogi ozbiljno zbune oko utf8 i dobijaju wide character upozorenja ili krakozjabre (dupli enkoding i slično). A tema je zapravo veoma jednostavna.
+<br>Sve što treba znati:
+<br>1) U Perl-u string može da predstavlja 2 entiteta: byte stream i string znakova. <code>is_utf8</code> govori koji je režim uključen. U režimu stringa neke funkcije (<code>substr</code>, <code>length</code> itd.) menjaju ponašanje sa bajtnog na znakovni režim, što naravno troši dodatno CPU vreme, jer je u memoriji svejedno utf8.
+<br>2) Interna reprezentacija se ne menja pri prelasku iz jednog režima u drugi. <code>decode_utf8</code> praktično ne radi ništa osim provere da nema nevalidnih utf8 sekvenci i prebacivanja režima.
+<br>3) Da se ne biste zbunili oko režima, jednostavno pravilo: sve što dolazi spolja (čitanje iz soketa, fajla, stdin, ...) uvek je bajtovno. Shodno tome, i sve što se tamo šalje treba da bude bajtovno (inače će biti wide character upozorenje, mada zbog podudarnosti interne reprezentacije može izgledati da radi).
+<br>4) Još jedno jednostavno pravilo: funkcija <code>is_utf8</code> uz veoma retke izuzetke ne treba da se koristi. Uvek treba da znate gde su vam bajtovi a gde znakovi. Po pravilu se na ulazu odmah dekodira i u aplikaciji se rade znakovi (osim kada su podaci binarni), a enkodira se na samom kraju pre upisa u kanal.
+<br>5) Neke biblioteke vas oslobađaju ručnog enkodiranja/dekodiranja. Na primer, <code>json::xs::decode_json()</code> očekuje binarni tok i vraća strukturu sa znakovima. Na encode očekuje znakove i vraća bajtove. Obično je to intuitivno i očekivano.
+<br>U objektnom stilu <code>JSON::XS-&gt;new-&gt;utf8-&gt;</code>
+<br>metod <code>utf8</code> upravo tera biblioteku da očekuje/vraća znakove. Ako ga ne uključite, struktura koju vrati decode može sadržati bajtove (bolje to ne raditi, osim ako ste sigurni da je samo engleski). Ali ulaz decode i izlaz encode su uvek bajtovi, to se ne menja, inače nema smisla.
+<br>Template Toolkit radi slično: čita bajtove sa diska, dekodira u znakove, očekuje da promenljive budu znakovi, renderuje i enkodira konačan rezultat u bajtove.
+<br>6) Mnogi misle da utf8 znači znakove. Ne. To su bajtovi. Utf8 je način serijalizacije Unicode kodova, tj. binarni režim. U Perl-u uopšte ne postoji pravi znakovni režim. On je čist virtuelan (radi se u runtime-u, parsiranjem bajtova). Na primer, kada u režimu znakova zatražite <code>substr</code> 10. znak, Perl ne može odmah da skoči na 10. znak kao u binarnom režimu, nego mora linearno da prođe od početka i broji znakove iz bajtova.
+<br>Pravi znakovni režim bi postojao kada bi Perl držao stringove u memoriji kao utf32 Unicode kodne tačke (trošilo bi 2-4x više memorije, ali bi radilo brže). U Perl-u je "znakovni režim" uvek utf8 ispod haube plus virtuelna runtime emulacija.</div>
+
+<div class="weight100 quote">I da, još jedna stvar koju sam zaboravio.
+<br>7) <code>use utf8;</code>
+<br>Nema nikakve veze sa runtime prekodiranjem podataka; to je samo helper koji automatski radi <code>decode_utf8</code> nad literalima napisanim u ovom fajlu / opsegu vidljivosti. Tako literali postaju stringovi. Ali ono što se učita u runtime-u ne!
+<br>Obično u programu nema mnogo hardkodovanih ne-engleskih stringova, pa nije previše koristan.</div>

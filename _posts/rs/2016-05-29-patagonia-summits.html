@@ -2,26 +2,88 @@
 layout: post
 title: "Arhiva vremena za izabrane vrhove Patagonije"
 type: post
-excerpt: "Automatizovano prikupljanje weather podataka sa mountain-forecast stranica u CSV skupove i grafičke prikaze za vrhove Patagonije."
+excerpt: "Priča o prikupljanju arhive vremena za vrhove Patagonije: parsiranje mountain-forecast, čuvanje podataka u CSV i prikaz grafikona temperature, vetra i snega."
+og: /assets/posts/2016-05-29-og.jpg
 ---
 
-<p>Zadatak je bio da se prati više mountain-forecast stranica iste strukture i da se dnevni podaci čuvaju u CSV fajlovima.</p>
+<p>Ovaj post ostavljam ovde kao case study iz praktične automatizacije podataka: ne samo „jednokratni parser“, već radni proces koji stabilno živi samostalno i daje koristan rezultat.</p>
 
-<p>Parser je prikupljao vreme objave prognoze i ključne pokazatelje za najbliže dnevne periode (am/pm/night): opis, vetar, sneg, maksimalnu/minimalnu temperaturu, chill i freezing level.</p>
+<p>Izazov je imao dva dela. Prvi: napraviti parser i deploy-ovati ga tako da radi svaki dan tokom cele godine. Rešenje je radilo preko cron-a: pokretalo se dnevno, parsiralo podatke i dopisivalo arhivu u CSV. Drugi: učiniti podatke preglednim. Za to su se Google Charts pokazali kao dobar izbor; niže su statični screenshot-ovi interaktivnih grafikona (ako se sve interaktivne dijagrame otvore na jednoj stranici, browseru postaje teško).</p>
 
-<p>Rezultat je arhiva pogodna za analizu trendova, uz vizuelne preglede i interaktivne grafikone po svakom vrhu.</p>
+<p class="mt-4">Ako vam treba parsiranje nečeg sličnog (po rasporedu, sa akumulacijom arhive i normalnom vizualizacijom podataka), pošaljite zadatak kroz brif.</p>
 
-<h2>Praćeni vrhovi</h2>
+<p class="pb-5">
+<a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_patagonia_submit_brief">Pošalji brif</a></p>
 
+<h2>Početni zadatak</h2>
+
+<p>Pre godinu dana jedan prijatelj alpinista je napisao: „Evo adresa stranica koje treba pratiti, sve imaju istu strukturu:
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Monte_Burney">Monte Burney</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)">Monte Darwin</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)">Lautaro</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Cerro_Arenales">Cerro Arenales</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo">San Lorenzo Patagonia</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn">Monte San Valentin</a></li>
-</ul>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-San-Valentin/forecasts/4058">http://www.mountain-forecast.com/peaks/Monte-San-Valentin/forecasts/4058</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-Burney/forecasts/1758">http://www.mountain-forecast.com/peaks/Monte-Burney/forecasts/1758</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Lautaro/forecasts/3380">http://www.mountain-forecast.com/peaks/Lautaro/forecasts/3380</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-Darwin/forecasts/2488">http://www.mountain-forecast.com/peaks/Monte-Darwin/forecasts/2488</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/San-Lorenzo-Patagonia/forecasts/3706">http://www.mountain-forecast.com/peaks/San-Lorenzo-Patagonia/forecasts/3706</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Cerro-Arenales/forecasts/3437">http://www.mountain-forecast.com/peaks/Cerro-Arenales/forecasts/3437</a></li>
+</ul></p>
+
+<p>Pošto na Mac-u nisam imao alat da „zaokružim crveno“ na screenshot-u, napisao sam tekstom šta treba parsirati:</p>
+<p>Weather Forecast Issued (local time) - verovatno je bolje razbiti na tri polja: vreme, dan, mesec-godina, da bi kasnije u Excel-u bilo lakše računati prosek.</p>
+
+<p>I tri puta za najbliži dan (kolone am/pm/night) sledeća polja:
+<ul>
+<li>Summary (opis)</li>
+<li>Wind (km/h)</li>
+<li>Snow (cm)</li>
+<li>High °C</li>
+<li>Low °C</li>
+<li>Chill °C</li>
+<li>Freezing level (m)</li></ul></p>
+
+<p>Mislim da je dovoljno ulaziti jednom dnevno u 9 po Peterburgu, to je 3 ujutro po njihovom vremenu - sigurno će postojati tri kolone za najbliži dan. Sve čuvati, verovatno, u CSV-u“.</p>
+
+<p>Za temperaturu, prosečna vrednost je „prosek preko bolnice“. Trebaju dva odvojena grafikona: maksimalna dnevna i minimalna dnevna temperatura.</p>
+
+<p>+ maksimalna brzina vetra</p>
+
+<p>+ wind chill</p>
 
 <p><a href="https://en.wikipedia.org/wiki/List_of_mountains_in_Chile">Spisak planina u Čileu (Wikipedia)</a></p>
 
-<p>Izvorni kod: <a href="https://bitbucket.org/raskumandrin/mountain-forecast/src">https://bitbucket.org/raskumandrin/mountain-forecast/src</a></p>
+<p>A evo šta je iz toga ispalo.</p>
+
+<h2>Monte Burney</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_Burney"><img src="{{ '/assets/posts/2016-05-29-burney.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-burney-charts.png' | relative_url }}"></p>
+
+<h2>Monte Darwin</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)"><img src="{{ '/assets/posts/2016-05-29-darwin.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-darwin-charts.png' | relative_url }}"></p>
+
+<h2>Lautaro</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)"><img src="{{ '/assets/posts/2016-05-29-lautaro.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-lautaro-charts.png' | relative_url }}"></p>
+
+<h2>Cerro Arenales</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Cerro_Arenales"><img src="{{ '/assets/posts/2016-05-29-arenales.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-arenales-charts.png' | relative_url }}"></p>
+
+<h2>San Lorenzo Patagonia</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo"><img src="{{ '/assets/posts/2016-05-29-san-lorenzo.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-lorenzo-charts.png' | relative_url }}"></p>
+
+<h2>Monte San Valentin</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn"><img src="{{ '/assets/posts/2016-05-29-san-valentin.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-valentin-charts.png' | relative_url }}"></p>

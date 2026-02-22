@@ -1,22 +1,74 @@
 ---
 layout: post
-title: "Složeni JavaScript kalkulator"
+title: "Složeni prodajni kalkulator: prelazak sa Excela na web aplikaciju"
 type: post
-excerpt: "Web kalkulator za kompleksne prodajne procene sa velikim brojem međuzavisnih parametara i pravila popusta."
+excerpt: "Praktičan primer iz 2014: kako je složen obračun za prodaju zateznih plafona prebačen iz ručnog računanja/Excela u web kalkulator sa trenutnim preračunavanjem, objašnjenjima i manje grešaka."
+og: /assets/posts/2014-10-04-complicated-calculator-en.jpg
 ---
 
-<p>Ovaj kalkulator je automatizovao složen proces obračuna za prodaju plafona, gde je ručni proračun po klijentu trajao i do 30 minuta.</p>
+<p>Ovo je arhivski, ali i dalje koristan primer iz prakse: projekat je urađen <strong>4. oktobra 2014.</strong> (od februara 2026. to je već <strong>11+ godina</strong>). Danas bih za ovakav zadatak češće birao modernije i vizuelno jače web frameworke, ali sam projekat i dalje dobro pokazuje <strong>zašto biznis prelazi sa Excela na web aplikaciju</strong>.</p>
 
-<p>Model je imao mnogo međuzavisnih parametara i preklapajućih pravila popusta, pa je ručni rad bio spor i sklon greškama.</p>
+<h2>1. Projekat iz poslovnog ugla</h2>
 
-<h3>Zašto web, a ne Excel</h3>
+<p>Kalkulator je bio potreban za automatizaciju rada prodajnog tima za zatezne plafone. Logika obračuna cene bila je složena: mnogo parametara, zavisnosti i pravila popusta koja utiču i na međurezultate i na konačnu cenu.</p>
 
-<p>Početna ideja je bila Excel. Predložena je web verzija zbog manje zavisnosti od verzija/instalacija, centralizacije logike i trenutnog preračunavanja za prodajni tim.</p>
+<p>Pre kalkulatora, priprema obračuna za jednog klijenta mogla je da traje i do 30 minuta, što je dovodilo do tipičnih problema:</p>
+<ul>
+  <li>sporiji rad prodaje i gubitak tempa u razgovoru sa klijentom,</li>
+  <li>greške u ručnom računanju koje utiču na maržu i poverenje klijenata,</li>
+  <li>teža obuka novih zaposlenih zbog mnogo izuzetaka i pravila.</li>
+</ul>
 
-<p>Frontend stack: JavaScript za računanje + Bootstrap interfejs.</p>
+<p>Na početku je ideja naručioca bila da se to uradi u Excelu. To je čest prvi korak, ali se kod ovakvog procesa ograničenja brzo pojave.</p>
 
-<p style="text-align: center;"><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/calc.png"><img style="border: solid 1px #f9f9f9; padding: 4px; border-radius: 3px;" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/calc.th.png" class="img-fluid" alt="UI složenog kalkulatora"></a></p>
+<p class="pb-4">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_complicated_calculator_rs_submit_brief">Pošaljite brief</a>
+</p>
 
-<p>Konačno rešenje je smanjilo vreme pripreme ponuda, olakšalo obuku novih zaposlenih i povećalo stabilnost obračuna.</p>
+<h2>2. Zašto web aplikacija, a ne Excel</h2>
 
-<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-10-04-complicated-calculator/src/complicated-calculator-ru-layout.html">Interaktivna verzija</a></p>
+<p>Umesto Excela predložena je web verzija kalkulatora. Ključna ideja je bila da se poslovna logika prebaci u jedinstven interfejs koji radi isto za ceo tim.</p>
+
+<p>Praktične prednosti web aplikacije u odnosu na Excel u ovom projektu:</p>
+<ul>
+  <li>nema zavisnosti od verzije Excela i lokalnog podešavanja na svakom računaru,</li>
+  <li>jedna logika obračuna za sve zaposlene umesto različitih fajlova,</li>
+  <li>trenutno preračunavanje pri promeni parametara,</li>
+  <li>lakše centralno ažuriranje algoritma i pravila popusta,</li>
+  <li>lakše čuvanje i ponovno korišćenje varijanti obračuna,</li>
+  <li>manji prag ulaska za nove menadžere zahvaljujući objašnjenjima u interfejsu.</li>
+</ul>
+
+<p>Svi proračuni su urađeni u frontend JavaScript-u, što je davalo brz odziv interfejsa bez čekanja serverskog odgovora i olakšavalo kasnije izmene pravila.</p>
+
+<h2>3. Šta je dobijeno</h2>
+
+<p>Interfejs je napravljen na <a href="http://getbootstrap.com">Bootstrap</a>-u (u tom trenutku to je bilo pragmatično rešenje da se brzo dođe do radnog alata). U ovoj objavi demo je sačuvan <strong>kakav jeste</strong> na starom Bootstrap stack-u, bez refaktorisanja, da bi klijent mogao uživo da prođe kroz logiku i ponašanje kalkulatora.</p>
+
+<p>
+  <a href="/assets/posts/2014-10-04-complicated-calculator-en.jpg">
+    <img src="/assets/posts/2014-10-04-complicated-calculator-en.jpg" class="img-fluid" style="max-height: 420px; width: auto;" alt="Interfejs kalkulatora za obračun zateznih plafona">
+  </a>
+</p>
+
+<p><a href="{{ '/demos/ceilcalc/rs/' | relative_url }}"><strong>Interaktivna demo verzija kalkulatora zateznih plafona</strong></a></p>
+
+<p>Nakon uvođenja, prodavcu je bilo dovoljno da unese parametre, a obračun se odmah ažurirao. Nije više morao da pamti sve izuzetke, jer su u interfejs dodata kontekstualna objašnjenja i napomene.</p>
+
+<h2>4. Šta je kalkulator pokrivao</h2>
+
+<ul>
+  <li>više plafona u jednom obračunu (na primer kuhinja, dnevna soba, kupatilo),</li>
+  <li>različite tipove plafona (PVC i tkanina) sa zajedničkom i specifičnom logikom,</li>
+  <li>pravila popusta i međuzavisne parametre,</li>
+  <li>čuvanje stanja obračuna i preračunavanje pri promenama,</li>
+  <li>izvoz konačne ponude u Excel.</li>
+</ul>
+
+<p>Sa tehničke strane, postojala je zajednička entitetska logika za „plafon”, a zatim specijalizovani naslednici za razlike između tipova.</p>
+
+<h2>5. Zašto je ovaj primer i dalje koristan</h2>
+
+<p>Iako je implementacija istorijska (2014), scenario je i dalje aktuelan: kada prodaja zavisi od složene formule sa izuzecima i popustima, prelazak sa Excela/ručnog računanja na web alat obično brzo daje rezultat u brzini, kvalitetu i obuci tima.</p>
+
+<p>Danas bih za sličan zadatak najčešće birao moderni framework (u zavisnosti od konteksta: React, Vue, Svelte itd.) i savremeniju UI arhitekturu. Ali kao demonstracija <strong>praktičnog poslovnog rezultata</strong>, ovaj primer je i dalje reprezentativan.</p>

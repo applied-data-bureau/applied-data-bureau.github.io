@@ -1,0 +1,1459 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Stretch Ceiling Calculator</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/non-responsive.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/style.css"/>
+</head>
+
+<body style="padding-top: 70px; padding-bottom: 40px;">
+
+<input type="hidden" name="id" value="1">
+<input type="hidden" name="date" value="2014.10.04">
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ '/complicated-calculator' | relative_url }}" style="color: #fff;">&larr; Back to the <span style="color: #ed2a23;">Bureau</span> post: complex calculator</a>
+		</div>
+
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<p class="navbar-text navbar-right">
+				<button type="button" class="btn btn-xs btn-danger btn-save" disabled="disabled">Save</button>
+			</p>
+			<p class="navbar-text navbar-right" style="color: #f99">
+				Total: <span class="main-total-sum">0</span> $
+			</p>
+			<p class="active navbar-text navbar-right">Estimate 8430 &bull; Ivanov</p>
+		</div><!-- /.navbar-collapse -->
+	</div> <!-- div.container -->
+</nav>
+
+<div class="container">
+
+<form role="form">
+
+<div class="row">
+	<div class="col-xs-7">
+		
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Client</span>
+				</label>
+			</div>
+			<div class="col-xs-4 control-group">
+				<input class="form-control" name="surname" type="text" placeholder="Last name" value="Ivanov" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="name" type="text" placeholder="First name" value="Ivan" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="patronymic" type="text" placeholder="Middle name" value="Ivanovich" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Phone</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="phone" type="text" value="123-45-67" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Address</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="address" type="text" value="" />
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="col-xs-5">
+		
+		<label class="control-label" style="font-weight: normal">Comment on estimate</label>
+		
+		<textarea class="form-control" name="comment" rows="5">Give the client a small gift from the company</textarea>
+		
+	</div>
+</div>
+
+<hr>
+
+<div class="ajax-data">
+
+<div class="header-parameters">
+
+<div class="row">
+	<div class="col-xs-12 start-help">
+		
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-xs-2 align-right company control-group error">
+		<label class="custom-label control-label">
+			<span class="popover-label control-label" data-ref="company">Company</span>
+		</label>
+	</div>
+	<div class="col-xs-4 company control-group error">
+		<select class="form-control" name="company">
+			<option value=""           ></option>
+			<option value="firm1"  >Legal Entity 1</option>
+			<option value="firm2"     >Legal Entity 2</option>
+			<option value="dealer"     >Dealer</option>
+		</select>
+	</div>
+	<div class="col-xs-6 dealer">
+		<input class="form-control" name="dealer" type="text"/>
+	</div>
+</div>
+
+<div class="row form-group error-firm">
+	<div class="col-xs-2 align-right">
+		<label class="custom-label">
+			<span class="popover-label" data-ref="ceiling-addition">Add ceiling</span>
+		</label>
+	</div>
+	<div class="col-xs-4">
+		<input class="form-control" name="ceiling-name" type="text" placeholder="Name" />
+	</div>
+	<div class="col-xs-6">
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_pvc" type="button">Add PVC ceiling</button>
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_tex" type="button">Add Fabric ceiling</button>
+    </div>
+</div>
+
+</div> <!-- div.header-parameters -->
+
+
+<div class="row no-seilings">
+	<div class="col-xs-12 text-center muted" style="padding: 2em 0; font-size: 130%;">
+		No ceilings have been added to the estimate
+		<br><br><span style="color: #c9302c; font-weight: bold;">Click “Add PVC ceiling” or “Add Fabric ceiling” above<br>to start calculating their cost</span>
+	</div>
+</div>
+
+<div class="seilings-list">
+
+<legend>Ceiling list <small class="seiling-alert">Ceilings with a red label (not calculated) are not included in the total estimate cost.</small></legend>
+
+<ul class="nav nav-tabs">
+<!--
+    <li><a href="#pvc1" data-toggle="tab">Bathroom PVC</a></li>
+    <li class="active"><a href="#textile1" data-toggle="tab">Living room Fabric</a></li>
+-->
+</ul>
+
+<br>
+
+<div class="tab-content">
+
+</div> <!-- .tab-content -->
+
+</div> <!-- div.seilings-list -->
+
+</div> <!-- div.ajax-data -->
+
+</form>
+
+</div> <!-- .containter -->
+
+<!-- Kонтейнер для хранения шаблонов форм потолков -->
+<div class="seiling-data" style="display: none;">
+
+
+	<!-- Tab 1 -->
+	<div class="tab-pane" id="pvc">
+
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Canvas: <strong class="texture-discount-sum">32 440</strong> $
+			with discount <strong class="discount-value">0</strong>%
+			(<strong class="discount-type">first/even ceiling</strong>);
+			before discount: <strong class="texture-sum">32 440</strong> $
+			Options: <strong class="options-sum">32 440</strong> $
+		</div>
+
+		<div class="alert alert-danger main-alert-error">
+			To calculate the ceiling cost, fill in the required parameters.
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Name</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Name" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Remove ceiling from estimate</span>
+				<span class="muted">(confirmation will be requested on click)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Remove ceiling from estimate</button>
+				<span class="danger" style="padding-left: 2em;">Warning! Deleted data cannot be restored!</span>
+			</div>
+		</div>
+
+		<div class="row control-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Max height</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="pvc-max-height" checked>2 to 3.6 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="pvc-max-height">3.6 to 5 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="pvc-max-height">5 to 7 m
+				</label>  
+				<span class="danger falsework">Warning! Scaffolding is provided by the customer!</span>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Room length</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-length" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Room width</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-width" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right area control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="area">Area</span>
+				</label>
+			</div>
+			<div class="col-xs-2 area control-group error">
+				<div class="input-group">
+					<input class="form-control" name="pvc-area" type="number" step="0.01" />
+					<span class="input-group-addon">m²</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Perimeter</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group pvc-perimeter">
+			<div class="col-xs-5">
+				<p class="dt perimeter-type">Perimeter based on area, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-perimeter"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Final perimeter for calculation, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+		<div class="row form-group pvc-area">
+			<div class="col-xs-5">
+				<p class="dt">Area based on length and width, m²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-area"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Final area for calculation, m²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-area"></p>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Texture</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="pvc-texture">
+					<option value="0" selected>Not selected</option>
+					<option value="101">M matt white 218<span class="text-info">; 1 m²: <span style="color:red;">650<span> $, total: <span>3 600</span> $</span></option>
+					<option value="102">M matt colored 218</option>
+					<option value="103">M matt white 300/350</option>
+					<option value="104">M matt colored 300</option>
+					<option value="105">M matt white 560</option>
+					<option value="106">S satin white 218</option>
+					<option value="107">S satin colored 218</option>
+					<option value="108">S satin white 300/350</option>
+					<option value="109">S satin colored 300</option>
+					<option value="110">S satin white 560</option>
+					<option value="111">L gloss white 165</option>
+					<option value="112">L gloss colored 165</option>
+					<option value="113">SL gloss white 194</option>
+					<option value="114">SL gloss colored 194</option>
+					<option value="115">L gloss white 300/350</option>
+					<option value="116">L gloss colored 300/350</option>
+					<option value="117">L gloss white 500</option>
+					<option value="118">OT transparent 142</option>
+					<option value="119">style, marble 142</option>
+					<option value="120">fantasy-suede 142</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Full canvas price list</button>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="baguette">Baguette type</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="1" checked>Plastic
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="2">Aluminum
+				</label>  
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="masking-tape">Masking tape</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="1" checked>No tape
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="2">White
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="3">Black
+				</label> 
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="4">Colored
+				</label> 
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right bypassing-tube control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="bypassing-tube">Pipe bypass</span>
+				</label>
+			</div>
+			<div class="col-xs-2 bypassing-tube control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right corners control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="corners">Corners</span>
+				</label>
+			</div>
+			<div class="col-xs-2 corners control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group chandelier">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="chandelier">Chandelier</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group chandelier">
+				<div class="input-group">
+					<input class="form-control" name="pvc-chandelier" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right control-group luminaire">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="luminaire">Luminaire installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group luminaire">
+				<div class="input-group">
+					<input class="form-control" name="pvc-luminaire" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Luminaire</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="pvc-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>not selected</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Quantity</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-lamp" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Bulb</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="pvc-light-bulb" class="form-control">
+					<option value="0" selected>not selected</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Additional parameters</span>
+			</div>
+		</div>
+
+</div>
+
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group keramogranit">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="keramogranit">Porcelain tile</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group keramogranit">
+				<div class="input-group">
+					<input class="form-control" name="pvc-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group soffit-space">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="soffit-space">Behind-cornice space</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group soffit-space">
+				<div class="input-group">
+					<input class="form-control" name="pvc-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group timber">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="timber">Timber</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group timber">
+				<div class="input-group">
+					<input class="form-control" name="pvc-timber" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-moldings">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Ceiling baguette</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-moldings">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group led-strip">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="led-strip">LED strip installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group led-strip">
+				<div class="input-group">
+					<input class="form-control" name="pvc-led-strip" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group curvilinearity">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="curvilinearity">Curvilinear section</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group curvilinearity">
+				<div class="input-group">
+					<input class="form-control" name="pvc-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group inner-cut">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="inner-cut">Internal cutout</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group inner-cut">
+				<div class="input-group">
+					<input class="form-control" name="pvc-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ventilation">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ventilation">Ventilation opening</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ventilation">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ventilation" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+						
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group air-vent">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="air-vent">Island hood installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group air-vent">
+				<div class="input-group">
+					<input class="form-control" name="pvc-air-vent" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-cornice">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Ceiling cornice (mount point)</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-cornice">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group transformer">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="transformer">Transformer/controller installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group transformer">
+				<div class="input-group">
+					<input class="form-control" name="pvc-transformer" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group sensor">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="sensor">Sensor installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group sensor">
+				<div class="input-group">
+					<input class="form-control" name="pvc-sensor" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group separator">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="separator">Separator</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group separator">
+				<div class="input-group">
+					<input class="form-control" name="pvc-separator" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group art-prints">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="art-prints">Art print</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group art-prints">
+				<div class="input-group">
+					<input id="ceiling-pvc-square" class="form-control" name="pvc-art-prints" type="number" step="0.01" />
+					<span class="input-group-addon">m²</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="seam-alignment">Seam alignment</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="pvc-seam-alignment">
+				</label>  
+			</div>
+		</div>
+</div> <!-- collapse -->
+			
+	</div> <!-- /Tab 1 -->
+
+	<!-- Tab 2 -->
+	<div class="tab-pane" id="tex">
+		
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Canvas: <strong class="texture-discount-sum">32 440</strong> $
+<!--			with discount <strong class="discount-value">0</strong>%
+			(первый/чётный потолок);
+			before discount: <strong class="texture-sum">32 440</strong> $
+-->
+			Options: <strong class="options-sum">32 440</strong> $
+		</div>
+	
+		<div class="alert alert-danger main-alert-error">
+			To calculate the ceiling cost, fill in the required parameters.
+		</div>
+	
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Name</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Name" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Remove ceiling from estimate</span>
+				<span class="muted">(confirmation will be requested on click)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Remove ceiling from estimate</button>
+				<span class="danger" style="padding-left: 2em;">Warning! Deleted data cannot be restored!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Max height</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="tex-max-height" checked>2 to 3.6 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="tex-max-height">3.6 to 5 m
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="tex-max-height">5 to 7 m
+				</label>  
+				<span class="danger falsework">Warning! Scaffolding is provided by the customer!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Texture</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="tex-texture">
+					<option value="0" selected>Not selected</option>
+					<option value="200">Clipso classic 705S White 300/400/500; 1 m²: 1'080 $, total: 3'600 $</option>
+					<option value="201">Clipso classic 705C Colored 300/400/500</option>
+					<option value="202">Clipso acoustic 705A White 300/400/500</option>
+					<option value="203">Clipso acoustic 705A Colored 300/400/500</option>
+					<option value="204">Clipso acoustic economy 495D White 300/400/500</option>
+					<option value="205">Clipso acoustic economy 495D Colored 300/400/500</option>
+					<option value="206">Clipso translucent 507PT White 300/400/500</option>
+					<option value="207">Clipso antibacterial 705H White 300/400/500</option>
+					<option value="208">Clipso water-repellent 705Nosweat White 300/400/500</option>
+					<option value="209">Clipso stain-resistant 705Nostain White 300/400/500</option>
+					<option value="210">Clipso MONBLAN 607M White 300/400/500</option>
+					<option value="211">Descor warm White 310/410/510</option>
+					<option value="212">Descor cool White 310/410/510</option>
+					<option value="213">Clipso classic 705S White 300/400/500</option>
+					<option value="214">Clipso classic 705C Colored 300/400/500</option>
+					<option value="215">Clipso acoustic 705A White 300/400/500</option>
+					<option value="216">Clipso acoustic 705A Colored 300/400/500</option>
+					<option value="217">Clipso acoustic economy 495D White 300/400/500</option>
+					<option value="218">Clipso acoustic economy 495D Colored 300/400/500</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Full canvas price list</button>
+			</div>
+		</div>
+
+		<div class="alert alert-error tex-calc-error">
+			<p class="text-danger">
+				It is impossible to cut the selected canvas for the specified maximum dimensions.
+			</p>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions">Max room length</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-length" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions" data-title="Maximum room width">Max room width</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-width" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Perimeter</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">m</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group tex-calc">
+			<div class="col-xs-4">
+				<p class="dt">Length with allowances, m:</p>
+				<p class="dt">Width with allowances, m:</p>
+				<p class="dt">Selected roll width, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd length-margin"></p>
+				<p class="dd width-margin"></p>
+				<p class="dd tex-width"></p>
+			</div>
+			<div class="col-xs-2">
+				<p class="length-cut"></p> <!-- (cut length) -->
+				<p class="width-cut"></p> <!-- (cut length) -->
+			</div>
+			<div class="col-xs-4">
+				<p class="dt">Cut area, m²:</p>
+				<p class="dt">Perimeter by width and length, m:</p>
+				<p class="dt">Perimeter for calculations, m:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd cut-area"></p>
+				<p class="dd calc-perimeter"></p>
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="bypassing-tube">Pipe bypass</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="corners">Corners</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="chandelier">Chandelier</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-chandelier" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="luminaire">Luminaire installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-luminaire" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Luminaire</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="tex-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>not selected</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Quantity</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-lamp" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Bulb</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="tex-light-bulb" class="form-control">
+					<option value="0" selected>not selected</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Additional parameters</span>
+			</div>
+		</div>
+		
+</div>
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="keramogranit">Porcelain tile</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="soffit-space">Behind-cornice space</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="timber">Timber</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-timber" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Ceiling baguette</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="led-strip">LED strip installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-led-strip" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="curvilinearity">Curvilinear section</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="inner-cut">Internal cutout</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">lm</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ventilation">Ventilation opening</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ventilation" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="air-vent">Island hood installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-air-vent" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Ceiling cornice (mount point)</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="transformer">Transformer/controller installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-transformer" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="sensor">Sensor installation</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-sensor" type="number" step="1" />
+					<span class="input-group-addon">pcs</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="tex-canvas-timber">Insert 2 canvases into 1 baguette with timber</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="tex-canvas-timber">
+				</label>  
+			</div>
+		</div>
+		
+</div> <!--  collapse -->
+
+	</div> <!-- /Tab 2 -->
+</div>
+<!-- // Kонтейнер для хранения шаблонов форм потолков -->
+
+
+<!-- Kонтейнер для хранения всплывающих плашек со справочной информацией -->
+<div class="popover-data" style="display: none;">
+
+<!-- Company -->
+<div class="company">
+	<p>The selected company determines discount and promo rules.</p>
+	<dl>
+		<dt>Legal Entity 1</dt>
+		<dd>Odd PVC ceilings: 10%+10%; even PVC ceilings: 50%+10%. Luminaires at full price.</dd>
+		<dt>Legal Entity 2, Dealers</dt>
+		<dd>Odd PVC ceilings: 10%+5%; even PVC ceilings: 50%+5%. Plastic luminaires are free when a bulb is purchased.</dd>
+	</dl>
+	<p>The PVC ceiling discount is shown directly above the ceiling parameter form (below).</p>
+	<p>If “Dealer” is selected, specify which dealer it is.</p>
+</div>
+<!-- Подарочная карта -->
+<div class="discount">
+	<p>If a card is available, the corresponding discount is applied to the final order cost.</p>
+</div>
+<!-- Kомментарии -->
+<div class="comment">
+	<p>Any additional information about the client.</p>
+</div>
+<!-- Add ceiling -->
+<div class="ceiling-addition">
+	<p>Ceilings are added as tabs below.</p>
+	<p>Tab sorting: PVC ceilings come first in descending canvas price order, followed by fabric ceilings.</p>
+	<p>Use client-provided names when estimating more than 3 ceilings in one order. Each ceiling is calculated separately even if they are in the same room.</p>
+</div>
+
+
+<!-- ПВХ ТKАНЬ Name и удаление -->
+<div class="ceiling-name" title="Name and deletion">
+	<p>The ceiling name helps avoid confusion with the client and in the ceiling list. Changing the name immediately updates the tab label above.</p>
+	<p>Deleting a ceiling removes it from calculations completely. A deleted ceiling cannot be restored (better copy the estimate and calculate the variant there). Deletion changes order, which affects odd/even discounts.</p>
+</div>
+
+<!-- ПВХ ТKАНЬ Maximum room height -->
+<div class="max-height" title="Maximum room height">
+	<p>If the ceiling is installed above a stairwell, height is measured from the lowest step to the highest point of the base ceiling.</p>
+	<p>If a non-standard height is selected (not 2 to 3.6 m), the total ceiling cost (canvas, chandeliers, luminaires and all extras) increases:</p>
+	<dl>
+		<dt>3.6 to 5 m</dt>
+		<dd>Plus 20% to the final amount of this ceiling.</dd>
+		<dt>5 to 7 m</dt>
+		<dd>Plus 30% to the final amount of this ceiling.</dd>
+	</dl>
+	<p>Also, for non-standard height the client must be informed that scaffolding is provided by them.</p>
+</div>
+<!-- ПВХ Room length and width -->
+<div class="ceiling-dimensions" title="Room length and width">
+	<p>Enter length and width if area and perimeter are unknown. After clicking “Calculate area and perimeter”, area and perimeter will be calculated from length and width and filled below.</p>
+	<p>For PVC ceilings, length and width are not used directly in cost calculations and are only used to calculate perimeter and area (after clicking “Calculate area and perimeter”).</p>
+</div>
+<!-- ТKАНЬ Maximum room length and width -->
+<div class="max-ceiling-dimensions" title="Maximum room length and width">
+	<p>Maximum room length and width, without allowances.</p>
+	<p>After clicking “Calculate cut area and perimeter”, area and perimeter will be calculated from length and width and filled below.</p>
+	<p>For fabric ceilings, maximum room length and width (or simply length and width for a rectangular room) are used to calculate required allowances.</p>
+</div>
+<!-- ПВХ ТKАНЬ Area -->
+<div class="area">
+	<p>Actual ceiling area including all cutouts.</p>
+	<p>The value is stored with two decimals, but calculations use an integer-rounded value. Fractions up to 0.24 are rounded down; above 0.24 are rounded up.</p>
+</div>
+<!-- ПВХ ТKАНЬ Perimeter -->
+<div class="perimeter">
+	<p>The value is stored with two decimals, but calculations use a value rounded up to a whole number.</p>
+	<p>If perimeter is not specified, the system calculates it <i>approximately (!)</i> using [square root of area]×4.</p>
+	<p>Exact perimeter is calculated from room length and width, or entered manually.</p>
+</div>
+<!-- ПВХ ТKАНЬ Corners -->
+<div class="corners">
+	<p>All internal and external room corners. On curvilinear sections, corners are also counted at radius break points.</p>
+	<p>Default value is 4. If up to four, each costs 90 $; if five or more, each costs 150 $.</p>
+</div>
+<!-- ПВХ ТKАНЬ Texture -->
+<div class="texture">
+	<p>Canvas price per meter depends on room area. The larger the area, the lower the price per square meter.</p>
+	<p>Texture and room area affect the cost. All price options are listed on the “Full canvas price list” page.</p>
+	<p>If area is already specified, cost is shown for each texture.</p>
+</div>
+<!-- ПВХ Baguette type -->
+<div class="baguette">
+	<p>Plastic baguette is free. Aluminum baguette is 40 $/lm.</p>
+	<p>Wall baguette is calculated by default. If ceiling-mounted baguette is needed, see “Additional parameters”.</p>
+</div>
+<!-- ПВХ Masking tape -->
+<div class="masking-tape" title="Masking tape">
+	<p>For colored tape, the quantity included in the estimate must be rounded up to the nearest multiple of five. White and black tape are rounded up to whole numbers.</p>
+</div>
+<!-- ПВХ ТKАНЬ Chandelier -->
+<div class="chandelier">
+	<p>Installation of each chandelier or pendant luminaire costs $500 regardless of mounting type.</p>
+</div>
+<!-- ПВХ ТKАНЬ Luminaire installation -->
+<div class="luminaire" title="Luminaire installation">
+	<p>Installation of one luminaire costs $500.</p>
+	<p>The price includes ceiling wiring, marking, terminals, thermal rings and luminaire installation. This field is NOT tied to the number of luminaires below.</p>
+</div>
+<!-- ПВХ ТKАНЬ Pipe bypass -->
+<div class="bypassing-tube">
+	<p>Bypassing one standard-diameter pipe costs $300.</p>
+</div>
+<!-- ПВХ ТKАНЬ Luminaire -->
+<div class="lamp">
+	<p>If a luminaire is selected, a required field for quantity appears.</p>
+	<p>In some cases the luminaire is provided as a gift, but only when a bulb is selected (the number of bulbs must match the number of luminaires).</p>
+</div>
+<!-- ПВХ ТKАНЬ Bulb -->
+<div class="light-bulb">
+	<p>If a bulb is selected, a required field for quantity appears.</p>
+	<p>2700 K, 2800 K are warm white light.</p>
+	<p>4100 K is cool white light.</p>
+</div>
+<!-- ПВХ ТKАНЬ Porcelain tile -->
+<div class="keramogranit">
+	<p>Cost is determined by job complexity.</p>
+</div>
+<!-- ПВХ ТKАНЬ Behind-cornice space -->
+<div class="soffit-space">
+	<p>Ceiling installation in behind-cornice or hard-to-reach space.</p>
+</div>
+<!-- ПВХ ТKАНЬ Timber -->
+<div class="timber">
+	<p>Used for various needs during ceiling installation.</p>
+</div>
+<!-- ПВХ ТKАНЬ Ceiling baguette -->
+<div class="ceiling-moldings">
+	<p>Ceiling installation on ceiling-mounted baguette. This value is not algorithmically tied to perimeter.</p>
+</div>
+<!-- ПВХ ТKАНЬ LED strip installation -->
+<div class="led-strip">
+	<p>Labor for LED strip installation only: 200 $/lm. The strip is purchased and paid for separately.</p>
+</div>
+<!-- ПВХ ТKАНЬ Curvilinear section -->
+<div class="curvilinearity">
+	<p>Length of the curvilinear ceiling section.</p>
+</div>
+<!-- ПВХ ТKАНЬ Internal cutout -->
+<div class="inner-cut">
+	<p>Internal cutout in PVC canvas (at production) or in fabric canvas (made on site).</p>
+</div>
+<!-- ПВХ ТKАНЬ Ventilation opening -->
+<div class="ventilation">
+	<p>The price includes installation of a ring of the required diameter and connection of the existing ventilation pipe.</p>
+</div>
+<!-- ПВХ ТKАНЬ Island hood installation -->
+<div class="air-vent">
+	<p>Charged when the hood must be installed by our team. All work is included.</p>
+</div>
+<!-- ПВХ ТKАНЬ Ceiling cornice (mount point) -->
+<div class="ceiling-cornice" title="Ceiling cornice (mount point)">
+	<p>Installation of one ceiling cornice mount point.</p>
+</div>
+<!-- ПВХ ТKАНЬ Установка трансфорmattора, констроллера -->
+<div class="transformer">
+	<p>Labor for transformer or controller installation only; the devices are purchased and paid for separately.</p>
+</div>
+<!-- ПВХ ТKАНЬ Sensor installation -->
+<div class="sensor">
+	<p>Installation of any security or fire sensor.</p>
+</div>
+<!-- ТKАНЬ Insert 2 canvases into 1 baguette with timber -->
+<div class="tex-canvas-timber">
+	<p>Insert two fabric canvases into one baguette. Price includes installation of the support structure for the fabric ceiling baguette.</p>
+</div>
+<!-- ПВХ Separator -->
+<div class="separator">
+	<p>Separator installation; the supporting structure (timber) is calculated separately.</p>
+</div>
+<!-- ПВХ Art print -->
+<div class="art-prints">
+	<p>Photo print area is calculated as max image length × max image width. Price per meter depends on total canvas area and texture.</p>
+	<p>Art print area must not exceed room area.</p>
+	<p>Art print is not available on “style, marble 142” and “fantasy-suede 142” textures.</p>
+</div>
+<!-- ПВХ Seam alignment -->
+<div class="seam-alignment">
+	<p>Seam centering or custom seam position. Adds 15% to canvas cost.</p>
+</div>
+
+
+</div>
+<!-- / Kонтейнер для хранения всплывающих плашек со справочной информацией -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:90%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Canvas cost by area</h4>
+      </div>
+      <div class="modal-body">
+		  <h1>PVC</h1>
+		  <table class="table table-bordered price-list-pvh table-condensed">
+			  <tr class="text-center">
+			    <th>Texture</th>
+			    <th>21.00 m² and more</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² and less</th>
+			  </tr>
+
+		  </table>
+		  
+		  <h1>Art print</h1>
+		  <table class="table table-bordered price-list-art table-condensed">
+			  <tr class="text-center">
+			    <th>Texture</th>
+			    <th>21.00 m² and more</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² and less</th>
+			  </tr>
+
+		  </table>
+		  <h1>Fabric</h1>
+		  <table class="table table-bordered price-list-tex table-condensed">
+			  <tr class="text-center">
+			    <th>Texture</th>
+			    <th>21.00 m² and more</th>
+			    <th>11.00–20.99 m²</th>
+			    <th>6.00–10.99 m²</th>
+			    <th>5.99 m² and less</th>
+			  </tr>
+			
+		  </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="../shared/jquery-2.0.3.min.js"></script>
+<script src="../shared/bootstrap/js/bootstrap.min.js"></script>
+<script src="./price.js"></script>
+<script src="./calc.js"></script>
+<script>
+
+seilingList = JSON.parse( '[]' );
+//console.log(seilingList);
+
+var i;
+for (i = 0; i < seilingList.length; ++i) {
+	if ( seilingList[i].type == 'ПВХ' ) {
+		seilingList[i].__proto__ = PVCSeiling.prototype;
+	};
+	if ( seilingList[i].type == 'Ткань' ) {
+		seilingList[i].__proto__ = TexSeiling.prototype;
+	};
+//	console.log(seilingList[i].type);
+	
+//	seilingList[i].textureDiscountSum = seilingList[i].textureSum;
+//	seilingList[i].totalSum = seilingList[i].textureDiscountSum + seilingList[i].optionsSum;
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .texture-sum').text( numberWithCommas( seilingList[i].textureSum ) );
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .options-sum').text( numberWithCommas( seilingList[i].optionsSum ) );
+}
+<!-- tmpl_if name="sindex" -->
+Seiling.index = <!-- tmpl_var name="sindex" -->;
+<!-- tmpl_else -->
+Seiling.index = 0;
+<!-- /tmpl_if  -->
+
+///console.log(seilingList);
+
+//console.log(Seiling.index);
+
+</script>
+
+<script>
+// заполняем прайс в диалоговом окне
+
+pvhTexture.forEach(function(entry) {
+	$('table.price-list-pvh tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Matt, satin</td>'
+	+'<td>' + artPrint.gloss.a21 + '</td>'
+	+'<td>' + artPrint.gloss.a10 + '</td>'
+	+'<td>' + artPrint.gloss.a5  + '</td>'
+	+'<td>' + artPrint.gloss.a0  + '</td>'
+	+'</tr>');
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Gloss</td>'
+	+'<td>' + artPrint.matt.a21 + '</td>'
+	+'<td>' + artPrint.matt.a10 + '</td>'
+	+'<td>' + artPrint.matt.a5  + '</td>'
+	+'<td>' + artPrint.matt.a0  + '</td>'
+	+'</tr>');
+
+texTexture.forEach(function(entry) {
+	$('table.price-list-tex tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+</script>
+<script>
+$('select[name="company"] option[value="firm1"]').attr('selected','selected');
+$('select[name="company"]').change();
+
+</script>
+
+</body>
+</html>

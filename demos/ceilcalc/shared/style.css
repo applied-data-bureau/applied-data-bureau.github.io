@@ -1,0 +1,86 @@
+.form-element {
+    margin-bottom: 20px;
+}
+
+.popover { color: #333; }
+
+ul.nav-tabs li a.error { color: red; }
+
+span.falsework { display: none; }
+div.extra-parameters { display: none; }
+
+div.align-right { text-align: right; }
+div.align-right label { font-weight: normal;; }
+
+.dealer { display: none; }
+.light-count { display: none; }
+.lamp-count { display: none; }
+
+.btn-extra-parameters { border-bottom: dashed 1px #333; cursor: pointer;color: #333;margin-bottom: 1em;}
+
+.popover-label {
+border-bottom: dashed 1px gray;
+}
+.popover-data {
+display: none;
+}
+.custom-label {
+min-height: 30px; text-align: right; vertical-align: middle; padding-top: 5px;
+}
+
+.delete-confirmation { display: none; }
+.btn-delete-confirm { line-height: 30px; left-margin: 3em; border-bottom: dashed 1px #b94a48; color: #b94a48; cursor: pointer;} 
+div.primary-parameters .row, div.header-parameters .row { margin-bottom: 1em; }
+
+.no-seilings {
+display: none; 
+}
+
+.primary-parameters .dt { text-align: right;  color: gray; }
+.primary-parameters .dd { text-align: right; font-weight: bolder; }
+
+.tex-calc { padding-bottom: 1em; display: none; }
+.tex-calc-error { display: none; }
+
+.pvc-perimeter {display: none; }
+.pvc-area {display: none; }
+
+.seilings-list {
+display: none; 
+}
+.error-firm { display: none; }
+.label-hover:hover {
+background-color: #fcf8e3; 
+}
+small.seiling-alert {
+ color: #b94a48; display: none;
+}
+
+.custom-label span {
+line-height: 20px;
+}
+
+.inline-labels label {
+	margin-right: 1em;
+}
+.danger {  line-height: 30px; color: red; }
+
+.inline-labels  {
+padding-top : 4px;
+/*	line-height: 30px; */
+}
+
+.main-alert-info span { font-size: 140%; vertical-align:middle; }
+
+
+.info {
+    font-style: oblique;
+    margin-left: 200px;
+    margin-bottom: 25px;
+}
+.help-button {
+    margin-top: 25px;
+}
+
+.label-no-bold { font-weight: normal; }
+.glyphicon-silver { color: #f0ad4e; margin-right: 0.5em; }

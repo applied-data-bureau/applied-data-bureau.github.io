@@ -1,0 +1,1459 @@
+---
+---
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>Калькулятор натяжных потолков</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/css/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/bootstrap/non-responsive.css"/>
+	<link rel="stylesheet" type="text/css" href="../shared/style.css"/>
+</head>
+
+<body style="padding-top: 70px; padding-bottom: 40px;">
+
+<input type="hidden" name="id" value="1">
+<input type="hidden" name="date" value="2014.10.04">
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Навигация</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ '/complicated-calculator' | relative_url }}" style="color: #fff;">&larr; Назад к посту <span style="color: #ed2a23;">Бюро</span>: сложный калькулятор</a>
+		</div>
+
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<p class="navbar-text navbar-right">
+				<button type="button" class="btn btn-xs btn-danger btn-save" disabled="disabled">Сохранить</button>
+			</p>
+			<p class="navbar-text navbar-right" style="color: #f99">
+				Итого: <span class="main-total-sum">0</span> руб.
+			</p>
+			<p class="active navbar-text navbar-right">Расчёт 8430 &bull; Иванов</p>
+		</div><!-- /.navbar-collapse -->
+	</div> <!-- div.container -->
+</nav>
+
+<div class="container">
+
+<form role="form">
+
+<div class="row">
+	<div class="col-xs-7">
+		
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Клиент</span>
+				</label>
+			</div>
+			<div class="col-xs-4 control-group">
+				<input class="form-control" name="surname" type="text" placeholder="Фамилия" value="Иванов" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="name" type="text" placeholder="Имя" value="Иван" />
+			</div>
+			<div class="col-xs-3 control-group">
+				<input class="form-control" name="patronymic" type="text" placeholder="Отчество" value="Иванович" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Телефон</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="phone" type="text" value="123-45-67" />
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group">
+				<label class="custom-label control-label">
+					<span class="control-label">Адрес</span>
+				</label>
+			</div>
+			<div class="col-xs-10 control-group">
+				<input class="form-control" name="address" type="text" value="" />
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="col-xs-5">
+		
+		<label class="control-label" style="font-weight: normal">Комментарий к расчёту</label>
+		
+		<textarea class="form-control" name="comment" rows="5">Подарить клиенту презент от фирмы</textarea>
+		
+	</div>
+</div>
+
+<hr>
+
+<div class="ajax-data">
+
+<div class="header-parameters">
+
+<div class="row">
+	<div class="col-xs-12 start-help">
+		
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-xs-2 align-right company control-group error">
+		<label class="custom-label control-label">
+			<span class="popover-label control-label" data-ref="company">Компания</span>
+		</label>
+	</div>
+	<div class="col-xs-4 company control-group error">
+		<select class="form-control" name="company">
+			<option value=""           ></option>
+			<option value="firm1"  >Юридическое лицо 1</option>
+			<option value="firm2"     >Юридическое лицо 2</option>
+			<option value="dealer"     >Дилер</option>
+		</select>
+	</div>
+	<div class="col-xs-6 dealer">
+		<input class="form-control" name="dealer" type="text"/>
+	</div>
+</div>
+
+<div class="row form-group error-firm">
+	<div class="col-xs-2 align-right">
+		<label class="custom-label">
+			<span class="popover-label" data-ref="ceiling-addition">Добавление потолка</span>
+		</label>
+	</div>
+	<div class="col-xs-4">
+		<input class="form-control" name="ceiling-name" type="text" placeholder="Название" />
+	</div>
+	<div class="col-xs-6">
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_pvc" type="button">Добавить потолок «ПВХ»</button>
+		<button style="margin-right: 1em;" class="btn btn-default seiling_add_tex" type="button">Добавить потолок «Ткань»</button>
+    </div>
+</div>
+
+</div> <!-- div.header-parameters -->
+
+
+<div class="row no-seilings">
+	<div class="col-xs-12 text-center muted" style="padding: 2em 0; font-size: 130%;">
+		В расчёт не добавлено ни одного потолка
+		<br><br><span style="color: #c9302c; font-weight: bold;">Нажмите «Добавить потолок ПВХ» или «Добавить потолок Ткань» выше<br>для начала вычисления их стоимости</span>
+	</div>
+</div>
+
+<div class="seilings-list">
+
+<legend>Список потолков <small class="seiling-alert">Потолки с красным ярлычком (непосчитанные) не учитывается в общей стоимости всего расчёта.</small></legend>
+
+<ul class="nav nav-tabs">
+<!--
+    <li><a href="#pvc1" data-toggle="tab">Туалет ПВХ</a></li>
+    <li class="active"><a href="#textile1" data-toggle="tab">Гостиная Ткань</a></li>
+-->
+</ul>
+
+<br>
+
+<div class="tab-content">
+
+</div> <!-- .tab-content -->
+
+</div> <!-- div.seilings-list -->
+
+</div> <!-- div.ajax-data -->
+
+</form>
+
+</div> <!-- .containter -->
+
+<!-- Контейнер для хранения шаблонов форм потолков -->
+<div class="seiling-data" style="display: none;">
+
+
+	<!-- Tab 1 -->
+	<div class="tab-pane" id="pvc">
+
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Полотно: <strong class="texture-discount-sum">32 440</strong> руб.
+			с учётом скидки <strong class="discount-value">0</strong>%
+			(<strong class="discount-type">первый/чётный потолок</strong>);
+			без скидки: <strong class="texture-sum">32 440</strong> руб.
+			Опции: <strong class="options-sum">32 440</strong> руб.
+		</div>
+
+		<div class="alert alert-danger main-alert-error">
+			Для вычисления стоимости потолка необходимо указать обязательные для расчёта параметры потолка.
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Название</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Название" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Удаление потолка из расчёта</span>
+				<span class="muted">(при клике будет запрошено подтверждение)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Удалить потолок из расчёта</button>
+				<span class="danger" style="padding-left: 2em;">Внимание! Восстановить удалённые данные будет нельзя!</span>
+			</div>
+		</div>
+
+		<div class="row control-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Макс. высота</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="pvc-max-height" checked>от 2 до 3,6 м
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="pvc-max-height">от 3,6 до 5 м
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="pvc-max-height">от 5 до 7 м
+				</label>  
+				<span class="danger falsework">Внимание! Леса предоставляет заказчик!</span>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Длина помещения</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-length" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-dimensions">Ширина помещения</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-width" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right area control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="area">Площадь</span>
+				</label>
+			</div>
+			<div class="col-xs-2 area control-group error">
+				<div class="input-group">
+					<input class="form-control" name="pvc-area" type="number" step="0.01" />
+					<span class="input-group-addon">м²</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Периметр</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group pvc-perimeter">
+			<div class="col-xs-5">
+				<p class="dt perimeter-type">Периметр на основе площади, м:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-perimeter"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Итоговый периметр для расчёта, м:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+		<div class="row form-group pvc-area">
+			<div class="col-xs-5">
+				<p class="dt">Площадь на основе длины и ширины, м²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd calc-area"></p>
+			</div>
+			<div class="col-xs-5">
+				<p class="dt">Итоговая площадь для расчёта, м²:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd real-area"></p>
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Фактура</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="pvc-texture">
+					<option value="0" selected>Не выбрана</option>
+					<option value="101">М мат белый 218<span class="text-info">; 1 м²: <span style="color:red;">650<span> руб., итого: <span>3 600</span> руб.</span></option>
+					<option value="102">М мат цветной 218</option>
+					<option value="103">М мат белый 300/350</option>
+					<option value="104">М мат цветной 300</option>
+					<option value="105">М мат белый 560</option>
+					<option value="106">S сатин белый 218</option>
+					<option value="107">S сатин цветной 218</option>
+					<option value="108">S сатин белый 300/350</option>
+					<option value="109">S сатин цветной 300</option>
+					<option value="110">S сатин белый 560</option>
+					<option value="111">L лак белый 165</option>
+					<option value="112">L лак цветной 165</option>
+					<option value="113">SL лак белый 194</option>
+					<option value="114">SL лак цветной 194</option>
+					<option value="115">L лак белый 300/350</option>
+					<option value="116">L лак цветной 300/350</option>
+					<option value="117">L лак белый 500</option>
+					<option value="118">OT прозрачный 142</option>
+					<option value="119">стиль, мрамор 142</option>
+					<option value="120">фантазия-замша 142</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Полный прайс по полотнам</button>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="baguette">Вид багета</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="1" checked>Пластик
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-baguette" value="2">Алюминий
+				</label>  
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="masking-tape">Маск. лента</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="1" checked>Без ленты
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="2">Белая
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="3">Чёрная
+				</label> 
+				<label class="radio-inline">
+					<input type="radio" name="pvc-masking-tape" value="4">Цветная
+				</label> 
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right bypassing-tube control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="bypassing-tube">Обход трубы</span>
+				</label>
+			</div>
+			<div class="col-xs-2 bypassing-tube control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right corners control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="corners">Углы</span>
+				</label>
+			</div>
+			<div class="col-xs-2 corners control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right control-group chandelier">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="chandelier">Люстра</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group chandelier">
+				<div class="input-group">
+					<input class="form-control" name="pvc-chandelier" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right control-group luminaire">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="luminaire">Монтаж свет-ка</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group luminaire">
+				<div class="input-group">
+					<input class="form-control" name="pvc-luminaire" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Светильник</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="pvc-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>не выбран</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Количество</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="pvc-lamp" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Лампа</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="pvc-light-bulb" class="form-control">
+					<option value="0" selected>не выбрана</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Дополнительные параметры</span>
+			</div>
+		</div>
+
+</div>
+
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group keramogranit">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="keramogranit">Керамогранит</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group keramogranit">
+				<div class="input-group">
+					<input class="form-control" name="pvc-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group soffit-space">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="soffit-space">Закарнизное пространство</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group soffit-space">
+				<div class="input-group">
+					<input class="form-control" name="pvc-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group timber">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="timber">Брус</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group timber">
+				<div class="input-group">
+					<input class="form-control" name="pvc-timber" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-moldings">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Потолочный багет</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-moldings">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group led-strip">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="led-strip">Установка светодиодной ленты</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group led-strip">
+				<div class="input-group">
+					<input class="form-control" name="pvc-led-strip" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group curvilinearity">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="curvilinearity">Криволинейность</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group curvilinearity">
+				<div class="input-group">
+					<input class="form-control" name="pvc-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group inner-cut">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="inner-cut">Внутренний вырез</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group inner-cut">
+				<div class="input-group">
+					<input class="form-control" name="pvc-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ventilation">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ventilation">Отверстие под вентиляцию</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ventilation">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ventilation" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+						
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group air-vent">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="air-vent">Монтаж островной вытяжки</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group air-vent">
+				<div class="input-group">
+					<input class="form-control" name="pvc-air-vent" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right control-group ceiling-cornice">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Потол. карниз (точка крепления)</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group ceiling-cornice">
+				<div class="input-group">
+					<input class="form-control" name="pvc-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group transformer">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="transformer">Установка трансформатора, констроллера</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group transformer">
+				<div class="input-group">
+					<input class="form-control" name="pvc-transformer" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group sensor">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="sensor">Установка датчика</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group sensor">
+				<div class="input-group">
+					<input class="form-control" name="pvc-sensor" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+		
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right control-group separator">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="separator">Разделитель</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group separator">
+				<div class="input-group">
+					<input class="form-control" name="pvc-separator" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			
+			<div class="col-xs-4 align-right control-group art-prints">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="art-prints">Арт-печать</span>
+				</label>
+			</div>
+			<div class="col-xs-2 control-group art-prints">
+				<div class="input-group">
+					<input id="ceiling-pvc-square" class="form-control" name="pvc-art-prints" type="number" step="0.01" />
+					<span class="input-group-addon">м²</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="seam-alignment">Центровка шва</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="pvc-seam-alignment">
+				</label>  
+			</div>
+		</div>
+</div> <!-- collapse -->
+			
+	</div> <!-- /Tab 1 -->
+
+	<!-- Tab 2 -->
+	<div class="tab-pane" id="tex">
+		
+<div class="primary-parameters">
+
+		<div class="alert alert-info main-alert-info">
+			Полотно: <strong class="texture-discount-sum">32 440</strong> руб.
+<!--			с учётом скидки <strong class="discount-value">0</strong>%
+			(первый/чётный потолок);
+			без скидки: <strong class="texture-sum">32 440</strong> руб.
+-->
+			Опции: <strong class="options-sum">32 440</strong> руб.
+		</div>
+	
+		<div class="alert alert-danger main-alert-error">
+			Для вычисления стоимости потолка необходимо указать обязательные для расчёта параметры потолка.
+		</div>
+	
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-name">Название</span>
+				</label>
+			</div>
+			<div class="col-xs-3">
+				<input class="form-control ceiling-name" name="ceiling-name" type="text" placeholder="Название" />
+			</div>
+			<div class="col-xs-7">
+				<span class="btn-delete-confirm">Удаление потолка из расчёта</span>
+				<span class="muted">(при клике будет запрошено подтверждение)</span>
+			</div>
+		</div>
+
+		<div class="row form-group delete-confirmation">
+			<div class="col-xs-10 col-xs-offset-2">
+				<button class="btn btn-danger btn-delete" name="btn-delete" type="button">Удалить потолок из расчёта</button>
+				<span class="danger" style="padding-left: 2em;">Внимание! Восстановить удалённые данные будет нельзя!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="max-height">Макс. высота</span>
+				</label>
+			</div>
+			<div class="col-xs-10 inline-labels">
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="1" name="tex-max-height" checked>от 2 до 3,6 м
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="2" name="tex-max-height">от 3,6 до 5 м
+				</label>  
+				<label class="radio-inline">
+					<input type="radio" class="falsework" value="3" name="tex-max-height">от 5 до 7 м
+				</label>  
+				<span class="danger falsework">Внимание! Леса предоставляет заказчик!</span>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right texture control-group error">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="texture">Фактура</span>
+				</label>
+			</div>
+			<div class="col-xs-6 texture control-group error">
+				<select class="form-control" name="tex-texture">
+					<option value="0" selected>Не выбрана</option>
+					<option value="200">Clipso классич. 705S Белый 300/400/500; 1 м²: 1'080 руб., итого: 3'600 руб.</option>
+					<option value="201">Clipso классич. 705С Цветной 300/400/500</option>
+					<option value="202">Clipso акустич. 705A Белый 300/400/500</option>
+					<option value="203">Clipso акустич. 705A Цветной 300/400/500</option>
+					<option value="204">Clipso акустич.эконом 495D Белый 300/400/500</option>
+					<option value="205">Clipso акустич.эконом 495D Цветной 300/400/500</option>
+					<option value="206">Clipso светопрозрачная 507PT Белый 300/400/500</option>
+					<option value="207">Clipso антибактер. 705H Белый 300/400/500</option>
+					<option value="208">Clipso водоотталк. 705Nosweat Белый 300/400/500</option>
+					<option value="209">Clipso непачкающ. 705Nostain Белый 300/400/500</option>
+					<option value="210">Clipso  MONBLAN 607M Белый 300/400/500</option>
+					<option value="211">Descor теплый Белый 310/410/510</option>
+					<option value="212">Descor холодный Белый 310/410/510</option>
+					<option value="213">Clipso классич. 705S Белый 300/400/500</option>
+					<option value="214">Clipso классич. 705С Цветной 300/400/500</option>
+					<option value="215">Clipso акустич. 705A Белый 300/400/500</option>
+					<option value="216">Clipso акустич. 705A Цветной 300/400/500</option>
+					<option value="217">Clipso акустич.эконом 495D Белый 300/400/500</option>
+					<option value="218">Clipso акустич.эконом 495D Цветной 300/400/500</option>
+				</select>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Полный прайс по полотнам</button>
+			</div>
+		</div>
+
+		<div class="alert alert-error tex-calc-error">
+			<p class="text-danger">
+				Для заданных полотна и максимальных измерений невозможно выполнить отрез.
+			</p>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right length control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions">Макс. длина пом-я</span>
+				</label>
+			</div>
+			<div class="col-xs-2 length control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-length" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right width control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="max-ceiling-dimensions" data-title="Максимальная ширина помещения">Макс. ширина пом-я</span>
+				</label>
+			</div>
+			<div class="col-xs-2 width control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-width" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+
+			<div class="col-xs-2 align-right perimeter control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="perimeter">Периметр</span>
+				</label>
+			</div>
+			<div class="col-xs-2 perimeter control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-perimeter" type="number" step="0.01" />
+					<span class="input-group-addon">м</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group tex-calc">
+			<div class="col-xs-4">
+				<p class="dt">Длина с припусками, м:</p>
+				<p class="dt">Ширина с припусками, м:</p>
+				<p class="dt">Ширина выбранного рулона, м:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd length-margin"></p>
+				<p class="dd width-margin"></p>
+				<p class="dd tex-width"></p>
+			</div>
+			<div class="col-xs-2">
+				<p class="length-cut"></p> <!-- (длина отреза) -->
+				<p class="width-cut"></p> <!-- (длина отреза) -->
+			</div>
+			<div class="col-xs-4">
+				<p class="dt">Площадь отреза, м²:</p>
+				<p class="dt">Периметр по ширине и длине, м:</p>
+				<p class="dt">Периметр для расчётов, м:</p>
+			</div>
+			<div class="col-xs-1">
+				<p class="dd cut-area"></p>
+				<p class="dd calc-perimeter"></p>
+				<p class="dd real-perimeter"></p>
+			</div>
+		</div>
+
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="bypassing-tube">Обход трубы</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-bypassing-tube" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="corners">Углы</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="pvc-corners" value="4" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="chandelier">Люстра</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-chandelier" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="luminaire">Монтаж свет-ка</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-luminaire" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="lamp">Светильник</span>
+				</label>
+			</div>
+			<div class="col-xs-6">
+				<select name="tex-light-type" class="form-control ceiling-light-type">
+					<option value="0" selected>не выбран</option>
+				</select>
+			</div>
+			<div class="col-xs-2 align-right light-count control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Количество</span>
+				</label>
+			</div>
+			
+			<div class="col-xs-2 light-count control-group">
+				<div class="input-group">
+					<input class="form-control" name="tex-lamp" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-2 align-right light-bulb control-group">
+				<label class="custom-label control-label">
+					<span class="popover-label" data-ref="lamp">Лампа</span>
+				</label>
+			</div>
+			<div class="col-xs-6 light-bulb control-group">
+				<select name="tex-light-bulb" class="form-control">
+					<option value="0" selected>не выбрана</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<span class="btn-extra-parameters">Дополнительные параметры</span>
+			</div>
+		</div>
+		
+</div>
+<div class="extra-parameters">
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="keramogranit">Керамогранит</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-keramogranit" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="soffit-space">Закарнизное пространство</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-soffit-space" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="timber">Брус</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-timber" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-moldings">Потолочный багет</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-moldings" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="led-strip">Установка светодиодной ленты</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-led-strip" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="curvilinearity">Криволинейность</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-curvilinearity" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="inner-cut">Внутренний вырез</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-inner-cut" type="number" step="1" />
+					<span class="input-group-addon">м.п.</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ventilation">Отверстие под вентиляцию</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ventilation" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="air-vent">Монтаж островной вытяжки</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-air-vent" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="ceiling-cornice">Потол. карниз (точка крепления)</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-ceiling-cornice" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="transformer">Установка трансформатора, констроллера</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-transformer" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+			
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="sensor">Установка датчика</span>
+				</label>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input class="form-control" name="tex-sensor" type="number" step="1" />
+					<span class="input-group-addon">шт</span>
+				</div>    
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-xs-4 align-right">
+				<label class="custom-label">
+					<span class="popover-label" data-ref="tex-canvas-timber">Заправка 2х полотен в 1 багет с брусом</span>
+				</label>
+			</div>
+			<div class="col-xs-2 inline-labels form-inline">
+				<label class="checkbox">
+					<input type="checkbox" name="tex-canvas-timber">
+				</label>  
+			</div>
+		</div>
+		
+</div> <!--  collapse -->
+
+	</div> <!-- /Tab 2 -->
+</div>
+<!-- // Контейнер для хранения шаблонов форм потолков -->
+
+
+<!-- Контейнер для хранения всплывающих плашек со справочной информацией -->
+<div class="popover-data" style="display: none;">
+
+<!-- Компания -->
+<div class="company">
+	<p>От выбора компании зависит система подсчета скидок и акций.</p>
+	<dl>
+		<dt>Юридическое лицо 1</dt>
+		<dd>Нечётные потолки ПВХ: 10%+10%; чётные потолки ПВХ: 50%+10%. Светильники по полной стоимости.</dd>
+		<dt>Юридическое лицо 2, Дилеры</dt>
+		<dd>Нечётные потолки ПВХ: 10%+5%, чётные потолки ПВХ: 50%+5%. Пластиковые светильники в подарок при условии приобретения лампы.</dd>
+	</dl>
+	<p>Скидка на потолки ПВХ указана непосредственно над формой с параметрами потолка (ниже).</p>
+	<p>В случае выбора варианта «Дилер» следует указать о каком именно дилере идёт речь.</p>
+</div>
+<!-- Подарочная карта -->
+<div class="discount">
+	<p>При наличии карты делается соответствующая скидка на конечную стоимость заказа.</p>
+</div>
+<!-- Комментарии -->
+<div class="comment">
+	<p>Любая дополнительная информация о клиенте.</p>
+</div>
+<!-- Добавление потолка -->
+<div class="ceiling-addition">
+	<p>Потолки добавляются в виде закладок ниже.</p>
+	<p>Сортировка закладок: сначала выстроены потолки ПВХ в порядке убывания цены за полотно, после них следуют потолки из ткани.</p>
+	<p>Название желательно указывать со слов Клиента при просчете более 3-х потолков в одном заказе. Каждый потолок считается в отдельности даже если они находятся в одном помещении.</p>
+</div>
+
+
+<!-- ПВХ ТКАНЬ Название и удаление -->
+<div class="ceiling-name" title="Название и удаление">
+	<p>Название потолка нужно указывать для взаимопонимания с клиентом и устранения путаницы в списке потолков. При изменении названия сразу меняется текст на ярлычке выше.</p>
+	<p>Удаление потолка полностью исключает его из расчётов. Восстановить удалённый потолок нельзя (лучше создать копию расчёта и в ней посчитать вариант без какого-то потолка). При удалении меняется порядок, что влияет на скидки чётные/нечётные.</p>
+</div>
+
+<!-- ПВХ ТКАНЬ Максимальная высота помещения -->
+<div class="max-height" title="Максимальная высота помещения">
+	<p>В случае монтажа потолка над лестничным пролетом считается высота от нижней ступени до самой верхней точки основного потолка.</p>
+	<p>Если выбрана высота отличная от стандартной (от 2 до 3,6 м), то стоимость потолка (полной его цене, т.е. полотно, люстры светильники и все-все допы) увеличивается:</p>
+	<dl>
+		<dt>от 3,6 до 5 м</dt>
+		<dd>Плюс 20% к итоговой сумме этого потолка.</dd>
+		<dt>от 5 до 7 м</dt>
+		<dd>Плюс 30% к итоговой сумме этого потолка.</dd>
+	</dl>
+	<p>Кроме этого в случае нестандартной высоты клиенту нужно сообщить о том, что леса предоставляет он.</p>
+</div>
+<!-- ПВХ Длина и ширина помещения -->
+<div class="ceiling-dimensions" title="Длина и ширина помещения">
+	<p>Значение длины и ширины следует указать, если не известны площать и периметр. После нажатия «Расчитать площадь и периметр» на основе длины и ширины площадь и периметр будут вычеслены и заполнены ниже.</p>
+	<p>В случае потолков из ПВХ значения длины и ширины непосредственно в расчётах стоимости не используются и могут служить лишь для вычисления периметра и площади (при нажатии кнопки «Расчитать площадь и периметр»).</p>
+</div>
+<!-- ТКАНЬ Максимальная длина и ширина помещения -->
+<div class="max-ceiling-dimensions" title="Максимальная длина и ширина помещения">
+	<p>Максимальная длина и ширина помещения, без припусков.</p>
+	<p>После нажатия «Расчитать площадь отреза и периметр» на основе длины и ширины площадь и периметр будут вычеслены и заполнены ниже.</p>
+	<p>В случае потолков из Ткани значения максимальной длины и максимальной ширины помещения (либо просто длины и ширины, если помещение прямоугольное)  будут использоваться при вычислении необходимых припусков.</p>
+</div>
+<!-- ПВХ ТКАНЬ Площадь -->
+<div class="area">
+	<p>Реальная площадь потолка с учетом всех вырезов.</p>
+	<p>Значение хранится с точностью до сотых, но в вычислениях используется округлённое до целых значение. Значение с дробной частью до 0.24 включительно округляется в меньшую сторону, с дробной частью более 0.24 — в большую сторону.</p>
+</div>
+<!-- ПВХ ТКАНЬ Периметр -->
+<div class="perimeter">
+	<p>Значение хранится с точностью до сотых, но в вычислениях используется округлённое до целых в большую сторону значение.</p>
+	<p>В случае, если периметр не задан, система его вычисляет <i>примерно (!)</i>, по формуле [квадратный корень из площади]&times;4.</p>
+	<p>Точный периметр считается либо на основе длины и ширины помещения, либо вводится вручную</p>
+</div>
+<!-- ПВХ ТКАНЬ Углы -->
+<div class="corners">
+	<p>Все внутренние и внешние углы помещения. На криволинейном участке углы так же считаются в местах перелома радиусов.</p>
+	<p>По умолчанию значение 4. Если до четырёх, то стоимость каждого 90 руб., если пять и более то стоимость каждого по 150 руб.</p>
+</div>
+<!-- ПВХ ТКАНЬ Фактура -->
+<div class="texture">
+	<p>Стоимость метра полотна зависит от площади помещения. Чем больше площадь, тем меньше цена за квадратный метр.</p>
+	<p>Фактура и площадь помещения влияют на стоимость. Список всех вариантов цены приведён на странице «Полный прайс по полотнам».</p>
+	<p>В случае если площадь уже задана, то для каждой фактуры приводится стоимость.</p>
+</div>
+<!-- ПВХ Вид багета -->
+<div class="baguette">
+	<p>Пластиковый багет — бесплатно. Алюминиевый багет — 40 руб./м.п.</p>
+	<p>По умолчанию просчитывается стеновой багет. При необходимости монтажа потолка на потолочный багет см. раздел «Дополнительные параметры».</p>
+</div>
+<!-- ПВХ Маскировочная лента -->
+<div class="masking-tape" title="Маскировочная лента">
+	<p>При выборе цветной ленты ее количество, которое будет закладываться в смету, должно быть округлено в большую сторону до числа кратного пяти. Белая и черная лента округляется до целых в большую сторону.</p>
+</div>
+<!-- ПВХ ТКАНЬ Люстра -->
+<div class="chandelier">
+	<p>Стоимость монтажа каждой люстры или подвесного светильника составляет 500 рублей вне зависимоти от типа крепления.</p>
+</div>
+<!-- ПВХ ТКАНЬ Монтаж светильника -->
+<div class="luminaire" title="Монтаж светильника">
+	<p>Стоимость монтажа одного светильника составляет 500 рублей.</p>
+	<p>В цену включены проводка по потолку, разметка, клеммники, термокольца и монтаж светильника. Это поле НЕ связано с количеством самих светильников ниже.</p>
+</div>
+<!-- ПВХ ТКАНЬ Обход трубы -->
+<div class="bypassing-tube">
+	<p>Стоимость обхода одной трубы стандартного диаметра составляет 300 рублей.</p>
+</div>
+<!-- ПВХ ТКАНЬ Светильник -->
+<div class="lamp">
+	<p>В случае если выбран светильник, появляется обязательное поле для указания количества.</p>
+	<p>В некоторых случаях светильник предоставляется в подарок, но только при выборе лампы (количество ламп в этом случае должно равняться количеству светильников).</p>
+</div>
+<!-- ПВХ ТКАНЬ Лампа -->
+<div class="light-bulb">
+	<p>В случае если выбрана лампа, появляется обязательное поле для указания количества.</p>
+	<p>2700 К, 2800 К — теплый белый свет.</p>
+	<p>4100 К — холодный белый свет.</p>
+</div>
+<!-- ПВХ ТКАНЬ Керамогранит -->
+<div class="keramogranit">
+	<p>Стоимость обусловлена сложностью работ.</p>
+</div>
+<!-- ПВХ ТКАНЬ Закарнизное пространство -->
+<div class="soffit-space">
+	<p>Монтаж потолка в закарнизное пространство или труднодоступное пространство.</p>
+</div>
+<!-- ПВХ ТКАНЬ Брус -->
+<div class="timber">
+	<p>Используется для различных нужд при монтаже потолка.</p>
+</div>
+<!-- ПВХ ТКАНЬ Потолочный багет -->
+<div class="ceiling-moldings">
+	<p>Монтаж потолка на багет потолочного крепления. Значение алгоритмически не привязано к периметру.</p>
+</div>
+<!-- ПВХ ТКАНЬ Установка светодиодной ленты -->
+<div class="led-strip">
+	<p>Стоимость только работы по монтажу светодиодной ленты - 200 руб./м.п. Лента приобретается и оплачивается отдельно.</p>
+</div>
+<!-- ПВХ ТКАНЬ Криволинейность -->
+<div class="curvilinearity">
+	<p>Длина криволинейного участка потолка.</p>
+</div>
+<!-- ПВХ ТКАНЬ Внутренний вырез -->
+<div class="inner-cut">
+	<p>Внутренний вырез в полотне ПВХ (на производстве) или на тканевом полотне (делается по месту)</p>
+</div>
+<!-- ПВХ ТКАНЬ Отверстие под вентиляцию -->
+<div class="ventilation">
+	<p>В цену включен монтаж кольца необходимого диаметра и подводка имеющейся вентиляционной трубы.</p>
+</div>
+<!-- ПВХ ТКАНЬ Монтаж островной вытяжки -->
+<div class="air-vent">
+	<p>Оплачивается при необходимости установить вытяжку нашими силами. В стоимость включены все работы.</p>
+</div>
+<!-- ПВХ ТКАНЬ Потол. карниз (точка крепления) -->
+<div class="ceiling-cornice" title="Потолочный карниз (точка крепления)">
+	<p>Монтаж одной точки крепления потолочного карниза.</p>
+</div>
+<!-- ПВХ ТКАНЬ Установка трансформатора, констроллера -->
+<div class="transformer">
+	<p>Стоимость только работы по монтажу трансформатора или констроллера сами приборы приобретаются и оплачиваются отдельно.</p>
+</div>
+<!-- ПВХ ТКАНЬ Установка датчика -->
+<div class="sensor">
+	<p>Монтаж любого охранного или пожарного датчика.</p>
+</div>
+<!-- ТКАНЬ Заправка 2х полотен в 1 багет с брусом -->
+<div class="tex-canvas-timber">
+	<p>Заправка двух тканевых полотен в один багет. Цена с учетом монтажа несущей конструкции под тканевый потолочный багет.</p>
+</div>
+<!-- ПВХ Разделитель -->
+<div class="separator">
+	<p>Монтаж разделителя (сепаратора) несущая конструкция (брус) просчитывается отдельно.</p>
+</div>
+<!-- ПВХ Арт-печать -->
+<div class="art-prints">
+	<p>Площадь нанесения фотопечати считается как произведение максимальной длины рисунка на максимальную ширину. Цена за метр зависит от общей площади полотна и фактуры.</p>
+	<p>Площадь арт-печати не должна превышать площадь помещения.</p>
+	<p>Арт-печать не производится на фактурах «стиль, мрамор 142» и «фантазия-замша 142».</p>
+</div>
+<!-- ПВХ Центровка шва -->
+<div class="seam-alignment">
+	<p>Центровка или заданное расположение шва. Прибавляется 15% к стоимости полотна.</p>
+</div>
+
+
+</div>
+<!-- / Контейнер для хранения всплывающих плашек со справочной информацией -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:90%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Стоимость полотна в зависимости от площади</h4>
+      </div>
+      <div class="modal-body">
+		  <h1>ПВХ</h1>
+		  <table class="table table-bordered price-list-pvh table-condensed">
+			  <tr class="text-center">
+			    <th>Фактура</th>
+			    <th>21.00 м² и более</th>
+			    <th>11.00—20.99 м²</th>
+			    <th>6.00—10.99 м²</th>
+			    <th>5.99 м² и менее</th>
+			  </tr>
+
+		  </table>
+		  
+		  <h1>Арт-печать</h1>
+		  <table class="table table-bordered price-list-art table-condensed">
+			  <tr class="text-center">
+			    <th>Фактура</th>
+			    <th>21.00 м² и более</th>
+			    <th>11.00—20.99 м²</th>
+			    <th>6.00—10.99 м²</th>
+			    <th>5.99 м² и менее</th>
+			  </tr>
+
+		  </table>
+		  <h1>Ткань</h1>
+		  <table class="table table-bordered price-list-tex table-condensed">
+			  <tr class="text-center">
+			    <th>Фактура</th>
+			    <th>21.00 м² и более</th>
+			    <th>11.00—20.99 м²</th>
+			    <th>6.00—10.99 м²</th>
+			    <th>5.99 м² и менее</th>
+			  </tr>
+			
+		  </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="../shared/jquery-2.0.3.min.js"></script>
+<script src="../shared/bootstrap/js/bootstrap.min.js"></script>
+<script src="./price.js"></script>
+<script src="./calc.js"></script>
+<script>
+
+seilingList = JSON.parse( '[]' );
+//console.log(seilingList);
+
+var i;
+for (i = 0; i < seilingList.length; ++i) {
+	if ( seilingList[i].type == 'ПВХ' ) {
+		seilingList[i].__proto__ = PVCSeiling.prototype;
+	};
+	if ( seilingList[i].type == 'Ткань' ) {
+		seilingList[i].__proto__ = TexSeiling.prototype;
+	};
+//	console.log(seilingList[i].type);
+	
+//	seilingList[i].textureDiscountSum = seilingList[i].textureSum;
+//	seilingList[i].totalSum = seilingList[i].textureDiscountSum + seilingList[i].optionsSum;
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .texture-sum').text( numberWithCommas( seilingList[i].textureSum ) );
+//	$('div#seiling' + seilingList[i].index + ' .main-alert-info .options-sum').text( numberWithCommas( seilingList[i].optionsSum ) );
+}
+<!-- tmpl_if name="sindex" -->
+Seiling.index = <!-- tmpl_var name="sindex" -->;
+<!-- tmpl_else -->
+Seiling.index = 0;
+<!-- /tmpl_if  -->
+
+///console.log(seilingList);
+
+//console.log(Seiling.index);
+
+</script>
+
+<script>
+// заполняем прайс в диалоговом окне
+
+pvhTexture.forEach(function(entry) {
+	$('table.price-list-pvh tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Мат, сатин</td>'
+	+'<td>' + artPrint.gloss.a21 + '</td>'
+	+'<td>' + artPrint.gloss.a10 + '</td>'
+	+'<td>' + artPrint.gloss.a5  + '</td>'
+	+'<td>' + artPrint.gloss.a0  + '</td>'
+	+'</tr>');
+$('table.price-list-art tr:last').after('<tr>'
+	+'<td>Лак</td>'
+	+'<td>' + artPrint.matt.a21 + '</td>'
+	+'<td>' + artPrint.matt.a10 + '</td>'
+	+'<td>' + artPrint.matt.a5  + '</td>'
+	+'<td>' + artPrint.matt.a0  + '</td>'
+	+'</tr>');
+
+texTexture.forEach(function(entry) {
+	$('table.price-list-tex tr:last').after('<tr>'
+		+'<td>' + entry.title + '</td>'
+		+'<td>' + entry.a21 + '</td>'
+		+'<td>' + entry.a10 + '</td>'
+		+'<td>' + entry.a5  + '</td>'
+		+'<td>' + entry.a0  + '</td>'
+		+'</tr>');
+});
+
+</script>
+<script>
+$('select[name="company"] option[value="firm1"]').attr('selected','selected');
+$('select[name="company"]').change();
+
+</script>
+
+</body>
+</html>
