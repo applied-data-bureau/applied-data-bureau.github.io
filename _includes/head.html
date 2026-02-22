@@ -113,6 +113,19 @@
     {% assign og_image_name = "meditate-og-1200x630.png" %}
   {% endif %}
   {% assign og_image_href = canonical_base | append: "/img/og/" | append: og_image_name %}
+  {% assign custom_og = page.og | default: "" | strip %}
+  {% if custom_og != "" %}
+    {% if custom_og contains "://" %}
+      {% assign og_image_href = custom_og %}
+    {% else %}
+      {% assign custom_og_prefix = custom_og | slice: 0, 1 %}
+      {% if custom_og_prefix == "/" %}
+        {% assign og_image_href = canonical_base | append: custom_og %}
+      {% else %}
+        {% assign og_image_href = canonical_base | append: "/" | append: custom_og %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
   {% if page_title != "" %}
     {% assign meta_title = page_title | append: " · " | append: site.title %}
   {% else %}
