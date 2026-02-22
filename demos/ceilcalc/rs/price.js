@@ -1,0 +1,128 @@
+
+/*
+title - название пункта в выпадающем списке    ,
+id    - идентификатор для значения value у select'а
+a0     - от нуля до 4,99 кв.м.
+a5     - от 5 до 9,99 кв.м.
+a10    - от 10 до 20,99 кв.м.
+a21    - от 21 кв.м.
+*/
+
+var pvhTexture = [
+	 { title : 'M mat bela 218'        , id : 101 , type : 'matt'  , a21 :  400 , a10 :  450 , a5 :  650 , a0 :  850 }
+	,{ title : 'M mat u boji 218'      , id : 102 , type : 'matt'  , a21 :  500 , a10 :  550 , a5 :  750 , a0 :  950 }
+	,{ title : 'M mat bela 300/350'    , id : 103 , type : 'matt'  , a21 :  550 , a10 :  600 , a5 :  800 , a0 :  950 }
+	,{ title : 'M mat u boji 300'      , id : 104 , type : 'matt'  , a21 :  650 , a10 :  700 , a5 :  900 , a0 : 1050 }
+	,{ title : 'M mat bela 560'        , id : 105 , type : 'matt'  , a21 :  600 , a10 :  650 , a5 :  850 , a0 : 1000 }
+	,{ title : 'S saten bela 218'      , id : 106 , type : 'matt'  , a21 :  450 , a10 :  500 , a5 :  700 , a0 :  900 }
+	,{ title : 'S saten u boji 218'    , id : 107 , type : 'matt'  , a21 :  550 , a10 :  600 , a5 :  800 , a0 : 1000 }
+	,{ title : 'S saten bela 300/350'  , id : 108 , type : 'matt'  , a21 :  600 , a10 :  650 , a5 :  850 , a0 : 1000 }
+	,{ title : 'S saten u boji 300'    , id : 109 , type : 'matt'  , a21 :  700 , a10 :  750 , a5 :  950 , a0 : 1100 }
+	,{ title : 'S saten bela 560'      , id : 110 , type : 'matt'  , a21 :  650 , a10 :  700 , a5 :  900 , a0 : 1050 }
+	,{ title : 'L sjaj bela 165'        , id : 111 , type : 'gloss' , a21 :  500 , a10 :  550 , a5 :  750 , a0 :  950 }
+	,{ title : 'L sjaj u boji 165'      , id : 112 , type : 'gloss' , a21 :  600 , a10 :  650 , a5 :  850 , a0 : 1050 }
+	,{ title : 'SL sjaj bela 194'       , id : 113 , type : 'gloss' , a21 :  600 , a10 :  650 , a5 :  850 , a0 : 1050 }
+	,{ title : 'SL sjaj u boji 194'     , id : 114 , type : 'gloss' , a21 :  700 , a10 :  750 , a5 :  950 , a0 : 1150 }
+	,{ title : 'L sjaj bela 300/350'    , id : 115 , type : 'gloss' , a21 :  700 , a10 :  750 , a5 :  950 , a0 : 1200 }
+	,{ title : 'L sjaj u boji 300/350'  , id : 116 , type : 'gloss' , a21 :  800 , a10 :  850 , a5 : 1050 , a0 : 1200 }
+	,{ title : 'M sjaj bela 500'        , id : 117 , type : 'gloss' , a21 :  750 , a10 :  800 , a5 : 1000 , a0 : 1200 }
+	,{ title : 'OT transparentna 142'      , id : 118 , type : 'gloss' , a21 :  700 , a10 :  800 , a5 :  800 , a0 :  900 }
+	,{ title : 'stil, mermer 142'      , id : 119 , type : ''      , a21 : 1000 , a10 : 1100 , a5 : 1200 , a0 : 1300 }
+	,{ title : 'fantazija-antilop 142'     , id : 120 , type : ''      , a21 : 1100 , a10 : 1200 , a5 : 1300 , a0 : 1400 }
+	];
+	
+var artPrint = {
+	'gloss' : { a21 : 1800 , a10 : 2000 , a5 : 2150 , a0 : 2300 }
+	,'matt' : { a21 : 1300 , a10 : 1500 , a5 : 1650 , a0 : 1800 }
+	};
+
+var texTexture = [
+	 { title : 'Clipso klasični 705S Bela'          , id : 201 , a21 : 1080 , a10 : 1120 , a5 : 1220 , a0 : 1540 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso klasični 705C U boji'        , id : 202 , a21 : 1260 , a10 : 1300 , a5 : 1440 , a0 : 1800 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso akustični 705A Bela'          , id : 203 , a21 : 1260 , a10 : 1300 , a5 : 1440 , a0 : 1800 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso akustični 705A U boji'        , id : 204 , a21 : 1350 , a10 : 1380 , a5 : 1520 , a0 : 1900 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso akustični ekonomični 495D Bela'    , id : 205 , a21 : 1000 , a10 : 1040 , a5 : 1140 , a0 : 1460 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso akustični ekonomični 495D U boji'  , id : 206 , a21 : 1040 , a10 : 1080 , a5 : 1180 , a0 : 1500 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso svetlopropusna 507PT Bela'  , id : 207 , a21 : 1200 , a10 : 1240 , a5 : 1340 , a0 : 1660 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso antibakterijska 705H Bela'       , id : 208 , a21 : 1320 , a10 : 1380 , a5 : 1520 , a0 : 1900 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso vodoodbojna 705Nosweat Bela' , id : 209 , a21 : 1080 , a10 : 1120 , a5 : 1220 , a0 : 1540 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso otporna na mrlje 705Nostain Bela'  , id : 210 , a21 : 1080 , a10 : 1120 , a5 : 1220 , a0 : 1540 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Clipso MONBLAN 607M Bela'          , id : 211 , a21 :  750 , a10 :  800 , a5 :  860 , a0 : 1140 , w1 : 300 , w2 : 400 , w3 : 500 }
+	,{ title : 'Descor topli Bela'                 , id : 212 , a21 :  750 , a10 :  800 , a5 :  860 , a0 : 1160 , w1 : 310 , w2 : 410 , w3 : 510 }
+	,{ title : 'Descor hladni Bela'               , id : 213 , a21 :  750 , a10 :  800 , a5 :  860 , a0 : 1160 , w1 : 310 , w2 : 410 , w3 : 510 }
+	];
+
+var lamp = [
+	 { title : 'GX-53 H4, hrom'        , id : 1 , price1 : 200 , price2 : 50 } 
+	,{ title : 'GX-53 H4, saten-hrom'  , id : 2 , price1 : 200 , price2 : 50 } 
+	,{ title : 'GX-53 H4, zlato'      , id : 3 , price1 : 200 , price2 : 50 } 
+	,{ title : 'GX-53 H4, crni hrom' , id : 4 , price1 : 200 , price2 : 50 } 
+	,{ title : 'GX-53 H4, bela'       , id : 5 , price1 : 200 , price2 : 50 } 
+	,{ title : 'GX-53 H7, bela'       , id : 6 , price1 : 150 , price2 :  0 } 
+	,{ title : 'GX-53 H7, zlato'      , id : 7 , price1 : 150 , price2 :  0 } 
+	,{ title : 'GX-53 H7, srebro'     , id : 8 , price1 : 150 , price2 :  0 } 
+	,{ title : 'GX-53 H7, crna'      , id : 9 , price1 : 150 , price2 :  0 } 
+	];
+
+var light = [
+	 { title : 'GX53 štedna 9 W 2700K'  , id :  1 , price1 : 210 , price2 : 250 }
+	,{ title : 'GX53 štedna 9 W 4100K'  , id :  2 , price1 : 210 , price2 : 250 }
+	,{ title : 'GX53 štedna 11 W 2700K' , id :  3 , price1 : 250 , price2 : 300 }
+	,{ title : 'GX53 štedna 11 W 4100K' , id :  4 , price1 : 250 , price2 : 300 }
+	,{ title : 'GX53 štedna 13 W 2700K' , id :  5 , price1 : 300 , price2 : 350 }
+	,{ title : 'GX53 štedna 13 W 4100K' , id :  6 , price1 : 300 , price2 : 350 }
+	,{ title : 'GX53 LED 4,2 W 2800K'       , id :  7 , price1 : 400 , price2 : 400 }
+	,{ title : 'GX53 LED 4,2 W 4100K'       , id :  8 , price1 : 400 , price2 : 400 }
+	,{ title : 'GX53 LED 6 W 2800K'         , id :  9 , price1 : 500 , price2 : 500 }
+	,{ title : 'GX53 LED 6 W 4100K'         , id : 10 , price1 : 500 , price2 : 500 }
+	];
+	
+var options = {
+	falsework_3_5       :   20  // при высоте помещения от 3.6 до 5 м. + 20% к стоимости всего потолка
+	,falsework_5_7      :   30  // при высоте помещения от 3.6 до 5 м. + 30% к стоимости всего потолка
+	                    
+	,baguettePlastic    :    0  // стоимость метра периметра пластикового багета
+	,baguetteAluminium  :   40  // стоимость метра периметра алюминиевого багета
+                        
+	,maskingTapeNo      :    0  // стоимость метра периметра без маскировочной ленты
+	,maskingTapeWhite   :   60  // стоимость метра периметра белой маскировочной ленты
+	,maskingTapeBlack   :   60  // стоимость метра периметра черной маскировочной ленты
+	,maskingTapeColor   :  200  // стоимость метра периметра u boji маскировочной ленты
+	              
+	,pvcPerimeter       :    0  // стоимость погонного метра ПВХ периметра
+	,texPerimeter       :   40  // стоимость погонного метра тканевого периметра
+				        
+	,bypassingTube      :  300  // обход трубы
+	,corner             :   90  // Стоимость каждого угла если их всего НЕ БОЛЬШЕ четырёх
+	,corner4            :  150  // Стоимость каждого угла если их всего БОЛЬШЕ четырёх
+	,chandelier         :  500  // Люстра
+	,luminaire          :  500  // Монтаж свет-ка
+// Дополнительные параметры
+	,keramogranit       :  400  // Керамогранит (м.п.)
+	,soffitSpace        :  200  // Закарнизное пространство (м.п.)
+	,timber             :  300  // Брус (м.п.)
+	,pvhCeilingMoldings :  140  // Потолочный багет (м.п.) ПВХ
+	,texCeilingMoldings :  200  // Потолочный багет (м.п.) Ткань
+	,ledStrip           :  200  // Установка светодиодной ленты (м.п.)
+	,curvilinearity     :  300  // Криволинейность (м.п.)
+	,innerCut           :  300  // Внутренний вырез (м.п.)
+	,ventilation        :  500  // Отверстие под вентиляцию (шт.)
+	,airVent            : 2500  // Монтаж вытяжки (шт.)
+	,ceilingCornice     :  500  // Потол. карниз (точка крепления) (шт.)
+	,transformer        :  150  // Установка трансфорmatора, констроллера (шт.)
+	,sensor             :  500  // Установка датчика (шт.)
+	,separator          :  400  // Разделитель (м.п.)
+	,seamAlignment      :   15  // Центровка шва, проценты к полотну
+	}
+	
+// Скидки
+
+// " odd1 : 10 , odd2 : 5 , even1 : 50 , even2 : 15 " означает
+// скидка на нечётные полотна: 10 + 5; скидка на чётные полотна: 50 + 15
+
+var company = [
+	 { id : 'firm1'   , title : 'Pravno lice 1'     , odd1 : 10 , odd2 : 10 , even1 : 50 , even2 : 10 }
+ 	,{ id : 'firm2'      , title : 'Pravno lice 2'        , odd1 : 10 , odd2 :  5 , even1 : 50 , even2 :  5 }
+	,{ id : 'dealer'      , title : 'Diler'         , odd1 : 10 , odd2 :  5 , even1 : 50 , even2 :  5 }
+]
+
