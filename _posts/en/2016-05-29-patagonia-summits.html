@@ -2,26 +2,88 @@
 layout: post
 title: "Weather Archive for Selected Patagonia Summits"
 type: post
-excerpt: "Automating weather data collection from mountain-forecast pages into CSV datasets and chart views for Patagonia peaks."
+excerpt: "Story of building a weather archive for Patagonia summits: parsing mountain-forecast, storing daily data in CSV, and publishing chart views for temperature, wind, and snow."
+og: /assets/posts/2016-05-29-og.jpg
 ---
 
-<p>A friend asked to monitor several mountain-forecast pages with identical structure and store daily weather snapshots in CSV.</p>
+<p>I keep this post here as a case study in practical data automation: not just a one-off scraper, but a working process that runs reliably on its own and produces a useful result.</p>
 
-<p>The parser collected issue date/time and core indicators for the nearest day windows (am/pm/night): summary, wind, snow, high/low temperature, chill, and freezing level.</p>
+<p>The challenge had two parts. First: build a parser and deploy it so it runs every day for a full year. The solution ran on cron: every day it started, parsed the data, and appended records to a CSV archive. Second: make the data easy to read. Google Charts worked well for that; below are static screenshots from interactive chart versions (when all interactive charts are loaded on one page at once, the browser starts to struggle).</p>
 
-<p>The result was a reusable archive with visual previews and interactive chart blocks per summit.</p>
+<p class="mt-4">If you need something similar parsed (scheduled runs, archive accumulation, and clear data visualization), send your task via the brief.</p>
 
-<h2>Tracked Summits</h2>
+<p class="pb-5">
+<a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_patagonia_submit_brief">Submit brief</a></p>
 
+<h2>Original Task</h2>
+
+<p>A year earlier, a climber friend wrote: “Here are the page URLs we need to monitor; they all have the same structure:
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Monte_Burney">Monte Burney</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)">Monte Darwin</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)">Lautaro</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Cerro_Arenales">Cerro Arenales</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo">San Lorenzo Patagonia</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn">Monte San Valentin</a></li>
-</ul>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-San-Valentin/forecasts/4058">http://www.mountain-forecast.com/peaks/Monte-San-Valentin/forecasts/4058</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-Burney/forecasts/1758">http://www.mountain-forecast.com/peaks/Monte-Burney/forecasts/1758</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Lautaro/forecasts/3380">http://www.mountain-forecast.com/peaks/Lautaro/forecasts/3380</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Monte-Darwin/forecasts/2488">http://www.mountain-forecast.com/peaks/Monte-Darwin/forecasts/2488</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/San-Lorenzo-Patagonia/forecasts/3706">http://www.mountain-forecast.com/peaks/San-Lorenzo-Patagonia/forecasts/3706</a></li>
+<li><a href="http://www.mountain-forecast.com/peaks/Cerro-Arenales/forecasts/3437">http://www.mountain-forecast.com/peaks/Cerro-Arenales/forecasts/3437</a></li>
+</ul></p>
+
+<p>Without a quick way on Mac to circle things in red on a screenshot, I described in text what should be parsed:</p>
+<p>Weather Forecast Issued (local time) - probably better to split this into three fields: Time, Day, Month-Year, so it is easier to calculate averages later in Excel.</p>
+
+<p>And for the nearest day, three times (am/pm/night columns), collect:
+<ul>
+<li>Summary (text)</li>
+<li>Wind (km/h)</li>
+<li>Snow (cm)</li>
+<li>High °C</li>
+<li>Low °C</li>
+<li>Chill °C</li>
+<li>Freezing level (m)</li></ul></p>
+
+<p>It should be enough to visit once a day at 9:00 St. Petersburg time, which is 3 a.m. in their local time - there will definitely be three columns for the nearest day. Store everything, probably, in CSV.”</p>
+
+<p>For temperature, the average is not very useful. We need two separate charts: daily maximum and daily minimum.</p>
+
+<p>+ maximum wind speed</p>
+
+<p>+ wind chill</p>
 
 <p><a href="https://en.wikipedia.org/wiki/List_of_mountains_in_Chile">List of mountains in Chile (Wikipedia)</a></p>
 
-<p>Source code: <a href="https://bitbucket.org/raskumandrin/mountain-forecast/src">https://bitbucket.org/raskumandrin/mountain-forecast/src</a></p>
+<p>Here is what came out of it.</p>
+
+<h2>Monte Burney</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_Burney"><img src="{{ '/assets/posts/2016-05-29-burney.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-burney-charts.png' | relative_url }}"></p>
+
+<h2>Monte Darwin</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)"><img src="{{ '/assets/posts/2016-05-29-darwin.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-darwin-charts.png' | relative_url }}"></p>
+
+<h2>Lautaro</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)"><img src="{{ '/assets/posts/2016-05-29-lautaro.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-lautaro-charts.png' | relative_url }}"></p>
+
+<h2>Cerro Arenales</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Cerro_Arenales"><img src="{{ '/assets/posts/2016-05-29-arenales.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-arenales-charts.png' | relative_url }}"></p>
+
+<h2>San Lorenzo Patagonia</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo"><img src="{{ '/assets/posts/2016-05-29-san-lorenzo.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-lorenzo-charts.png' | relative_url }}"></p>
+
+<h2>Monte San Valentin</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn"><img src="{{ '/assets/posts/2016-05-29-san-valentin.jpg' | relative_url }}"></a></p>
+
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-valentin-charts.png' | relative_url }}"></p>

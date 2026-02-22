@@ -3,7 +3,20 @@ layout: post
 title: "Архив погоды на избранных вершинах Патагонии"
 type: post
 excerpt: "История о сборе погодного архива по вершинам Патагонии: парсинг mountain-forecast, сохранение данных в CSV и публикация графиков по температуре, ветру и снегу."
+og: /assets/posts/2016-05-29-og.jpg
 ---
+
+<p>Этот пост оставляю здесь как кейс по прикладной автоматизации данных: не просто «спарсить один раз», а собрать рабочий процесс, который стабильно живет сам по себе и дает полезный результат.</p>
+
+<p>Челлендж был в двух частях. Первая: сделать парсер и задеплоить его так, чтобы он отрабатывал каждый день весь год. В итоге задача работала по cron: запускалась ежедневно, парсила данные и дописывала архив в CSV. Вторая: сделать данные наглядными. Для этого хорошо подошли Google Charts; ниже в посте показаны статические скриншоты с интерактивных версий графиков (если открыть все интерактивные диаграммы на одной странице, браузеру становится тяжеловато).</p>
+
+<p class="mt-4">Если вам нужно парсить что-то похожее (по расписанию, с накоплением архива и нормальной визуализацией данных), отправьте задачу в бриф.</p>
+
+<p class="pb-5">
+<a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_patagonia_submit_brief">Отправить бриф</a></p>
+
+<h2>Исходная задача</h2>
+
 
 <p>Год назад один друг-альпинист написал: «Вот адреса страничек, которые надо мониторить, они все одинаковые по структуре:
 <ul>
@@ -16,21 +29,22 @@ excerpt: "История о сборе погодного архива по ве
 </ul></p>
 
 <p>За неимением на Маке средства обвести красненьким на скриншоте, пишу
-словами что надо парсить:
-<pre><code class="language-markup">Weather Forecast Issued (local time) - лучше, наверное, разбивать на
+словами что надо парсить:</p>
+<p>Weather Forecast Issued (local time) - лучше, наверное, разбивать на
 три поля: Время, Число, Месяц-год, чтобы потом в Экселе было удобно
-считать среднее.
+считать среднее.</p>
 
-И три раза на ближайший день (колонки am/pm/night) следующие поля:
-Summary (текстовка),
-Wind (km/h),
-Snow (cm),
-High °C,
-Low °C,
-Chill °C,
-Freezing level (m).</code></pre>
+<p>И три раза на ближайший день (колонки am/pm/night) следующие поля:
+<ul>
+<li>Summary (текстовка)</li>
+<li>Wind (km/h)</li>
+<li>Snow (cm)</li>
+<li>High °C</li>
+<li>Low °C</li>
+<li>Chill °C</li>
+<li>Freezing level (m)</li></ul></p>
 
-Думаю, будет достаточно заходить раз в день в 9 часа по Питеру, это 3
+<p>Думаю, будет достаточно заходить раз в день в 9 часа по Питеру, это 3
 ночи по их времени - гарантированно будут три колонки на ближайший
 день. Сохранять все, наверное, в csv».</p>
 
@@ -47,37 +61,36 @@ Freezing level (m).</code></pre>
 
 <h2>Monte Burney</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Monte_Burney"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/1758-monte-burney.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Monte_Burney"><img src="{{ '/assets/posts/2016-05-29-burney.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/1758-calendars.png"></p>
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-burney-charts.png' | relative_url }}"></p>
 
 <h2>Monte Darwin</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/2488-monte-darwin.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Mount_Darwin_(Andes)"><img src="{{ '/assets/posts/2016-05-29-darwin.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/2488-calendars.png"></p>
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-darwin-charts.png' | relative_url }}"></p>
 
 <h2>Lautaro</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3380-lautaro.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Lautaro_(volcano)"><img src="{{ '/assets/posts/2016-05-29-lautaro.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3380-calendars.png"></p>
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-lautaro-charts.png' | relative_url }}"></p>
 
 <h2>Cerro Arenales</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Cerro_Arenales"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3437-cerro-arenales.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Cerro_Arenales"><img src="{{ '/assets/posts/2016-05-29-arenales.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3437-calendars.png"></p>
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-arenales-charts.png' | relative_url }}"></p>
 
 <h2>San Lorenzo Patagonia</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3706-san-lorenzo-patagonia.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Lorenzo"><img src="{{ '/assets/posts/2016-05-29-san-lorenzo.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/3706-calendars.png"></p>
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-lorenzo-charts.png' | relative_url }}"></p>
 
 <h2>Monte San Valentin</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/4058-monte-san-valentin.jpg"></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Monte_San_Valent%C3%ADn"><img src="{{ '/assets/posts/2016-05-29-san-valentin.jpg' | relative_url }}"></a></p>
 
-<p><img class="mt-3 img-fluid" src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2016-05-29-patagonia-summits/4058-calendars.png"></p>
-
+<p><img class="mt-3 img-fluid" src="{{ '/assets/posts/2016-05-29-san-valentin-charts.png' | relative_url }}"></p>
