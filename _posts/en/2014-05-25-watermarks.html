@@ -1,41 +1,272 @@
 ---
 layout: post
-title: "Watermarks for E-commerce Images"
+title: "Watermarks for E-commerce Images: A Batch Processing Case (Hundreds of Thousands of Files)"
 type: post
-excerpt: "Technical implementation of watermark generation and tiled overlay in Perl/ImageMagick for large image catalogs."
+excerpt: "A practical case about processing several hundred thousand e-commerce images: watermark generation, resizing, AWS S3 storage, and a custom Perl + ImageMagick pipeline from the pre-Cloudflare Images era."
+og: /assets/posts/2014-05-25-raspberry-ru.jpg
 ---
 
-<p>Business constraints required visible watermarks on product images. The focus here is technical implementation, not legal or ethical debate.</p>
+<p>This is an older but still useful case: the task was to build a reliable pipeline for processing <strong>several hundred thousand images</strong> for online stores, including watermarks, resizing, and repeatable batch execution without manual work.</p>
 
-<h3>Initial Requirements</h3>
+<h2>1. Business-side case</h2>
 
-<p>1. Make unauthorized reuse difficult.<br>
-2. Keep watermark visible on both light and dark backgrounds.<br>
-3. Preserve text readability in images.<br>
-4. Support batch processing without Photoshop/manual GUI work.</p>
+<p>The goal was not "make a nice picture in Photoshop", but a production pipeline for catalog assets:</p>
+<ul>
+  <li>process large image volumes (hundreds of thousands of files),</li>
+  <li>apply a watermark that remains readable on different backgrounds,</li>
+  <li>perform <strong>resizing</strong> for catalog/card image sizes,</li>
+  <li>store processed results in <strong>AWS S3</strong>,</li>
+  <li>avoid manual GUI work and designer time for repetitive operations.</li>
+</ul>
 
-<h3>Watermark Design</h3>
+<p>There was also a multi-store requirement: watermark assets had to be generated for different store names and then reused in an automated batch flow.</p>
 
-<p>A single semi-transparent caption was not enough. White text disappears on light backgrounds, dark text disappears on dark ones.</p>
+<p>The result was a batch process that could run on large datasets and produce consistent output without human variance.</p>
 
-<p>Adding a shadow gave much better contrast across mixed backgrounds.</p>
+<p class="pb-4">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_watermarks_submit_brief">Send Brief</a>
+</p>
 
-<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/raspberry-ru.jpg" class="img-fluid" alt="Contrast example"></p>
+<h2>2. Finding the watermark approach (with examples)</h2>
 
-<p>To improve protection, the final step was tiled watermarking across the whole image, not one centered logo.</p>
+<p>Below is the path to the final solution. The objective was practical: make the watermark visible without destroying image readability, including cases where the image already contains text.</p>
 
-<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orange-ru.jpg" class="img-fluid" alt="Tiled watermark"></p>
+<h3>Why a single semi-transparent caption is weak</h3>
+<p>A white semi-transparent caption disappears on light areas; a dark one disappears on dark areas. One color is not stable enough.</p>
+<p>
+  <a href="/assets/posts/2014-05-25-bilberry-ru.jpg">
+    <img src="/assets/posts/2014-05-25-bilberry-ru.jpg" class="img-fluid" alt="Example of poor readability with a single-layer watermark">
+  </a>
+</p>
 
-<h3>Implementation</h3>
+<h3>Working option: light text plus dark semi-transparent shadow</h3>
+<p>A better result came from combining a white semi-transparent caption with a dark semi-transparent shadow. This keeps the mark visible across mixed backgrounds.</p>
+<p>
+  <a href="/assets/posts/2014-05-25-raspberry-ru.jpg">
+    <img src="/assets/posts/2014-05-25-raspberry-ru.jpg" class="img-fluid" alt="Watermark with white text and dark shadow">
+  </a>
+</p>
 
-<p>The solution was built with ImageMagick in Perl. One script generated watermark assets, another applied them to source images in batch mode.</p>
+<p>If the image contains text, the watermark should not fully block it. The text + shadow transparency balance helps preserve readability.</p>
+<p>
+  <a href="/assets/posts/2014-05-25-georgia-ru.jpg">
+    <img src="/assets/posts/2014-05-25-georgia-ru.jpg" class="img-fluid" alt="Watermark example over an image that already contains text">
+  </a>
+</p>
 
-<pre><code>use Image::Magick;
-# create transparent canvas, render text, blur, rotate,
-# tile watermark layer, composite over source image,
-# crop to original bounds, save JPEG with target quality
-</code></pre>
+<h3>Why one centered watermark is easy to remove</h3>
+<p>If the watermark is always the same and always placed in the center, it is comparatively easy to remove locally and replace.</p>
+<p>
+  <a href="/assets/posts/2014-05-25-raspberry2-ru.jpg">
+    <img src="/assets/posts/2014-05-25-raspberry2-ru.jpg" class="img-fluid" alt="Example showing weakness of a single centered watermark">
+  </a>
+</p>
 
-<p>Final output:</p>
+<h3>Final approach: tiled watermarking across the whole image</h3>
+<p>To make removal harder, the watermark was tiled across the full image. A central element served as an anchor, and the rest were placed around it. Rotating the label made the result cleaner visually.</p>
+<p>
+  <a href="/assets/posts/2014-05-25-orange-ru.jpg">
+    <img src="/assets/posts/2014-05-25-orange-ru.jpg" class="img-fluid" alt="Tiled rotated watermarks across the image">
+  </a>
+</p>
 
-<p><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2014-05-25-watermarks/orng-ru.jpg" class="img-fluid" alt="Final result"></p>
+<p>Images with berries and orange by <a href="https://vk.com/nordling"><span class="icon-vk-com"></span> Kirill Krasnov</a>. Shutterstock: <a href="http://www.shutterstock.com/cat.mhtml?gallery_id=419308">http://www.shutterstock.com/cat.mhtml?gallery_id=419308</a>.</p>
+
+<h2>3. Technical details</h2>
+
+<p>This is a 2014 implementation. At that time, <strong>Cloudflare Images did not exist yet</strong>. Today, for many similar tasks, it makes sense to use an out-of-the-box managed solution (storage, transforms/resizing, delivery). This custom implementation remains here for presentation purposes: it shows how a batch image-processing pipeline was built manually.</p>
+
+<p>The pipeline at the time looked like this:</p>
+<ul>
+  <li>generate a PNG watermark for a specific store,</li>
+  <li>read the source image,</li>
+  <li>apply resizing for target catalog sizes,</li>
+  <li>apply tiled watermarks,</li>
+  <li>save the result and upload it to AWS S3.</li>
+</ul>
+
+<h3>3.1. Watermark generation (Perl + ImageMagick)</h3>
+<p>Below is the script that generates a PNG watermark with shadow and rotation. This asset is then used for tiling.</p>
+
+{% highlight perl %}
+#!/usr/bin/perl -w
+
+use strict;
+use Image::Magick;
+
+die `pod2text $0` unless @ARGV;
+
+# Create a canvas with transparent background
+my $image = Image::Magick->new(size=>'1000x70');
+$image->ReadImage('canvas:transparent');
+
+# Draw caption in black with 30% opacity
+$image->Annotate(
+	text      => $ARGV[0],
+	geometry  => "+50+50",
+	pen       => $image->QueryColorname('rgba(0,0,0,0.3)'),
+	font      => 'Bookman-Demi',
+	pointsize => 40,
+	kerning   => 3,
+);
+
+# Blur it to create the shadow
+$image->Blur(
+	radius  => 0,
+	sigma   => 6,
+	channel => 'RGBA'
+);
+
+# Create a mask for the main text
+my $mask = Image::Magick->new(size=>'1000x70');
+$mask->ReadImage('canvas:transparent');
+$mask->Annotate(
+	text      => $ARGV[0],
+	geometry  => "+50+50",
+	pen       =>  $image->QueryColorname('rgba(255,255,255,1)'),
+	font      => 'Bookman-Demi',
+	pointsize => 40,
+	kerning   => 3,
+);
+
+# Clear the center of the shadow under the white text
+$image->Composite(
+	image   => $mask,
+	mask    => $mask,
+	compose => 'Clear',
+);
+
+# Draw semi-transparent white text on top
+$image->Annotate(
+	text      => $ARGV[0],
+	geometry  => "+50+50",
+	pen       => $image->QueryColorname('rgba(255,255,255,0.3)'),
+	font      => 'Bookman-Demi',
+	pointsize => 40,
+	kerning   => 3,
+);
+
+$image->Trim();
+
+# Rotate the label
+$image->Rotate(
+	degrees    => -45,
+	background => 'transparent',
+);
+
+# Save as PNG
+if ($ARGV[1]) {
+	$image->Write("$ARGV[1]");
+}
+else {
+	$image->Write("$ARGV[0].png");
+}
+{% endhighlight %}
+
+<h3>3.2. Applying tiled watermarks to an image</h3>
+<p>The second script computes a grid, centers it relative to the source image, and tiles the watermark across the image.</p>
+
+{% highlight perl %}
+#!/usr/bin/perl -w
+
+use strict;
+use Image::Magick;
+use POSIX qw/ceil/;
+
+die `pod2text $0` unless @ARGV;
+
+# Source image
+my $image = Image::Magick->new;
+$image->Read("jpg:$ARGV[0]");
+my ($image_height, $image_width) = $image->Get('base-rows', 'base-columns');
+
+# Watermark image
+my $watermark = Image::Magick->new;
+$watermark->Read("png:$ARGV[1]");
+my ($watermark_height, $watermark_width) = $watermark->Get('base-rows', 'base-columns');
+
+# Canvas is needed in case watermark is larger than the source image
+my $canvas_height = ( $image_height > $watermark_height ? $image_height : $watermark_height );
+my $canvas_width  = ( $image_width  > $watermark_width  ? $image_width  : $watermark_width  );
+
+my $canvas = Image::Magick->new;
+$canvas->Set(size => "${canvas_width}x${canvas_height}");
+$canvas->Read('NULL:');
+
+my $tiled_layer = Image::Magick->new;
+$tiled_layer->Set(size => "${canvas_width}x${canvas_height}");
+$tiled_layer->Read('NULL:');
+
+# Grid size
+my $tile_columns = ceil($image_width / $watermark_width);
+my $tile_rows    = ceil($image_height / $watermark_height);
+
+# Make the grid odd-sized so it has a central element
+$tile_columns++ if $tile_columns % 2 == 0;
+$tile_rows++    if $tile_rows % 2 == 0;
+
+my $center_col = ceil($tile_columns / 2);
+my $center_row = ceil($tile_rows / 2);
+my $center_x = ($image_width - $watermark_width) * 0.5;
+my $center_y = ($image_height - $watermark_height) * 0.5;
+
+for my $col (1 .. $tile_columns) {
+	for my $row (1 .. $tile_rows) {
+		my $x = $center_x + ($col - $center_col) * $watermark_width;
+		my $y = $center_y + ($row - $center_row) * $watermark_height;
+
+		$tiled_layer->Composite(
+			image   => $watermark,
+			compose => 'over',
+			x       => $x,
+			y       => $y,
+			gravity => 'NorthWest',
+		);
+	}
+}
+
+$canvas->Composite(
+	image   => $image,
+	compose => 'over',
+	gravity => 'center',
+);
+
+$canvas->Composite(
+	image   => $tiled_layer,
+	compose => 'over',
+);
+
+$canvas->Crop(
+	x      => ($canvas_width - $image_width) * 0.5,
+	y      => ($canvas_height - $image_height) * 0.5,
+	width  => $image_width,
+	height => $image_height,
+);
+
+$canvas->Set(quality => 88);
+$canvas->Write("jpg:$ARGV[2]");
+{% endhighlight %}
+
+<h3>3.3. Where resizing and S3 fit into the process</h3>
+<p>In production, these scripts were part of a larger batch pipeline: after reading the source file, the process performed resizing for required catalog formats, then applied watermarking, and finally uploaded finished versions to AWS S3. In other words, this was asset preparation as a flow, not just a single visual effect.</p>
+
+<p>Simplified CLI example (for process illustration):</p>
+
+{% highlight bash %}
+# 1) Generate a PNG watermark for the store
+perl gen-watermark.pl "example-shop.com" /tmp/example-shop-watermark.png
+
+# 2) Prepare resized image versions (resize was handled in the pipeline)
+# 3) Apply watermark
+perl watermark.pl input.jpg /tmp/example-shop-watermark.png output.jpg
+
+# 4) Then upload the result to AWS S3
+{% endhighlight %}
+
+<p>
+  <a href="/assets/posts/2014-05-25-orng-ru.jpg">
+    <img src="/assets/posts/2014-05-25-orng-ru.jpg" class="img-fluid" alt="Final tiled watermark result">
+  </a>
+</p>
+
+<p>For new projects today, I would usually look at Cloudflare Images or similar managed services first. But as a case showing custom high-volume image processing logic, this example is still useful.</p>
