@@ -2,7 +2,10 @@
 layout: post
 title: Sequence diagrams as code
 excerpt: Sequence diagrams as code make it easier to track changes and control versioning; they also let you quickly create new diagrams from existing code.
+og: /assets/posts/2024-03-23-sso.png
 ---
+
+<p>For a project, documentation is not a “nice-to-have for later” but a working tool. It helps teams align on solutions faster, onboard new contributors more easily, and noticeably reduce troubleshooting time when something goes wrong in production.</p>
 
 <p>In software development, especially in multi-team projects, effective cross-team communication is critical for project success. One tool that can significantly improve this communication is sequence diagrams.</p>
 
@@ -16,9 +19,9 @@ excerpt: Sequence diagrams as code make it easier to track changes and control v
 
 <p>At first, I used to draw such diagrams in draw.io. Overall, it was quite time-consuming.</p>
 
-<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.th.png" class="img-fluid" alt="SSO diagram in draw.io"></a></p>
+<p><a href="/assets/posts/2024-03-23-sso-diagram.png"><img src="/assets/posts/2024-03-23-sso-diagram.png" class="img-fluid" alt="SSO diagram in draw.io"></a></p>
 
-<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso_diagram.drawio">sso_diagram.drawio</a></p>
+<p>Download the diagram file above: <a href="/assets/posts/2024-03-23-sso-diagram.drawio">sso-diagram.drawio</a>.</p>
 
 <p>Then I discovered PlantUML. Creating the first diagram in text was also labor-intensive, just like drawing in draw.io. But once I started making edits and producing similar diagrams, the advantages of code-based diagrams over image-based diagrams became obvious.</p>
 
@@ -55,25 +58,149 @@ excerpt: Sequence diagrams as code make it easier to track changes and control v
 
 <h2>Single Sign-On diagram example</h2>
 
-<p><a href="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.png"><img src="https://pub-3e57dc6805fe47c580cebfca6d4f2436.r2.dev/2024-03-23-sequence-diagram/sso.th.png" class="img-fluid" alt="SSO sequence diagram"></a></p>
+<p><a href="/assets/posts/2024-03-23-sso.png"><img src="/assets/posts/2024-03-23-sso.png" class="img-fluid" alt="SSO sequence diagram"></a></p>
 
-<pre><code>@startuml
-participant Customer
-participant Browser
-participant App1
-participant App2
+<pre><code class="language-plantuml">@startuml
 
+&lt;style&gt;
+group {
+    LineThickness 1
+    LineColor #4d4d4d
+    LineStyle 1
+  }
+
+  groupHeader {
+    LineThickness 1
+    LineStyle 1
+  }
+&lt;/style&gt;
+
+skinparam sequence {
+ArrowColor #000000
+ActorBorderColor #000000
+LifeLineBorderColor #000000
+LifeLineBackgroundColor #FFFFFF
+ParticipantBorderColor #000000
+ParticipantBackgroundColor #FFFFFF
+ParticipantFontColor #000000
+BoxBorderColor #000000
+BoxBackgroundColor #FFFFFF
+BoxFontColor #000000 }
+
+participant Customer order 10
+participant Browser order 20 #fff2cc
+participant App1 order 30 #dcebf7
+participant App2 order 40 #e2efda
+participant App3 order 50 #d9d2e9
+participant App4 order 60 #F5F5F5
+participant App5 order 70  #FCE4D6  
+
+group App1 Group Authentication
+ 
 Customer -> Browser : A1. Go to App1
+activate Browser
 Browser -> App1 : A2. GET index
+activate App1
 App1 -> Browser : A3. index
+deactivate App1
+
 Customer -> Browser : A4. Click Login
-Browser -> App2 : A5. GET authorization.oauth2
+Browser -> App2 : A5. GET authorization.oauth2, CustID: App1
+activate App2
+
+App2 -> Browser : A6. Login form
+
+Customer -> Browser : A7. Login information
+
+Browser -> App2 : A8. POST Login information
 App2 --> Browser : A9. 302 Redirect + auth code
-Browser -> App1 : A10. redirect uri + auth hash
-App1 -> App2 : A11. Request access token
+
+Browser -> App1 : A10. GET redirect uri_endpoint + auth hash
+activate App1
+
+App1 -> App2 : A11. Request access token by auth hash
+
 App2 -> App1 : A12. Access Token + User_Info
+
 App1 -> Browser : A13. Logged in content
+deactivate App1
+
 Browser -> Customer : A14. Logged in content
+
+end
+
+group  App1 User Authentication
+ 
+Customer -> Browser : B1. Click User Login
+Browser -> App1 : B2. GET
+activate App1
+
+App1 -> Browser : B3. Login form
+
+Customer -> Browser : B4. User Login information
+
+Browser -> App1 : B5. POST User Login information
+App1 -> Browser : B6. User Logged in content + Cookie with User Id
+deactivate App1
+
+Browser -> Customer : B7. User Logged in content
+
+end
+
+Customer -> Browser : C1. Go to App
+
+Browser -> App3 : C2. GET initial URI (with ID, pass and language parameters)
+activate App3
+App3 --> Browser : C3. 302 Redirect to App2, set state parameter to 'initial URI'
+
+Browser -> App2 : C4. GET authorization.oauth2, CustID: App1
+
+App2 --> Browser : C5. 302 Redirect + auth hash
+
+Browser -> App3 : C6. GET redirect uri_endpoint + auth hash
+
+App3 -> App2 : C7. Request tokens by auth hash
+
+App2 -> App3 : C8. Access, Refresh, Id Tokens
+
+App3 --> Browser : C9. 302 Redirect to certain Data Center depending on User from Id Token, GET initial URI
+deactivate App3
+
+Browser -> App4 : C10. GET initial URI
+activate App4
+
+App4 --> Browser : C11. 302 Redirect to App2, set state parameter to 'initial URI'
+Browser -> App2 : C12. GET authorization.oauth2, ClientID: App1
+
+App2 --> Browser : C13. 302 Redirect + auth hash
+
+Browser -> App4 : C14. GET redirect uri_endpoint + auth hash
+
+
+App4 -> App2 : C15. Request tokens by auth hash
+
+App2 -> App4 : C16. Access, Refresh, Id Tokens
+deactivate App2
+
+App4 -> App5 : C17. Socket: Id Token + User
+activate App5
+rnote over App5
+App5 gets Id token,
+extracts user information,
+creates internal context
+for this user
++ Login to User, if defined
+endrnote
+App5 -> App4 : 18. Success status
+deactivate App5
+
+App4 -> Browser : C19. App4 Logged in content, depending on parameters from App2 'state' about 'initial URI'
+deactivate App4
+Browser -> Customer : C20. App4 Logged in content
+
+
+deactivate Browser
+
 @enduml</code></pre>
 
 <p>Link to the full version of this diagram on the PlantUML server: <a href="http://www.plantuml.com/plantuml/uml/fLLjRzis4FxENt50FsH3DSzwaVE2ecYiD5s002kIz7F1I2URi4rw9DMc6_RVnnTPanWcCp0746BnUUwUEpvt_g0qbRhRRGbvf_IFBRudAocwFVn5m7nk6SU7DQit79M2T7XNYQsGyAPexD_mzju6SAY_YNcuGByXRL36mqM9xtxjTH2rONnF9Ts1mZywv3MQC9TIYkzz-hdxaCjQ2xaKqkIP7joo5ctuLyzelR52UTEVNxiF-KobPZNRKwuZzF7n4H6k1TTJ_b8ynSBQr_5mzkXP6Dld_RzfeEgK5ZkKu493Ef-SBatdr72OpU5DsxPPNKz0b_jzsYDoWsXgV6nFGqJM8mg3m0pRXeQ8l4UKDiPva-5vY2XwnC8Whalx5oBA7d4w1mEfFXPN2m3Y_UbrVlB_TdgDt32fPe8J84CRVda_57q1b-aCFWdGmd49hJNxHZKU4EI0D2GBi8pCC3u-0ECDFWq4JxUF87u-wv4DJh4l2IfcK6tDDC2jM34U2CWielG2gAbGIFQdAt0cxDSi0HlrvkeYACTI2R7F8DjYvlD0A-JkHKsd1nJZ5kTR6fDsDeFFlzy_HD0-zpJi-SpOAOCxR9Z4MiDRLnFKea4IwtmwzvNB0w6Jx2loPYyO7zXhgjOaQBLzZcMcvjRlxFfG6cXTsxsZnGOvFFuO1V6Qn_dDrLzw-8E5cvHVZCIlDwPE4hlyD7UDMs43Z9kwk4QkGoTCIkqlmBEB69kOWWz-zygiXcFzlanxUtbMp6EfXNcJn_eOnCkFCT2ocFbySHU5oSlUHN5AJCMYZn-soxgY4cB34BuplVQWc-ROArYUXd63QuYNMusNIbXXRW733c6QqIrykRk1dvp0cwi4zbGfeBo1BUMhZguGt0yUQfJgvycLvCG-Wh6gyc2il8ui0OKQbAPw5D0UdenadCJ6kYgEtZYnEQ_AGD1uKcFTMHmxvhxyaT3JOQxzGAluH0-PpWu3dHXUAr6j4sCFFzsAHBjx_hoxDKfD6OShgYbKo6rV6zmRoOolG73leLQAtH0y2Uy_i6GUDgQmkUq237bZLa68VOQIq_H_EI9YY3HxrH5RXlm_F97cnvl2rruSwmhVX8dSydXV-6IBrumHt5KsILWwlZ7YlQWtg2yCRV9hCRcmaaWkD8BuXj9_Tn5Mg9NXUQq9mISj3Kj1P_ZZLPYGMg89fO1Pqt6wzVlfIHE30RrcdaFUzcjK2wSX0TP2WotZsDX5vaIurACcf6UcXiurmNca2-ik-xg3YpsV-GZFTcOo6OhHKlEZuUxWnBdn1EYZw7JWmsdsueMTNMNpbmGGCexHqmdvO3Hrkot0Fm00">http://www.plantuml.com/plantuml/uml/fLLjRz...</a>.</p>
