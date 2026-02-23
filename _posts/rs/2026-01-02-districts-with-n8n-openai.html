@@ -1,0 +1,94 @@
+---
+layout: post
+title: "Spisak gradskih rajona u Rusiji: od pogrešnog SQL plana do n8n + Wikipedia API + OpenAI"
+excerpt: "Case study zadatka za spisak gradskih rajona u Rusiji: prvo sam planirao jedan SQL upit nad \"КЛАДР\", zatim pokušao preko \"ГАР\" (arhiva od oko 50 GB, problemi sa preuzimanjem i raspakivanjem), a na kraju dobio kompletan rezultat preko n8n, Wikipedia API i OpenAI."
+og: /assets/posts/2026-01-02-ru-districts-with-n8n-openai.png
+---
+
+<p>Ovo je bio mali hitan zadatak sa vrlo konkretnim rezultatom: bio je potreban spisak u formatu <code>region; grad; gradski rajon</code> za gradove Rusije, a ako grad nema rajone — red ostaje bez rajona.</p>
+
+<p>Na početku je zadatak delovao kao "brz SQL nad već poznatom bazom". U praksi je to bio dobar primer kako jednostavna isporuka spolja postaje istraživanje izvora podataka, provera kvaliteta i promena tehničkog pristupa usred rada.</p>
+
+<h2>Šta je bilo važno za biznis</h2>
+<ul>
+  <li>Dobiti <strong>kompletan</strong> spisak za sve gradove Rusije, a ne delimično tačan eksport.</li>
+  <li>Sačuvati jasan format rezultata za dalju upotrebu kod klijenta.</li>
+  <li>Ne isporučiti fajl koji izgleda "gotovo", ali je suštinski nepouzdan.</li>
+  <li>Voditi transparentnu komunikaciju o rokovima kada se pokazalo da je početna procena bila previše optimistična.</li>
+  <li>Dovesti zadatak do upotrebljivog rezultata čak i ako to znači promenu izvora i cele logike prikupljanja.</li>
+</ul>
+
+<p>Iz poslovne perspektive ključ nije bio da se po svaku cenu održi početni plan "jedan SQL upit", već da se klijentu ne preda netačan skup podataka. Kod ovakvih zadataka to je važnije od brzine: loša referentna tabela kasnije kvari filtere, segmentaciju i naredne automatizacije.</p>
+
+<p class="mt-4">Ako imate sličan zadatak (masovna referentna tabela, nestandardni eksport, kombinovanje zvaničnih i otvorenih izvora, provera kvaliteta rezultata), pošaljite zadatak kroz brif — mogu da složim radni pipeline, a ne samo "neki eksport".</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_districts_with_n8n_openai_submit_brief">Pošalji brif</a>
+</p>
+
+<p>Pre samog opisa rešenja, važan je kontekst o terminima. U Rusiji postoji starija baza "КЛАДР" (istorijski adresni klasifikator) i novija državna baza "ГАР" (državni adresni registar). To su česti izvori za adresne i referentne zadatke, ali ne garantuju da će podaci biti tačno u poslovnom formatu potrebnom u konkretnom projektu.</p>
+
+<p>Takođe je važno razumeti da u Rusiji postoje administrativna podela i municipalna podela, i to nije isto; uz to ne postoji jedna "idealna" federalna baza u kojoj su za sve gradove na isti način upisani baš oni gradski rajoni koje klijent očekuje.</p>
+
+<h2>Šta je bilo planirano na početku</h2>
+<p>Prvobitna pretpostavka je bila da će sve biti rešeno jednostavnim SQL upitom nad bazom "КЛАДР", sa kojom sam već radio. Logika je delovala jednostavno: uzeti referentne podatke, sastaviti strukturu "region → grad → rajon", izvesti CSV i isporučiti.</p>
+
+<p>Kada je krenuo praktičan rad, ispostavilo se da u "КЛАДР" nema podataka o gradskim rajonima u potrebnom obliku. Tada je postalo jasno da "brz SQL" neće biti dovoljan i da treba tražiti drugi izvor.</p>
+
+<h2>Tehnički izazovi: zašto pristup preko "ГАР" nije radio do kraja</h2>
+
+<h3>1. Dobar izvor u teoriji, ali težak za rad</h3>
+<p>Pretraga otvorenih izvora dovela je do "ГАР" (državni adresni registar), gde zaista postoje ažurniji i detaljniji podaci nego u "КЛАДР". Problem je obim: arhiva ima oko <strong>50 GB</strong>.</p>
+
+<h3>2. Preuzimanje iz inostranstva nije bilo trivijalno</h3>
+<p>Dodatno iznenađenje: stranica sa indeksom fajlova bila je nedostupna van Rusije. Ali kada se dobije direktan link ka fajlu, samo preuzimanje je radilo (sa drugog domena). Dakle, podaci su tehnički dostupni, ali put do njih nije bio očigledan.</p>
+
+<h3>3. Arhiva nije mogla da se raspakuje odjednom na laptopu</h3>
+<p>Čak i posle preuzimanja pojavio se sledeći problem: celu arhivu nije bilo moguće raspakovati odjednom zbog manjka prostora na laptopu. Privremeno inženjersko rešenje bilo je čitanje arhive i raspakivanje <strong>u batch-evima</strong> (otprilike po 10 regiona odjednom), zatim obrada i oslobađanje prostora.</p>
+
+<h3>4. Glavni problem — kvalitet/struktura podataka za konkretan zahtev</h3>
+<p>Posle delimične obrade "ГАР" pokazalo se da se ni tada ne dobija korektan automatski spisak rajona za sve gradove:</p>
+<ul>
+  <li>Za deo gradova rajoni postoje, za deo ne.</li>
+  <li>Za velike gradove (posebno Moskvu i Sankt Peterburg) mešaju se rajoni, municipaliteti i drugi tipovi unutrašnje podele grada.</li>
+  <li>Postoje i drugi gradovi gde je podela navedena nedosledno ili uopšte nije data u obliku potrebnom klijentu.</li>
+</ul>
+
+<p>Ovo je bio ključni trenutak odluke: tehnički se već "nešto" skupljalo, ali rezultat nije mogao da se isporuči kao kvalitetan i kompletan. Formalno fajl postoji, suštinski su podaci nepouzdani.</p>
+
+<h2>Promena pristupa: n8n + Wikipedia API + OpenAI</h2>
+<p>Treći pristup bio je workflow u n8n. Na ulaz ide spisak svih gradova Rusije, a zatim se za svaki grad izvršava sledeći scenario:</p>
+
+<ol>
+  <li>Otvoriti stranicu grada na Wikipediji.</li>
+  <li>Uzeti tekst članka preko Wikipedia API-ja.</li>
+  <li>Poslati tekst u OpenAI sa zadatkom da izvuče gradske rajone/okruga u strukturisanom obliku.</li>
+  <li>Sastaviti konačnu tabelu i sačuvati rezultat.</li>
+</ol>
+
+<p>U praksi je ovo radilo bolje nego što sam očekivao: rezultat je bio skoro idealan po potpunosti i kvalitetu.</p>
+
+<p>
+  <a href="/assets/posts/2026-01-02-ru-districts-with-n8n-openai.png">
+    <img src="/assets/posts/2026-01-02-ru-districts-with-n8n-openai.png" class="img-fluid" alt="n8n workflow za prikupljanje gradskih rajona u Rusiji preko Wikipedia API i OpenAI">
+  </a>
+</p>
+
+<h2>Dodatne poteškoće u LLM pristupu</h2>
+<ul>
+  <li>Ponekad je Wikipedia po nazivu grada vraćala stranicu sa višeznačnim pojmom (disambiguation), a ne članak o gradu. Takvih slučajeva je bilo oko dvadesetak, pa je za njih dodato posebno grananje u workflow-u.</li>
+  <li>Za Moskvu i Sankt Peterburg bilo je brže i pouzdanije uraditi posebnu ručnu obradu nego pokušavati da sve stane u jedan univerzalni šablon ekstrakcije.</li>
+  <li>Bila je potrebna provera rezultata ne samo po formatu, već i po značenju (da su izvučeni baš gradski rajoni/okruga, a ne bilo koji administrativni entiteti iz teksta).</li>
+</ul>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Konačni fajl je ispao kompletan i upotrebljiv za klijenta.</li>
+  <li>Zadatak je završen iako je početni plan ("jedan SQL upit") bio pogrešan.</li>
+  <li>Dobijen je ponovo upotrebljiv pristup kroz n8n + API + LLM za zadatke gde zvanični registri ne daju traženu poslovnu strukturu "iz kutije".</li>
+</ul>
+
+<h2>Praktičan zaključak</h2>
+<p>Ni zvanična baza ne sadrži uvek podatke u formatu koji biznisu stvarno treba. U ovakvim zadacima važno je ne samo "izvući podatke", već proveriti da li model izvora odgovara samoj postavci zadatka.</p>
+
+<p>U ovom slučaju put je bio duži nego što je planirano: prvo "КЛАДР", zatim pokušaj sa "ГАР", pa n8n + Wikipedia + OpenAI. Ali upravo promena pristupa je dala radni rezultat. To je često i glavna vrednost projekta: ne držati se prvog tehničkog plana po svaku cenu, već dovesti posao do korektnog izlaza.</p>
