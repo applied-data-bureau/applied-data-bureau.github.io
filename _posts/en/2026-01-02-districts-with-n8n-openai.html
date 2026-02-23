@@ -1,0 +1,94 @@
+---
+layout: post
+title: "Russian city district list: from a failed SQL plan to n8n + Wikipedia API + OpenAI"
+excerpt: "A case study about building a list of city districts across Russia: I first expected a single SQL query against \"КЛАДР\", then tried \"ГАР\" (a ~50 GB archive with download and unpacking constraints), and ultimately delivered a complete result via n8n, Wikipedia API, and OpenAI."
+og: /assets/posts/2026-01-02-ru-districts-with-n8n-openai.png
+---
+
+<p>This was a small urgent order with a very specific output: a list in the format <code>region; city; city district</code> for cities across Russia, and if a city has no district division, the row should be returned without a district value.</p>
+
+<p>At the start, it looked like a "quick SQL on a familiar database" task. In practice, it became a good example of how a simple-looking export turns into source-data research, quality validation, and a full technical pivot during execution.</p>
+
+<h2>What mattered for the business</h2>
+<ul>
+  <li>Get a <strong>complete</strong> list for cities across Russia, not a partially correct export.</li>
+  <li>Keep the output in a clear format the client could use immediately.</li>
+  <li>Avoid delivering a file that looked "done" but was actually unreliable.</li>
+  <li>Maintain transparent communication on timeline changes once it became clear the initial estimate was too optimistic.</li>
+  <li>Finish with a usable result even if that required changing both the source and the processing logic.</li>
+</ul>
+
+<p>From a business perspective, the key point was not to force the original "one SQL query" plan, but to avoid handing the client incorrect data. In tasks like this, that matters more than speed: a bad reference table breaks filters, segmentation, and downstream automations.</p>
+
+<p class="mt-4">If you have a similar task (bulk reference table creation, non-standard exports, combining official and open sources, result quality validation), send the task via the brief form. I can build a working pipeline, not just "some export".</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_districts_with_n8n_openai_submit_brief">Submit brief</a>
+</p>
+
+<p>Before the implementation details, a quick terminology note. In Russia there is an older database called "КЛАДР" (a historical address classifier) and a newer state database called "ГАР" (the state address registry). These are common sources for address/reference tasks, but they do not guarantee that the data is stored in the exact business-ready format needed for a specific project.</p>
+
+<p>It is also important to understand that Russia has both administrative division and municipal division, and they are not the same; there is no single "perfect" federal database where every city has the exact intra-city districts listed in one consistent format for this type of request.</p>
+
+<h2>What was planned first</h2>
+<p>Initially, I expected this to be solvable with a simple SQL query against "КЛАДР", which I had used before. The logic seemed straightforward: take the reference data, build a "region → city → district" structure, export CSV, and deliver.</p>
+
+<p>Once I started working, it turned out that "КЛАДР" did not contain city district data in the form required for this task. At that point it was clear the "quick SQL" plan would not work and another source was needed.</p>
+
+<h2>Technical challenges: why the "ГАР" route did not work end-to-end</h2>
+
+<h3>1. The right source in theory, but heavy in practice</h3>
+<p>Open-source research pointed to "ГАР" (the state address registry), which does have newer and more detailed data than "КЛАДР". The problem was scale: the archive was about <strong>50 GB</strong>.</p>
+
+<h3>2. Downloading from outside Russia was unexpectedly tricky</h3>
+<p>One more surprise: the file index page was not accessible from outside Russia. But once a direct file link was obtained, the download itself worked (from another domain). So the data was technically reachable, but the path to it was non-obvious.</p>
+
+<h3>3. The archive could not be fully unpacked on a laptop</h3>
+<p>Even after downloading it, the next issue appeared: unpacking the archive in full was not possible because there was not enough free disk space on the laptop. The practical workaround was to read the archive and unpack it <strong>in batches</strong> (I processed roughly 10 regions at a time), then process and free space before the next batch.</p>
+
+<h3>4. The main issue: data quality/structure for the client's actual requirement</h3>
+<p>After partial processing of "ГАР", it became clear that even then the result could not be turned into a correct automatic district list for all cities:</p>
+<ul>
+  <li>Some cities had district-like entries, some did not.</li>
+  <li>Large cities (especially Moscow and Saint Petersburg) mixed districts, municipalities, and other types of intra-city division.</li>
+  <li>Many other cities also had inconsistent structure, or no district information in the form the client needed.</li>
+</ul>
+
+<p>This was the key decision point: technically, "something" was already being assembled, but the result could not be responsibly delivered as complete and accurate. A file could be generated, but the dataset was unreliable.</p>
+
+<h2>Solution pivot: n8n + Wikipedia API + OpenAI</h2>
+<p>The third approach was an n8n workflow. The input was a list of all Russian cities, and for each city the workflow did the following:</p>
+
+<ol>
+  <li>Open the city's Wikipedia page.</li>
+  <li>Fetch the article text via the Wikipedia API.</li>
+  <li>Send the text to OpenAI with a prompt to extract intra-city districts/okrugs in a structured form.</li>
+  <li>Assemble and save the final table.</li>
+</ol>
+
+<p>In practice, this worked much better than expected: the result was almost ideal in both completeness and quality.</p>
+
+<p>
+  <a href="/assets/posts/2026-01-02-ru-districts-with-n8n-openai.png">
+    <img src="/assets/posts/2026-01-02-ru-districts-with-n8n-openai.png" class="img-fluid" alt="n8n workflow for collecting city districts across Russia via Wikipedia API and OpenAI">
+  </a>
+</p>
+
+<h2>Additional challenges in the LLM-based approach</h2>
+<ul>
+  <li>For some city names, Wikipedia returned a disambiguation page instead of the city article. There were about two dozen such cases, so I added a separate branch in the workflow for them.</li>
+  <li>For Moscow and Saint Petersburg, it was faster and more reliable to handle them separately by hand than to over-generalize everything into one extraction template.</li>
+  <li>The result had to be checked not only for format, but also for semantics (whether the extracted entities were really city districts/okrugs and not just any administrative entities mentioned in the article).</li>
+</ul>
+
+<h2>Result</h2>
+<ul>
+  <li>The final file was complete and usable for the client.</li>
+  <li>The task was completed even though the initial plan ("one SQL query") turned out to be wrong.</li>
+  <li>The project produced a reusable n8n + API + LLM approach for cases where official registries do not provide the required business structure out of the box.</li>
+</ul>
+
+<h2>Practical takeaway</h2>
+<p>Even official databases do not always store data in the form the business actually needs. In this type of task, the key is not only to "get data", but to verify whether the source model matches the business question.</p>
+
+<p>In this case, the path was longer than planned: first "КЛАДР", then an attempt with "ГАР", then n8n + Wikipedia + OpenAI. But that pivot is exactly what produced a workable result. In many projects, that is the real value: not forcing the first technical plan, but getting to a correct output.</p>

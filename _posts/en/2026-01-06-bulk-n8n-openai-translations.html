@@ -1,0 +1,79 @@
+---
+layout: post
+title: Bulk translation of 3,000 hiking route records into Russian via n8n + OpenAI (with staged quality checks)
+excerpt: I automated translation of 3,000 route names and descriptions from Excel into Russian using n8n and OpenAI, with intermediate quality checks, preserved file structure, and staged execution (test, 500 rows, full run).
+og: /assets/posts/2026-01-06-bulk-n8n-openai-translations.png
+---
+
+<p>The client needed a large dataset translated into Russian: about 3,000 rows with route names and descriptions in various European languages (mostly EN/DE/FR, but without a strict guarantee that those were the only languages present).</p>
+
+<p>A regular chat interface is not a practical tool for this kind of task: the volume is too large, the process must be batch-based, the file structure has to be preserved, and the output needs to be consistent across the whole dataset. The client also explicitly ruled out Google Translate because the task required more careful translation for travel-route descriptions.</p>
+
+<h2>What mattered for the business</h2>
+<ul>
+  <li>Translate the full dataset (3,000 rows) without manual copy/paste in chunks.</li>
+  <li>Preserve the Excel file structure, including hidden columns.</li>
+  <li>Run an intermediate quality check before processing everything.</li>
+  <li>Deliver the result in a format the client could import immediately.</li>
+  <li>Minimize manual cleanup after the automated translation run.</li>
+</ul>
+
+<p>To reduce risk, the work was run in stages: first a test batch, then a 500-row file for intermediate review, and only after quality confirmation a full run.</p>
+
+<p class="mt-4">If you have a similar task (bulk translation of a catalog, descriptions, listings, routes, or import-ready content), send the file and requirements via the brief form. I can build a batch workflow and a quality-check process for your volume.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_bulk_n8n_openai_translations_submit_brief">Submit brief</a>
+</p>
+
+<h2>What was done in n8n</h2>
+<p>I built an n8n workflow that processes table rows in batches, sends route names and descriptions to OpenAI for translation, receives a strictly structured response, and writes the translated fields back into an output file.</p>
+
+<ul>
+  <li>Built a batch-processing flow for Excel data instead of manual chat-based work.</li>
+  <li>Ran a small test batch to verify translation quality.</li>
+  <li>After alignment on quality, ran an intermediate 500-row batch with manual spot checks.</li>
+  <li>After client confirmation, ran the full dataset.</li>
+  <li>Kept Excel (<code>.xlsx</code>) as the delivery format, which fit the client's import workflow.</li>
+  <li>Accounted for the requirement to preserve the table structure (including hidden columns).</li>
+</ul>
+
+<p>
+  <a href="/assets/posts/2026-01-06-bulk-n8n-openai-translations.png">
+    <img src="/assets/posts/2026-01-06-bulk-n8n-openai-translations.png" class="img-fluid" alt="n8n workflow for bulk translation of an Excel table with tourist routes via OpenAI">
+  </a>
+</p>
+
+<h2>Technical details: how the processing pipeline was organized</h2>
+<p>Technically, this was not just a "translate some text" task. It required a stable pipeline for a large file so the data structure would not be damaged and the output would stay manageable across 3,000 rows.</p>
+
+<ol>
+  <li><strong>Batch processing instead of one massive request.</strong> The table was split into individual records, and each row went through the same translation scenario. This avoids the volume limits of a regular chat and makes row-level error control possible.</li>
+  <li><strong>Structured model response.</strong> For each row, the model returned JSON with two fields (translated name and description), so the result could be mapped back into the table reliably without manual cleanup.</li>
+  <li><strong>Intermediate quality checks.</strong> Instead of running everything at once, the process used checkpoints: first dozens of rows, then 500. This greatly reduces the risk of a prompt/format issue propagating across the whole dataset.</li>
+  <li><strong>Preserving the original file structure.</strong> A key requirement was not to break the original Excel file and not to lose hidden columns, so the result was delivered in the same format (<code>.xlsx</code>) instead of a flattened CSV/Google Sheets export.</li>
+  <li><strong>Description formatting.</strong> By agreement with the client, descriptions were kept without HTML tags, using readable line breaks/paragraphs to match the existing data format.</li>
+</ol>
+
+<h2>Technical details: key prompt lesson (simpler worked better)</h2>
+<p>An especially useful takeaway from this project: the first version used a detailed prompt with many constraints and clarifications (text type, style, formatting, list behavior, wording for route names, etc.). On paper, it looked more "correct", but in practice it turned out to be over-engineered.</p>
+
+<p>After the client's feedback, the prompt was simplified. The result improved: the translation became closer to the client's expectations and to the sample style they had already approved. This is a practical lesson for LLM automations: a long and highly detailed prompt does not always produce better output, especially when the goal is neutral bulk translation rather than heavy stylistic control.</p>
+
+<ul>
+  <li>The complex prompt introduced more unnecessary interpretation.</li>
+  <li>The simpler prompt matched the expected tone and format better.</li>
+  <li>The decision was made from fast test runs on real rows, not from theory.</li>
+</ul>
+
+<p>In practice, this means it is worth planning a short prompt A/B check on real data before launching a full-scale n8n + LLM batch run.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>The full dataset of about 3,000 rows (route names + descriptions) was translated.</li>
+  <li>The work was delivered in stages with intermediate quality confirmation (test -> 500 rows -> full run).</li>
+  <li>The file was delivered in Excel format, ready for the client's import process.</li>
+  <li>The client accepted the result and confirmed translation quality.</li>
+</ul>
+
+<p>This format works well for tasks where you do not need a one-off AI answer, but a controlled bulk run over a table with quality checks and clean delivery in a working file format.</p>

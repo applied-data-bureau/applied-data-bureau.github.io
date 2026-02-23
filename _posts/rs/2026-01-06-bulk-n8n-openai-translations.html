@@ -1,0 +1,79 @@
+---
+layout: post
+title: Paketni prevod 3000 turističkih ruta na ruski preko n8n + OpenAI (uz faznu proveru kvaliteta)
+excerpt: Automatizovao sam prevod 3000 naziva i opisa turističkih ruta iz Excel fajla na ruski jezik preko n8n i OpenAI, uz međuproveru kvaliteta, očuvanje strukture fajla i fazno pokretanje (test, 500 redova, ceo obim).
+og: /assets/posts/2026-01-06-bulk-n8n-openai-translations.png
+---
+
+<p>Klijentu je trebalo da prevede veliki sadržajni skup na ruski jezik: oko 3000 redova sa nazivima i opisima turističkih ruta na različitim evropskim jezicima (uglavnom EN/DE/FR, ali bez garancije da su samo oni).</p>
+
+<p>Običan chat nije praktičan za ovakav zadatak: obim je prevelik, potrebna je paketna obrada, očuvanje strukture fajla i predvidiv rezultat kroz ceo dataset. Klijent je odmah isključio Google Translate jer je bio potreban pažljiviji prevod za turističke opise.</p>
+
+<h2>Šta je bilo važno za biznis</h2>
+<ul>
+  <li>Prevesti ceo niz podataka (3000 redova) bez ručnog copy/paste rada po delovima.</li>
+  <li>Sačuvati strukturu Excel fajla, uključujući skrivene kolone.</li>
+  <li>Uraditi međuproveru kvaliteta pre punog pokretanja.</li>
+  <li>Isporučiti rezultat u formatu koji klijent može odmah da importuje dalje.</li>
+  <li>Smanjiti potrebu za ručnim doterivanjem nakon automatskog prevoda.</li>
+</ul>
+
+<p>Da bi se smanjio rizik, posao je puštan fazno: prvo testni uzorak, zatim fajl sa 500 redova za međuproveru, i tek nakon potvrde kvaliteta — puni prolaz.</p>
+
+<p class="mt-4">Ako imate sličan zadatak (masovni prevod kataloga, opisa, kartica, ruta ili sadržaja za import), pošaljite fajl i zahteve kroz brif — mogu da složim paketnu obradu i scenario provere kvaliteta za vaš obim.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_bulk_n8n_openai_translations_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Šta je urađeno u n8n</h2>
+<p>Za ovaj zadatak napravljen je n8n workflow koji obrađuje redove iz tabele paketno, šalje u OpenAI prevod naziva i opisa, dobija striktno strukturisan odgovor i upisuje rezultat nazad u izlazni fajl.</p>
+
+<ul>
+  <li>Napravljen je tok paketne obrade Excel podataka umesto ručnog rada kroz chat.</li>
+  <li>Urađen je testni prolaz na malom broju zapisa radi provere kvaliteta prevoda.</li>
+  <li>Nakon usaglašavanja kvaliteta — međuprolaz na 500 redova i ručni spot-check.</li>
+  <li>Nakon potvrde klijenta — puni prolaz kroz ceo dataset.</li>
+  <li>Sačuvan je format isporuke u Excelu (<code>.xlsx</code>), pogodan za dalji import kod klijenta.</li>
+  <li>Uvaženo je zahtevano očuvanje strukture tabele (uključujući skrivene kolone).</li>
+</ul>
+
+<p>
+  <a href="/assets/posts/2026-01-06-bulk-n8n-openai-translations.png">
+    <img src="/assets/posts/2026-01-06-bulk-n8n-openai-translations.png" class="img-fluid" alt="n8n workflow za paketni prevod Excel tabele sa turističkim rutama preko OpenAI">
+  </a>
+</p>
+
+<h2>Tehnički detalji: kako je obrada bila organizovana</h2>
+<p>Tehnički gledano, zadatak nije bio samo "prevedi tekst", već izgradnja stabilnog pipeline-a za veliki fajl, bez gubljenja strukture podataka i bez nepredvidivog rezultata na 3000 redova.</p>
+
+<ol>
+  <li><strong>Paketna obrada umesto jednog velikog zahteva.</strong> Tabela je razbijena na pojedinačne zapise i svaki red prolazi isti scenario prevoda. Tako se uklanja ograničenje običnog chata po obimu i dobija kontrola grešaka po redovima.</li>
+  <li><strong>Strukturisan odgovor modela.</strong> Za svaki red model vraća JSON sa dva polja (prevod naziva i opisa), tako da rezultat može pouzdano da se mapira nazad u tabelu bez ručnog čišćenja.</li>
+  <li><strong>Međuprovere kvaliteta.</strong> Umesto puštanja "odmah na sve", uvedeni su kontrolni koraci: prvo desetine redova, zatim 500. To značajno smanjuje rizik masovne greške u promptu ili formatu.</li>
+  <li><strong>Očuvanje izvorne strukture fajla.</strong> Važan zahtev je bio da se ne pokvari originalni Excel i ne izgube skrivene kolone, pa je rezultat isporučen u istom formatu (<code>.xlsx</code>), a ne kao "ravna" CSV/Google Sheets obrada.</li>
+  <li><strong>Formatiranje opisa.</strong> Po dogovoru sa klijentom opisi su ostavljeni bez HTML tagova, sa prelomima redova/pasusima u čitljivom obliku, da odgovaraju postojećem formatu podataka.</li>
+</ol>
+
+<h2>Tehnički detalji: važan zaključak o promptu (kraće je bilo bolje)</h2>
+<p>Posebno zanimljiv detalj iz ovog zadatka: prvo je napravljen detaljan prompt sa mnogo ograničenja i pojašnjenja (tip teksta, stil, format, liste, formulacije za nazive ruta itd.). Formalno je delovao "ispravnije", ali se u praksi pokazao previše komplikovanim.</p>
+
+<p>Nakon povratne informacije klijenta prompt je pojednostavljen. Rezultat je postao bolji: prevod je bio bliži očekivanjima klijenta i njegovom već proverenom primeru. Ovo je dobar praktičan primer za LLM automatizacije: dugačak i veoma detaljan prompt ne daje uvek bolji output, naročito kada je cilj neutralan masovni prevod, a ne složena stilizacija.</p>
+
+<ul>
+  <li>Složen prompt je davao više nepotrebne interpretacije i "samostalnosti".</li>
+  <li>Jednostavniji prompt je bolje pogodio očekivani ton i format.</li>
+  <li>Odluka nije doneta teorijski, već kroz brze testne prolaze i pregled realnih redova.</li>
+</ul>
+
+<p>Praktični zaključak: u n8n pipeline-ima sa LLM-om vredi unapred planirati kratku A/B proveru promptova na realnim podacima pre masovnog pokretanja.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Preveden je ceo skup od oko 3000 redova (nazivi + opisi ruta).</li>
+  <li>Posao je urađen fazno uz međupotvrdu kvaliteta (test -> 500 redova -> pun obim).</li>
+  <li>Fajl je isporučen u Excel formatu pogodnom za dalji import kod klijenta.</li>
+  <li>Klijent je prihvatio rezultat i potvrdio kvalitet prevoda.</li>
+</ul>
+
+<p>Ovakav format dobro radi za zadatke gde nije potreban "jedan odgovor AI-ja", već kontrolisan masovni prolaz kroz tabelu uz proveru kvaliteta i normalnu isporuku rezultata u radnom formatu.</p>
