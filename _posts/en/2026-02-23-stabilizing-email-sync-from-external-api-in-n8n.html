@@ -1,0 +1,112 @@
+---
+layout: post
+title: Stabilizing email sync from an external API in n8n (eliminating hangs and overlapping runs)
+excerpt: "I rebuilt an email sync process from an external API in n8n: removed conflicting parallel runs, added export-readiness waiting and API rate-limit handling, and merged load + cleanup into one stable flow."
+og: /assets/posts/2026-02-23-en.png
+---
+
+<p>The client (an online project with a Telegram bot and email-based access) already had an n8n automation that loaded emails from an external API, but it was unstable: exports stalled, new runs started before previous ones finished, and API errors often required manual restarts.</p>
+
+<p>This was not only a technical issue but a business one: the bot needs fresh emails soon after a user is added, and other automations must not break while the email table is being updated.</p>
+
+<h2>What mattered for the business</h2>
+<ul>
+  <li>The email list had to refresh regularly without manual intervention.</li>
+  <li>The bot had to see new users quickly.</li>
+  <li>Temporary errors or external API rate limits should not stop the whole flow.</li>
+  <li>List updates should not interfere with other workflows reading the same data.</li>
+  <li>Removal of outdated emails should be predictable and separate, without a full destructive reload every time.</li>
+</ul>
+
+<p>The result was a more resilient n8n process with protection against overlapping runs, waiting for export readiness on the external API side, rate-limit handling, and a safer data update strategy.</p>
+
+<p class="mt-4">If you have a similar situation (bot, integration, data table, unstable API, periodic hangs), send the task via the brief form. I can review the flow and propose a working setup without manual babysitting.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_external_api_n8n_submit_brief">Submit brief</a>
+</p>
+
+<h2>What was done in n8n</h2>
+<p>First, I reviewed the existing workflows and dependencies: email loading, deletion logic, and separate checks/waits. Then I rebuilt this into a more coherent process that handles external API delays better and does not conflict with itself.</p>
+
+<ul>
+  <li>Redesigned the email table update logic in n8n.</li>
+  <li>Added protection against parallel runs (a new run does not start until the previous one completes).</li>
+  <li>Added waiting for export readiness from the external API (with timeouts and repeated checks).</li>
+  <li>Handled API limits: increased intervals and added retries.</li>
+  <li>Merged loading and deletion logic into one resilient process instead of two separate workflows.</li>
+  <li>Moved keys into n8n Credentials so they are not stored in workflow JSON exports.</li>
+  <li>Added <code>Sticky Notes</code> inside the workflow to document logic directly in n8n (important when multiple people work with the same flow and separate docs become outdated).</li>
+  <li>Prepared final JSON exports for transfer/backup and tested the flow.</li>
+</ul>
+
+<h2>Before and after the redesign</h2>
+<p>Below is the visual difference: from a shorter but less stable loading flow to a more controlled process with explicit waiting, checks, synchronization, and error handling.</p>
+
+<p><strong>Before.</strong> The original flow was shorter, but less resilient to API delays and overlapping runs:</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-before.png">
+    <img src="/assets/posts/2026-02-23-before.png" class="img-fluid" alt="Original n8n workflow for loading emails from an external API before the redesign">
+  </a>
+</p>
+
+<p><strong>After.</strong> A more detailed and resilient process with waits, checks, run synchronization, error handling, and embedded notes inside the workflow:</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-after.png">
+    <img src="/assets/posts/2026-02-23-after.png" class="img-fluid" alt="Redesigned n8n workflow for syncing emails from an external API after stabilization">
+  </a>
+</p>
+
+<h2>Zoomed workflow fragment</h2>
+<p>Below is an enlarged fragment so the step structure and connections are easier to read.</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-en.png">
+    <img src="/assets/posts/2026-02-23-en.png" class="img-fluid" alt="Zoomed English n8n workflow fragment for syncing emails from an external API">
+  </a>
+</p>
+<p>This fragment also shows how <code>Sticky Notes</code> help document the workflow directly inside n8n. That matters when different developers/operators maintain the same flow: separate documents are often lost or stop being updated, while notes inside the workflow tend to stay in sync with changes.</p>
+
+<h2>Technical description: what changed</h2>
+<ol>
+  <li>Reviewed the current scheme and failure points: where exports hang, where reruns can overlap, and where other processes may read inconsistent data.</li>
+  <li>Reworked email table updates: instead of a blunt full rewrite, implemented a safer add/remove logic based on comparing current data with the API export.</li>
+  <li>Added parallel-run protection: one run cannot update the same table while another run is still active.</li>
+  <li>Added export readiness waiting: the external API may need several minutes to prepare an export, so the workflow now uses pauses and repeated status checks.</li>
+  <li>Handled rate limits and temporary API errors: the process retries instead of failing immediately.</li>
+  <li>Merged load and deletion logic into one process to remove duplication and reduce desynchronization between workflows.</li>
+  <li>Moved sensitive values into n8n Credentials instead of storing them in plain workflow JSON.</li>
+</ol>
+
+<h2>Technical details: Data Tables in the client project</h2>
+<p>The client project already used <strong>n8n Data Tables</strong> (an email table plus service tables for workflow state). This is a valid option for this kind of task, especially when you need a fast result inside n8n without introducing a separate database immediately.</p>
+
+<h3>Pros of Data Tables in this setup</h3>
+<ul>
+  <li>Fast start: no need to deploy a separate database first.</li>
+  <li>Convenient for internal n8n automations: data lives next to the workflows.</li>
+  <li>Useful as a technical state store (for example, a flag or current export ID).</li>
+  <li>Good fit for small and medium volumes where delivery speed matters more than architecture complexity.</li>
+</ul>
+
+<h3>Cons and constraints to keep in mind</h3>
+<ul>
+  <li>With full delete-and-reload, there is a window where other workflows may read an empty or partial table.</li>
+  <li>You need explicit parallel-run control, otherwise update conflicts are easy to introduce.</li>
+  <li>With an unstable API and frequent updates, logic complexity grows quickly (waits, retries, status checks).</li>
+  <li>For higher loads and more complex relations, it is often better to move to a separate DB with explicit transactions and locking (for example, Postgres/Supabase).</li>
+</ul>
+
+<p>In this project it was more rational to stabilize the existing Data Tables setup inside n8n than to immediately move everything to a separate database. If the next step requires stronger reliability and data control, the storage layer can be moved to Supabase/Postgres; I also take on that type of work: <a href="{{ '/supabase' | relative_url }}">Supabase service</a>.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>Email sync became more stable, without regular manual restarts.</li>
+  <li>Conflicting parallel runs were eliminated.</li>
+  <li>The email table became safer for other workflows that read it.</li>
+  <li>External API errors and limits no longer break the whole process.</li>
+  <li>The bot keeps working even during temporary API-side issues.</li>
+</ul>
+

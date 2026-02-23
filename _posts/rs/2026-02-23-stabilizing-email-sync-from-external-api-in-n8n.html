@@ -1,0 +1,112 @@
+---
+layout: post
+title: Stabilizacija sinhronizacije email adresa iz spoljašnjeg API-ja u n8n (uklanjanje zastoja i preklapanja pokretanja)
+excerpt: "Preprojektovao sam proces sinhronizacije email adresa iz spoljašnjeg API-ja u n8n: uklonio konfliktna paralelna pokretanja, dodao čekanje spremnosti izvoza i obradu API limita i spojio učitavanje + uklanjanje u jedan stabilan tok."
+og: /assets/posts/2026-02-23-rs.png
+---
+
+<p>Klijent (online projekat sa Telegram botom i pristupom preko email-a) je već imao n8n automatizaciju za učitavanje email adresa iz spoljašnjeg API-ja, ali je radila nestabilno: izvoz bi se zaglavio, nova pokretanja su kretala pre završetka prethodnih, a API greške su često tražile ručno ponovno pokretanje.</p>
+
+<p>To nije bio samo tehnički problem, već i poslovni: bot mora brzo da vidi nove email adrese nakon dodavanja korisnika, a druge automatizacije ne smeju da se lome dok se tabela osvežava.</p>
+
+<h2>Šta je bilo važno za biznis</h2>
+<ul>
+  <li>Lista email adresa mora redovno da se osvežava bez ručne intervencije.</li>
+  <li>Bot mora brzo da vidi nove korisnike.</li>
+  <li>Privremene greške ili limiti spoljašnjeg API-ja ne smeju da zaustave ceo tok.</li>
+  <li>Ažuriranje liste ne sme da ometa druge workflow-e koji čitaju iste podatke.</li>
+  <li>Uklanjanje neaktuelnih email adresa treba da bude predvidivo i odvojeno, bez potpunog destruktivnog reload-a svaki put.</li>
+</ul>
+
+<p>Rezultat je bio otporniji n8n proces sa zaštitom od preklapanja pokretanja, čekanjem spremnosti izvoza na strani spoljašnjeg API-ja, obradom limita API-ja i bezbednijom logikom ažuriranja podataka.</p>
+
+<p class="mt-4">Ako imate sličnu situaciju (bot, integracija, data table, nestabilan API, periodični zastoji), pošaljite zadatak kroz brif. Mogu da pregledam postojeći tok i predložim radnu šemu bez ručnog "čuvanja" procesa.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_external_api_n8n_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Šta je urađeno u n8n</h2>
+<p>Najpre sam pregledao postojeće workflow-e i njihove zavisnosti: učitavanje email adresa, logiku brisanja i odvojene provere/čekanja. Zatim sam sve složio u koherentniji proces koji bolje podnosi kašnjenja spoljašnjeg API-ja i ne ulazi u konflikt sam sa sobom.</p>
+
+<ul>
+  <li>Preprojektovana je logika ažuriranja email tabele u n8n.</li>
+  <li>Dodata je zaštita od paralelnih pokretanja (novo pokretanje ne kreće dok prethodno ne završi).</li>
+  <li>Dodato je čekanje spremnosti izvoza iz spoljašnjeg API-ja (sa timeout-ima i ponovljenim proverama).</li>
+  <li>Obrađeni su API limiti: povećani intervali i dodati retry pokušaji.</li>
+  <li>Logika učitavanja i brisanja spojena je u jedan otporniji proces umesto dva odvojena workflow-a.</li>
+  <li>Ključevi su premešteni u n8n Credentials da ne budu u JSON export-u workflow-a.</li>
+  <li>Dodati su <code>Sticky Notes</code> unutar workflow-a za dokumentovanje logike direktno u n8n (važno kada više ljudi radi sa istom šemom i odvojena dokumentacija brzo zastari).</li>
+  <li>Pripremljeni su finalni JSON export-i za prenos/backup i proces je testiran.</li>
+</ul>
+
+<h2>Pre i posle dorade</h2>
+<p>Ispod je vizuelna razlika: od kraćeg, ali manje stabilnog toka učitavanja ka kontrolisanijem procesu sa eksplicitnim čekanjem, proverama, sinhronizacijom i obradom grešaka.</p>
+
+<p><strong>Bilo je.</strong> Originalni tok je bio kraći, ali manje otporan na kašnjenja API-ja i preklapanje pokretanja:</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-before.png">
+    <img src="/assets/posts/2026-02-23-before.png" class="img-fluid" alt="Originalni n8n workflow za učitavanje email adresa iz spoljašnjeg API-ja pre dorade">
+  </a>
+</p>
+
+<p><strong>Postalo je.</strong> Detaljniji i otporniji proces sa čekanjem, proverama, sinhronizacijom pokretanja, obradom grešaka i ugrađenim beleškama u workflow-u:</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-after.png">
+    <img src="/assets/posts/2026-02-23-after.png" class="img-fluid" alt="Preprojektovani n8n workflow za sinhronizaciju email adresa iz spoljašnjeg API-ja nakon stabilizacije">
+  </a>
+</p>
+
+<h2>Uvećani fragment workflow-a</h2>
+<p>Ispod je uvećani fragment da bi struktura koraka i veze između blokova bile lakše za čitanje.</p>
+
+<p>
+  <a href="/assets/posts/2026-02-23-rs.png">
+    <img src="/assets/posts/2026-02-23-rs.png" class="img-fluid" alt="Uvećani srpski fragment n8n workflow-a za sinhronizaciju email adresa iz spoljašnjeg API-ja">
+  </a>
+</p>
+<p>Na ovom fragmentu se vidi kako <code>Sticky Notes</code> pomažu da workflow bude dokumentovan direktno u n8n. To je važno kada isti tok održavaju različiti developeri/operateri: odvojeni dokumenti se često izgube ili prestanu da se ažuriraju, dok beleške unutar workflow-a obično ostaju usklađene sa izmenama.</p>
+
+<h2>Tehnički opis: šta je tačno promenjeno</h2>
+<ol>
+  <li>Pregled postojeće šeme i tačaka otkaza: gde se izvoz zaglavljuje, gde ponovna pokretanja mogu da se preklapaju i gde drugi procesi mogu da čitaju nekonzistentne podatke.</li>
+  <li>Prerađena logika ažuriranja email tabele: umesto grubog potpunog prepisivanja, uvedena je bezbednija logika dodavanja/uklanjanja na osnovu poređenja trenutnih podataka i API izvoza.</li>
+  <li>Dodata zaštita od paralelnih pokretanja: jedan tok ne može da ažurira istu tabelu dok je drugi i dalje aktivan.</li>
+  <li>Dodato čekanje spremnosti izvoza: spoljašnjem API-ju može trebati nekoliko minuta da pripremi izvoz, pa workflow sada koristi pauze i ponovljene provere statusa.</li>
+  <li>Obrada rate limit-a i privremenih API grešaka: proces pokušava ponovo umesto da odmah padne.</li>
+  <li>Spojena logika učitavanja i brisanja u jedan proces da se ukloni dupliranje i smanji desinhronizacija između workflow-a.</li>
+  <li>Osetljive vrednosti prebačene su u n8n Credentials umesto čuvanja u otvorenom workflow JSON-u.</li>
+</ol>
+
+<h2>Tehnički detalji: Data Tables u projektu klijenta</h2>
+<p>U projektu klijenta su već korišćene <strong>n8n Data Tables</strong> (tabela email adresa i pomoćne tabele za stanje workflow-a). To je validna opcija za ovakve zadatke, posebno kada je cilj brz rezultat unutar n8n bez uvođenja posebne baze odmah.</p>
+
+<h3>Prednosti Data Tables u ovom scenariju</h3>
+<ul>
+  <li>Brz start: nije potrebno odmah podizati posebnu bazu.</li>
+  <li>Pogodno za interne n8n automatizacije: podaci su blizu workflow-a.</li>
+  <li>Korisno kao tehničko skladište stanja (na primer, flag ili trenutni export ID).</li>
+  <li>Dobar izbor za male i srednje obime kada je brzina isporuke važnija od složene arhitekture.</li>
+</ul>
+
+<h3>Mane i ograničenja koja treba imati u vidu</h3>
+<ul>
+  <li>Kod punog brisanja i ponovnog učitavanja postoji prozor u kome drugi workflow-i mogu da čitaju praznu ili delimičnu tabelu.</li>
+  <li>Potreban je eksplicitan kontrolni mehanizam za paralelna pokretanja, inače se lako uvode konflikti pri ažuriranju.</li>
+  <li>Sa nestabilnim API-jem i čestim osvežavanjima složenost logike brzo raste (čekanja, retry, provere statusa).</li>
+  <li>Za veća opterećenja i složenije relacije često je bolje preći na posebnu bazu sa eksplicitnim transakcijama i zaključavanjem (na primer, Postgres/Supabase).</li>
+</ul>
+
+<p>U ovom projektu je bilo racionalnije stabilizovati postojeći Data Tables setup unutar n8n nego odmah prebacivati sve u posebnu bazu. Ako sledeći korak traži viši nivo pouzdanosti i kontrole podataka, skladišni sloj može da se premesti u Supabase/Postgres; i takve zadatke radim: <a href="{{ '/supabase' | relative_url }}">Supabase usluga</a>.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Sinhronizacija email adresa je postala stabilnija, bez redovnih ručnih restartovanja.</li>
+  <li>Konfliktna paralelna pokretanja su uklonjena.</li>
+  <li>Email tabela je postala bezbednija za druge workflow-e koji je čitaju.</li>
+  <li>Greške i limiti spoljašnjeg API-ja više ne ruše ceo proces.</li>
+  <li>Bot nastavlja da radi i tokom privremenih problema na strani API-ja.</li>
+</ul>
+
