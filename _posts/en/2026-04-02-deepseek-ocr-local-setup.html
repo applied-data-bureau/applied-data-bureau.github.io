@@ -1,0 +1,77 @@
+---
+layout: post
+title: "DeepSeek OCR 2: Automatically generating LaTeX from a complex document"
+type: post
+excerpt: "A practical DeepSeek OCR 2 test on a maritime charter book: many headings, links, and footnotes, with final assembly into a single LaTeX file."
+og: /assets/posts/2026-04-02-deepseek-ocr-local-setup.png
+---
+
+<p>The goal of this test was practical: to verify whether a complex PDF can be converted into a working LaTeX book file using DeepSeek OCR 2 locally, without external APIs.</p>
+
+<p>The source document on maritime charters had dense structure: many headings and subheadings, a large number of links, and footnotes. The key question was not only text recognition, but whether structure and footnotes could be preserved in a format suitable for further editing and translation.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-02-page.jpg">
+    <img src="/assets/posts/2026-04-02-page.jpg" class="img-fluid border rounded" style="width: 60%;" alt="Sample page from the source maritime charter document">
+  </a>
+</p>
+
+<p class="mt-4">If you need to OCR complex documents locally (books, regulations, contract materials) and want a business-ready result rather than raw OCR output, you can send your task via the brief form.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_deepseek_ocr2_submit_brief">Submit brief</a>
+</p>
+
+<h2>What we tested</h2>
+<ol>
+  <li>Whether pages of a complex book can be recognized reliably in a local setup.</li>
+  <li>Whether OCR outputs can be merged while preserving both structure and footnotes.</li>
+  <li>Whether the final output can be a single LaTeX file ready for the next processing stage.</li>
+</ol>
+
+<h2>Result</h2>
+<p>The test was successful: a single final LaTeX file of the book was produced.</p>
+<p>So the hypothesis was confirmed: for this document class, a usable LaTeX result can be obtained via a local OCR pipeline plus post-processing.</p>
+
+<h2>Machine and resources</h2>
+<ul>
+  <li>Machine: MacBook Pro M1, 32 GB RAM.</li>
+  <li>Execution: inside Docker, CPU mode.</li>
+  <li>Inference mode: <code>cpu</code>, <code>float32</code>, <code>attn_impl=eager</code>.</li>
+</ul>
+
+<h2>Performance from terminal logs</h2>
+<p>Here is what terminal execution looked like: in the attached log fragment for pages <code>0178</code> and <code>0179</code>, processing one page took about 18-21 minutes, and model weight loading before processing took about 39-44 seconds.</p>
+
+<p>
+  <a href="/assets/posts/2026-04-02-deepseek-ocr-local-setup.png">
+    <img src="/assets/posts/2026-04-02-deepseek-ocr-local-setup.png" class="img-fluid" alt="DeepSeek OCR 2 terminal run log: CPU mode, per-page processing time, and model loading time">
+  </a>
+</p>
+
+<h2>Technical details</h2>
+<p>The document was processed page by page. Two OCR passes were used for each page:</p>
+<ul>
+  <li>
+    structured pass (produces cleaner text hierarchy),
+    <pre><code class="language-python">&lt;image&gt;
+&lt;|grounding|&gt;
+Convert the document to markdown.
+</code></pre>
+  </li>
+  <li>
+    full OCR pass (better at extracting complete text, including footnotes),
+    <pre><code class="language-python">&lt;image&gt;
+Free OCR.</code></pre>
+  </li>
+</ul>
+<p>Then outputs were merged: structure came from the first pass, while footnotes and missing fragments were pulled from the second pass. After that, a single LaTeX file was assembled, along with a separate list of spots for manual review.</p>
+
+<p>Model and exact revision: <a href="https://huggingface.co/deepseek-ai/DeepSeek-OCR-2/tree/aaa02f3811945a91062062994c5c4a3f4c0af2b0">deepseek-ai/DeepSeek-OCR-2 @ aaa02f3811945a91062062994c5c4a3f4c0af2b0</a>.</p>
+
+<ul>
+  <li>Attempts to improve output by experimenting with prompts did not produce a noticeable gain.</li>
+  <li>In practice, only two modes were stable: “convert to markdown” and “Free OCR”.</li>
+  <li>The best practical result came not from one “ideal” pass, but from merging these two outputs.</li>
+  <li>The resulting LaTeX is suitable as a base for the next stage: manual proofreading and translation into Russian.</li>
+</ul>

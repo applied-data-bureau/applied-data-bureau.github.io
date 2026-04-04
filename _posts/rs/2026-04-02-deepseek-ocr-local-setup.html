@@ -1,0 +1,77 @@
+---
+layout: post
+title: "DeepSeek OCR 2: automatski dobijamo LaTeX iz složenog dokumenta"
+type: post
+excerpt: "Praktičan test DeepSeek OCR 2 na knjizi o pomorskim čarterima: mnogo naslova, linkova i fusnota, sa završnim sklapanjem u jedan LaTeX fajl."
+og: /assets/posts/2026-04-02-deepseek-ocr-local-setup.png
+---
+
+<p>Cilj ovog testa je bio praktičan: proveriti da li se složen PDF dokument može pretvoriti u upotrebljiv LaTeX fajl knjige uz DeepSeek OCR 2 lokalno, bez spoljnih API-ja.</p>
+
+<p>Izvorni dokument o pomorskim čarterima imao je gustu strukturu: mnogo naslova i podnaslova, veliki broj linkova i fusnota. Ključno pitanje nije bilo samo prepoznavanje teksta, već da li je moguće sačuvati strukturu i vratiti fusnote u formatu pogodnom za dalju redakturu i prevod.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-02-page.jpg">
+    <img src="/assets/posts/2026-04-02-page.jpg" class="img-fluid border rounded" style="width: 60%;" alt="Primer stranice izvornog dokumenta o pomorskim čarterima">
+  </a>
+</p>
+
+<p class="mt-4">Ako vam treba lokalni OCR za složene dokumente (knjige, pravilnike, ugovorne materijale) i želite rezultat spreman za biznis, a ne „sirov OCR“, zadatak možete poslati kroz brif.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_deepseek_ocr2_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Šta smo proveravali</h2>
+<ol>
+  <li>Da li se stranice složene knjige mogu stabilno prepoznavati u lokalnom okruženju.</li>
+  <li>Da li OCR izlazi mogu da se spoje tako da se sačuvaju i struktura i fusnote.</li>
+  <li>Da li izlaz može biti jedan LaTeX fajl spreman za sledeću fazu obrade.</li>
+</ol>
+
+<h2>Rezultat</h2>
+<p>Test je bio uspešan: dobijen je jedinstven završni LaTeX fajl knjige.</p>
+<p>Drugim rečima, hipoteza je potvrđena: za ovu klasu dokumenata može da se dobije upotrebljiv LaTeX kroz lokalni OCR pipeline i postobradu.</p>
+
+<h2>Mašina i resursi</h2>
+<ul>
+  <li>Mašina: MacBook Pro M1, 32 GB RAM.</li>
+  <li>Pokretanje: u Docker-u, CPU režim.</li>
+  <li>Inference režim: <code>cpu</code>, <code>float32</code>, <code>attn_impl=eager</code>.</li>
+</ul>
+
+<h2>Performanse po terminal logu</h2>
+<p>Ovako je izgledao rad u terminalu: u priloženom delu loga za stranice <code>0178</code> i <code>0179</code>, obrada jedne stranice trajala je oko 18-21 minut, a učitavanje težina modela pre obrade oko 39-44 sekunde.</p>
+
+<p>
+  <a href="/assets/posts/2026-04-02-deepseek-ocr-local-setup.png">
+    <img src="/assets/posts/2026-04-02-deepseek-ocr-local-setup.png" class="img-fluid" alt="Terminal log pokretanja DeepSeek OCR 2: CPU režim, vreme obrade po stranici i vreme učitavanja modela">
+  </a>
+</p>
+
+<h2>Tehnički detalji</h2>
+<p>Dokument je obrađivan stranicu po stranicu. Za svaku stranicu korišćena su dva OCR prolaza:</p>
+<ul>
+  <li>
+    strukturni prolaz (daje uredniju hijerarhiju teksta),
+    <pre><code class="language-python">&lt;image&gt;
+&lt;|grounding|&gt;
+Convert the document to markdown.
+</code></pre>
+  </li>
+  <li>
+    puni OCR prolaz (bolje izvlači kompletan tekst, uključujući fusnote),
+    <pre><code class="language-python">&lt;image&gt;
+Free OCR.</code></pre>
+  </li>
+</ul>
+<p>Zatim su izlazi spajani: struktura je uzimana iz prvog prolaza, a fusnote i izgubljeni fragmenti iz drugog. Nakon toga je formiran jedinstven LaTeX fajl i poseban spisak mesta za ručnu proveru.</p>
+
+<p>Model i tačna revizija: <a href="https://huggingface.co/deepseek-ai/DeepSeek-OCR-2/tree/aaa02f3811945a91062062994c5c4a3f4c0af2b0">deepseek-ai/DeepSeek-OCR-2 @ aaa02f3811945a91062062994c5c4a3f4c0af2b0</a>.</p>
+
+<ul>
+  <li>Pokušaji poboljšanja rezultata kroz eksperimentisanje sa promptovima nisu dali primetan dobitak.</li>
+  <li>U praksi su stabilno radila samo dva režima: „convert to markdown“ i „Free OCR“.</li>
+  <li>Najbolji praktični rezultat nije dao jedan „idealni“ prolaz, već spajanje ova dva izlaza.</li>
+  <li>Dobijeni LaTeX je dobar kao osnova za sledeću fazu: ručnu lekturu i prevod na ruski.</li>
+</ul>
