@@ -1,0 +1,163 @@
+---
+layout: post
+title: "Lokalni automatizovani prevod sa engleskog na ruski uz model Qwen 2.5 32B"
+type: post
+excerpt: "Praktičan PoC potpuno automatizovanog EN->RU prevoda sa Qwen 2.5 32B na Mac-u: CPU režim je bio prespor, GPU režim je dao upotrebljivu brzinu uz kontrolu kvaliteta problematičnih segmenata."
+---
+
+<p>Cilj ovog testa je bio praktičan: proveriti da li je moguć <strong>potpuno automatizovan prevod sa engleskog na ruski</strong> lokalnim modelom, bez oslanjanja na plaćene API-je za glavni obim.</p>
+
+<p>Kao baza je korišćen Qwen 2.5 32B. Zadatak nije bio samo „dobiti prevod“, već napraviti radni proces za realne obime: predvidiva brzina, kontrola kvaliteta i jasna ekonomika.</p>
+
+<p>Ova faza direktno nastavlja OCR fazu: OCR je dao izvorni LaTeX iz PDF-a, a ovde je urađen automatizovani prevod i doterivanje kvaliteta. Kontekst i primer neprevedenog bloka su u <a href="{{ '/deepseek-ocr-local-setup' | relative_url }}">DeepSeek OCR 2 postu</a>.</p>
+
+<h2>Šta je bilo važno za biznis</h2>
+<ul>
+  <li>Automatski prevesti velike EN obime u RU, bez ručnog rada po pasusima.</li>
+  <li>Smanjiti trošak u odnosu na pristup „100% preko plaćenog API-ja“.</li>
+  <li>Zadržati kvalitet pogodan za objavu i dalju upotrebu.</li>
+  <li>Automatski prepoznati loše segmente i odvojeno obraditi samo problematični deo.</li>
+</ul>
+
+<p>Ključna ideja: lokalni prevod za stabilnu većinu, a mali teži deo preusmeriti na jači (skuplji) fallback kanal.</p>
+
+<p class="mt-4">Ako imate sličan zadatak (masovni prevod dokumentacije, baze znanja, kataloga, sadržaja sajta) i želite niži trošak bez pada kvaliteta, detalje možete poslati kroz brif.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_qwen_32b_local_translation_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li><strong>Potpuno automatizovan tok</strong> je implementiran i pokrenut lokalno na Mac-u.</li>
+  <li>Na <strong>CPU</strong> je scenario bio nepraktičan za radne obime zbog velike latencije.</li>
+  <li>Na <strong>GPU</strong> je dobijena brzina pogodna za praktičan rad.</li>
+  <li>Oko <strong>95%</strong> segmenata prevedeno je automatski bez intervencije.</li>
+  <li>Oko <strong>5%</strong> je imalo artefakte: CJK simbole, neprevedene delove ili suvišne komentare u izlazu.</li>
+</ul>
+
+<p>Tih 5% može automatski da se detektuje i pošalje u poseban tok dorade.</p>
+
+<h2>Ekonomika</h2>
+<p>Ako se sve prevodi preko plaćenog API-ja, trošak raste linearno sa obimom. U lokalnom pristupu glavni trošak je podešavanje i lokalna obrada, a varijabilni trošak po narednom prolazu je niži.</p>
+
+<p>U praksi je to dalo radni model:</p>
+<ul>
+  <li>glavni obim se prevodi lokalno (jeftinije);</li>
+  <li>samo problematičnih 5% ide u plaćeni API (skuplje po tokenu, ali mali obim);</li>
+  <li>ukupan trošak je znatno niži nego kod „100% API“.</li>
+</ul>
+
+<h2>Kako je obrađeno problematičnih 5%</h2>
+<p>Problematični segmenti su automatski označavani za ponovni prevod:</p>
+<ul>
+  <li>detekcija neočekivanih skripti/simbola (npr. CJK simboli u RU izlazu);</li>
+  <li>provera curenja izvornog jezika (veći EN fragmenti u RU rezultatu);</li>
+  <li>meta/komentarski artefakti koji ne smeju u finalni sadržaj.</li>
+</ul>
+
+<p>Taj mali podskup se zatim može poslati u OpenAI API kao drugi korak: skuplje po segmentu, ali kvalitetnije tamo gde je lokalni izlaz nestabilan. Tako se dobija kontrolisan hibridni pipeline: brzo, prosečno jeftinije i kvalitetan finalni rezultat.</p>
+
+<h2>Tehnički detalji</h2>
+<p>Ispod je PoC konfiguracija koja je postala radni baseline na Mac-u.</p>
+
+<h3>Cilj i ograničenja PoC-a</h3>
+<ul>
+  <li>Prevesti LaTeX dokument sa mnogo naslova, pasusa i posebno fusnota, uz visoku pravno-semantičku tačnost.</li>
+  <li>Raditi lokalno na macOS bez direktne instalacije alata na sistem.</li>
+</ul>
+
+<h3>Finalni profil modela</h3>
+<p>Ciljni profil kvaliteta za ovaj PoC bio je <strong>Qwen2.5-32B-Instruct, kvantizacija Q4_K_M</strong>.</p>
+<p>Link modela: <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct-GGUF">Qwen/Qwen2.5-32B-Instruct-GGUF</a>.</p>
+<p>Radna LM Studio konfiguracija na ovom hardveru: <code>GPU offload max</code> (UI je prikazivao <code>64/64</code>), početni kontekst <code>4096</code>.</p>
+<p>Testiran je i <code>Q3_K_M</code>: bio je brži, ali slabiji u pravnoj preciznosti formulacija i stabilnosti terminologije. Finalni kvalitet baseline je ostao <code>Q4_K_M</code>.</p>
+
+<h3>Kako je tok prevoda organizovan</h3>
+<ul>
+  <li>Izvor se deli na blokove po praznim redovima.</li>
+  <li>Dugi blokovi se dele prioritetno po rečenicama (<code>. ? !</code>), uz bezbedan fallback po razmaku/limitu.</li>
+  <li>Koristi se jedan strogi system prompt (bez posebnih review/retry/heading režima).</li>
+  <li><code>\footnote{...}</code> i linkovi (<code>\url</code>, <code>\href</code>, <code>\hyperref</code>, <code>\nolinkurl</code>, <code>\path</code>) se ne prevode.</li>
+</ul>
+
+<h3>Validacija i auto-kontrola kvaliteta</h3>
+<ul>
+  <li>Meta-komentari se odbacuju (<code>Note</code>, <code>Correction</code>, <code>Final</code> itd.).</li>
+  <li>Markdown code-fence u izlazu se odbacuje.</li>
+  <li>Proverava se curenje engleskih pomorskih termina u RU izlazu.</li>
+  <li>Detektuju se CJK simboli, dupli prelomi redova i drugi obrasci „prljavog“ izlaza.</li>
+</ul>
+
+<h3>Eksperimenti po modelima</h3>
+<ul>
+  <li><code>qwen2.5:7b</code>: brži, ali slabiji u terminologiji i stabilnosti na složenim pasusima.</li>
+  <li><code>qwen2.5:14b</code>: bolji od 7b, ali i dalje sa quality drift-om i mešanjem jezika.</li>
+  <li><code>qwen2.5:32b</code>: znatno bolji kvalitet, ali mnogo zahtevniji po memoriji i resursima.</li>
+</ul>
+
+<h3>Zašto CPU nije bio upotrebljiv, a GPU jeste</h3>
+<ul>
+  <li>Na CPU-u su dugi segmenti pravili dugačke timeout/retry cikluse, pa je pun prolaz bio nepraktičan.</li>
+  <li>Nije bio bitan samo prompt; ključni su bili profil resursa i runtime tuning.</li>
+  <li>Na Mac GPU-u sa <code>Q4_K_M</code> profilom brzina je porasla više puta uz prihvatljiv pravni kvalitet.</li>
+</ul>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-cpu.png">
+    <img src="/assets/posts/2026-04-03-cpu.png" class="img-fluid border rounded" alt="Terminal snimak CPU prevoda gde jedan pasus traje 5-9 minuta">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> CPU prolaz: jedan pasus je trajao otprilike 5-9 minuta.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-memory.png">
+    <img src="/assets/posts/2026-04-03-memory.png" class="img-fluid border rounded" alt="Snimak Docker Desktop-a sa potrošnjom memorije oko 20 GB tokom CPU prolaza">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 2.</strong> CPU prolaz je rađen kroz Docker; potrošnja memorije je bila oko 20 GB. GPU prolaz je rađen odvojeno u LM Studio.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-gpu-timing.png">
+    <img src="/assets/posts/2026-04-03-gpu-timing.png" class="img-fluid border rounded" alt="Terminal snimak ubrzanog prolaza gde jedan pasus traje oko 15 sekundi">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 3.</strong> Ubrzani profil: jedan pasus je trajao oko 15 sekundi.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-gpu-usage.png">
+    <img src="/assets/posts/2026-04-03-gpu-usage.png" class="img-fluid border rounded" alt="Snimak LM Studio i macOS System Monitor-a sa stabilnim GPU opterećenjem tokom prevoda">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 4.</strong> Stabilna GPU iskorišćenost tokom prolaza (LM Studio + macOS System Monitor).</small></p>
+
+<h3>Inference podešavanja i njihov uticaj</h3>
+<p>Kvalitet na prvih 12 redova je vidljivo porastao zbog kombinacije tri faktora: manje stepena slobode modela (jedan strogi system prompt, bez review/retry/heading režima), čistiji ulaz (samo prevodivi tekst, ne ceo LaTeX markup) i stroga validacija izlaza (meta/šum se odbacuje i radi retry).</p>
+<p>Pored izbora modela, snažan uticaj su imali i inference/pipeline parametri:</p>
+<ul>
+  <li><code>temperature</code>: glavni regulator varijacije. Niže (oko <code>0.0</code>) daje stabilnije pravne formulacije i manje šuma.</li>
+  <li><code>top_p</code>: seče „rep“ verovatnoća. Uz <code>temperature=0</code> uticaj je mali; uz veću temperaturu niži <code>top_p</code> daje stroži stil, ali može odseći dobre alternative.</li>
+  <li><code>max_tokens</code>: plafon dužine odgovora. Prenisko vodi ka odsecanju; previsoko ne povećava kvalitet direktno, ali smanjuje rizik od prekida na dugim segmentima.</li>
+  <li><code>num_ctx</code>: dostupni kontekst. Veći poboljšava koherentnost dugih segmenata, ali diže latenciju/opterećenje. <code>4096</code> je ovde bio dobar balans.</li>
+  <li><code>CHUNK_CHARS</code> (pipeline parametar): veličina prevodnog segmenta. Veće daje više lokalnog konteksta, ali diže rizik timeout-a/degradacije; manje je stabilnije, ali može smanjiti povezanost između rečenica.</li>
+</ul>
+<p>Zaključak: inference i chunking parametri su uticali na rezultat skoro koliko i izbor modela.</p>
+
+<h3>Konačna tehnička šema</h3>
+<ol>
+  <li><strong>Extract text -> translate -> assemble</strong> kao bazni tok.</li>
+  <li>Izlazni <code>.tex</code> se piše od početka prolaza; ako segment padne, upisuje se fallback i prolaz se ne zaustavlja.</li>
+  <li>Posle punog pokrivanja, quality-gate detektuje artefakte i pravi poseban red problematičnih segmenata.</li>
+  <li>Dorađuju se samo problematični segmenti (jači lokalni model ili plaćeni API), pa se radi finalno sklapanje.</li>
+</ol>
+
+<p>Važno: pokušano je i direktno slanje „sirovog" LaTeX markup-a na prevod, ali je taj režim davao više halucinacija i lomljenja strukture. Radni pristup je bio da se iz LaTeX-a izdvoje samo prevodivi tekstualni delovi, prevedu, pa da se dokument ponovo sastavi uz očuvan markup.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-final.png">
+    <img src="/assets/posts/2026-04-03-final.png" class="img-fluid border rounded" alt="Finalna prevedena stranica u Overleaf-u sa LaTeX izvorom i generisanim PDF-om">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 5.</strong> Finalni rezultat: prevedena stranica u Overleaf-u (LaTeX + generisani PDF). Izvorni neprevedeni blok je u <a href="{{ '/deepseek-ocr-local-setup' | relative_url }}">OCR postu</a>.</small></p>
+
+<p>Glavni tehnički zaključak: za ovu klasu dokumenata, najbolji praktični kompromis je lokalni masovni prevod na 32B profilu + automatska detekcija grešaka + ciljano doterivanje malog teškog podskupa.</p>

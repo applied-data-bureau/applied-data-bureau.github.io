@@ -1,0 +1,163 @@
+---
+layout: post
+title: "Local automated English-to-Russian translation with Qwen 2.5 32B"
+type: post
+excerpt: "A practical PoC of fully automated EN->RU translation with Qwen 2.5 32B on Mac: CPU mode was too slow, GPU mode was production-viable, with quality control for problematic chunks."
+---
+
+<p>The goal of this test was practical: to verify whether <strong>fully automated English-to-Russian translation</strong> is feasible with a local model, without relying on paid APIs for the main volume.</p>
+
+<p>Qwen 2.5 32B was used as the base model. The task was not just to “get a translation”, but to build a production-like workflow for real document volumes: predictable speed, quality control, and clear economics.</p>
+
+<p>This stage directly continues the OCR stage: OCR produced the source LaTeX from PDF, and this stage handled automated translation and quality polishing. Source context and an example of the untranslated block are in the <a href="{{ '/deepseek-ocr-local-setup' | relative_url }}">DeepSeek OCR 2 post</a>.</p>
+
+<h2>What mattered for the business</h2>
+<ul>
+  <li>Translate large EN content volumes into RU automatically, without manual paragraph-by-paragraph work.</li>
+  <li>Reduce cost versus a “100% paid API” approach.</li>
+  <li>Keep quality at a level suitable for publication and downstream use.</li>
+  <li>Have built-in detection of bad chunks and process only the problematic subset separately.</li>
+</ul>
+
+<p>The key idea: use local translation for the stable majority, and route a small difficult subset to a stronger (and more expensive) fallback channel.</p>
+
+<p class="mt-4">If you have a similar task (bulk translation of documentation, knowledge base, catalog cards, website content) and need lower cost without quality loss, you can send details via the brief form.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_qwen_32b_local_translation_submit_brief">Submit brief</a>
+</p>
+
+<h2>Outcome</h2>
+<ul>
+  <li><strong>Fully automated flow</strong> was implemented and run locally on Mac.</li>
+  <li>On <strong>CPU</strong>, the workflow was impractical for production volumes due to latency.</li>
+  <li>On <strong>GPU</strong>, speed and throughput became production-viable.</li>
+  <li>About <strong>95%</strong> of chunks were translated automatically without intervention.</li>
+  <li>About <strong>5%</strong> had artifacts: CJK symbols, untranslated fragments, or extra comments in output.</li>
+</ul>
+
+<p>That 5% can be detected automatically and sent to a separate polishing route.</p>
+
+<h2>Economics</h2>
+<p>If you translate everything through paid APIs, cost scales linearly with volume. In the local approach, most cost is in setup and local compute, while per-run variable cost is much lower.</p>
+
+<p>In practice, this gave a workable model:</p>
+<ul>
+  <li>main volume translated locally (cheaper);</li>
+  <li>only problematic 5% sent to paid API (more expensive per token, but limited scope);</li>
+  <li>total pipeline cost significantly lower than “100% API”.</li>
+</ul>
+
+<h2>How the problematic 5% was handled</h2>
+<p>Problematic chunks were automatically flagged for re-translation:</p>
+<ul>
+  <li>unexpected script/symbol detection (for example, CJK symbols in RU output);</li>
+  <li>source-language leakage checks (large EN fragments in RU result);</li>
+  <li>meta/commentary artifacts that should not appear in final content.</li>
+</ul>
+
+<p>That small subset can then be sent to OpenAI API as a second stage: more expensive per chunk, but higher quality where local output is unstable. This yields a controlled hybrid pipeline: fast, cheaper on average, and high-quality final output.</p>
+
+<h2>Technical details</h2>
+<p>Below is the PoC setup that became the working baseline on Mac.</p>
+
+<h3>PoC goal and constraints</h3>
+<ul>
+  <li>Translate a LaTeX document with many headings, paragraphs, and especially footnotes, with high legal-semantic accuracy.</li>
+  <li>Run locally on macOS without direct local tool installation.</li>
+</ul>
+
+<h3>Final model profile</h3>
+<p>The quality target profile for this PoC was <strong>Qwen2.5-32B-Instruct, quantized as Q4_K_M</strong>.</p>
+<p>Model link: <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct-GGUF">Qwen/Qwen2.5-32B-Instruct-GGUF</a>.</p>
+<p>Working LM Studio setup on this hardware: <code>GPU offload max</code> (UI showed <code>64/64</code>), starting context <code>4096</code>.</p>
+<p>We also tested <code>Q3_K_M</code>: it was faster, but weaker on legal phrasing precision and terminology stability. Final quality baseline remained <code>Q4_K_M</code>.</p>
+
+<h3>Current translation flow</h3>
+<ul>
+  <li>Source is split into blocks by empty lines.</li>
+  <li>Long blocks are split with sentence priority (<code>. ? !</code>), with safe fallback by space/limit.</li>
+  <li>A single strict system prompt is used (no separate review/retry/heading modes).</li>
+  <li><code>\footnote{...}</code> and links (<code>\url</code>, <code>\href</code>, <code>\hyperref</code>, <code>\nolinkurl</code>, <code>\path</code>) are not translated.</li>
+</ul>
+
+<h3>Validation and auto quality control</h3>
+<ul>
+  <li>Meta-commentary is rejected (<code>Note</code>, <code>Correction</code>, <code>Final</code>, etc.).</li>
+  <li>Markdown code fences in output are rejected.</li>
+  <li>English maritime keyword leakage in RU output is checked.</li>
+  <li>CJK symbols, duplicate line breaks, and other “dirty output” patterns are detected.</li>
+</ul>
+
+<h3>Model experiments</h3>
+<ul>
+  <li><code>qwen2.5:7b</code>: faster, but weaker terminology and stability on complex paragraphs.</li>
+  <li><code>qwen2.5:14b</code>: better than 7b, but still had quality drift and multilingual leakage.</li>
+  <li><code>qwen2.5:32b</code>: significantly better quality, but much more demanding on memory/compute resources.</li>
+</ul>
+
+<h3>Why CPU was not viable and GPU became baseline</h3>
+<ul>
+  <li>On CPU, long chunks caused long timeouts/retries, making full runs impractical.</li>
+  <li>Not only prompting mattered; resource profile and runtime tuning were critical.</li>
+  <li>On Mac GPU with <code>Q4_K_M</code>, throughput improved by several times at acceptable legal quality.</li>
+</ul>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-cpu.png">
+    <img src="/assets/posts/2026-04-03-cpu.png" class="img-fluid border rounded" alt="Terminal screenshot of CPU translation run with one paragraph taking 5-9 minutes">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> CPU run: one paragraph took roughly 5-9 minutes.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-memory.png">
+    <img src="/assets/posts/2026-04-03-memory.png" class="img-fluid border rounded" alt="Docker Desktop screenshot showing around 20 GB memory usage during CPU run">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 2.</strong> CPU run used Docker; memory usage was around 20 GB. GPU run was executed separately in LM Studio.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-gpu-timing.png">
+    <img src="/assets/posts/2026-04-03-gpu-timing.png" class="img-fluid border rounded" alt="Terminal screenshot of accelerated run with one paragraph taking around 15 seconds">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 3.</strong> Accelerated profile: one paragraph took about 15 seconds.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-gpu-usage.png">
+    <img src="/assets/posts/2026-04-03-gpu-usage.png" class="img-fluid border rounded" alt="LM Studio and macOS System Monitor screenshot showing sustained GPU usage during translation">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 4.</strong> Sustained GPU utilization during the run (LM Studio + macOS System Monitor).</small></p>
+
+<h3>Inference settings and their impact</h3>
+<p>Quality on the first 12 lines improved significantly due to three combined factors: fewer model degrees of freedom (single strict system prompt, no review/retry/heading modes), cleaner input (only translatable text rather than full LaTeX markup), and strict output validation (meta/noise rejected and retried).</p>
+<p>Beyond model choice, inference and pipeline parameters had strong impact:</p>
+<ul>
+  <li><code>temperature</code>: main creativity/variance lever. Lower (around <code>0.0</code>) gave more stable legal phrasing and less noise.</li>
+  <li><code>top_p</code>: tail truncation. With <code>temperature=0</code> impact is small; with higher temperature, lower <code>top_p</code> makes style stricter but can cut good alternatives.</li>
+  <li><code>max_tokens</code>: response length cap. Too low causes truncation; too high does not improve quality directly but reduces cut-offs on long chunks.</li>
+  <li><code>num_ctx</code>: available context window. Larger improves coherence on long chunks but increases latency/load. <code>4096</code> was a good balance here.</li>
+  <li><code>CHUNK_CHARS</code> (pipeline parameter): translation chunk size. Larger gives more local context but raises timeout/degradation risk; smaller is more stable but can reduce cross-sentence coherence.</li>
+</ul>
+<p>Bottom line: inference and chunking parameters influenced outcomes almost as much as model choice.</p>
+
+<h3>Final technical scheme</h3>
+<ol>
+  <li><strong>Extract text -> translate -> assemble</strong> as the baseline flow.</li>
+  <li>Output <code>.tex</code> is written from run start; if a chunk fails, fallback is written and the run continues.</li>
+  <li>After full coverage, quality-gate detects artifacts and builds a separate problematic-chunk queue.</li>
+  <li>Only problematic chunks are polished (stronger local model or paid API), then final assembly is done.</li>
+</ol>
+
+<p>Important: there was a direct attempt to translate raw LaTeX markup as-is, but that mode produced more hallucinations and structure breakage. The working approach was to extract only translatable text from LaTeX, translate it, then assemble the final document back with preserved markup.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-03-final.png">
+    <img src="/assets/posts/2026-04-03-final.png" class="img-fluid border rounded" alt="Final translated page in Overleaf showing LaTeX source and generated PDF">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 5.</strong> Final result: translated page in Overleaf (LaTeX + compiled PDF). The original untranslated block is shown in the <a href="{{ '/deepseek-ocr-local-setup' | relative_url }}">OCR post</a>.</small></p>
+
+<p>Main technical takeaway: for this class of documents, the best practical compromise is local bulk translation on a 32B profile + automatic defect detection + targeted polishing of a small difficult subset.</p>
