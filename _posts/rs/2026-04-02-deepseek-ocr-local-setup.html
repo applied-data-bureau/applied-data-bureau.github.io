@@ -69,6 +69,66 @@ Free OCR.</code></pre>
 
 <p>Model i tačna revizija: <a href="https://huggingface.co/deepseek-ai/DeepSeek-OCR-2/tree/aaa02f3811945a91062062994c5c4a3f4c0af2b0">deepseek-ai/DeepSeek-OCR-2 @ aaa02f3811945a91062062994c5c4a3f4c0af2b0</a>.</p>
 
+<h3>Primeri OCR izlaza</h3>
+<p>Ispod su dva realna fragmenta sa jedne prepoznate stranice: strukturni Markdown izlaz i puni Free OCR izlaz.</p>
+
+<details class="border rounded p-3 mb-3">
+  <summary><strong>Primer Markdown prepoznavanja (otvori)</strong></summary>
+  <p class="mt-3 mb-2">Komentar: u ovom režimu se bolje čuva struktura dokumenta (naslovi i sekcije), ali pojedini elementi poput fusnota mogu da se izgube ili pojednostave.</p>
+  <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code class="language-markdown">&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[102, 79, 887, 145]]&lt;|/det|&gt;
+not be underplayed. In Papas Olio JSC v. Grains & Fourrages, \( ^{12} \)  Toulson L.J. said that, in most cases, the recap fulfils a dual function of confirming evidently the making of the oral agreement and also superseding the oral agreement by providing a document to which the parties can then look as the expression of their bargain. As Lord Blackburn said in Rossiter v. Miller \( ^{13} \) :
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[138, 156, 887, 315]]&lt;|/det|&gt;
+It is a necessary part of the plaintiff’s case to show that the two parties had come to a final and complete agreement, for, if not, there was no contract. So long as they are only in negotiation either party may retract; and though the parties may have agreed on all the cardinal points of the intended contract, yet, if some particulars essential to the agreement still remain to be settled afterwards, there is no contract. The parties, in such a case, are still only in negotiation. But the mere fact that the parties have expressly stipulated that there shall afterwards be a formal agreement prepared, embodying the terms, which shall be signed by the parties does not, by itself, show that they continue merely in negotiation. It is a matter to be taken into account in construing the evidence and determining whether the parties have really come to a final agreement or not. But as soon as the fact is established of the final mutual assent of the parties so that those who draw up the formal agreement have not the power to vary the terms already settled, I think the contract is completed.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 327, 886, 360]]&lt;|/det|&gt;
+1.4 Those particulars that are “essential to the agreement” and that must therefore be settled before a binding contract exists, may fall into two categories, namely:
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 361, 885, 393]]&lt;|/det|&gt;
+(i) terms that, if not settled, render the entire agreement unworkable, or void for uncertainty, with the result that the court is unable to enforce it, whatever the parties may have intended;
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 394, 885, 427]]&lt;|/det|&gt;
+(ii) terms, the agreement upon which is regarded by the parties themselves as an essential prerequisite of the making of a binding contract. \( ^{14} \)
+&lt;|ref|&gt;sub_title&lt;|/ref|&gt;&lt;|det|&gt;[[103, 450, 810, 483]]&lt;|/det|&gt;
+## Matters which must be agreed if the contract is not to be unworkable or void for uncertainty
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[102, 491, 886, 557]]&lt;|/det|&gt;
+1.5 As Bingham J. said in Pagnan v. Feed Products, \( ^{15} \)  “the parties are to be regarded as masters of their contractual fate”, and it is primarily up to them whether agreement upon any particular matter is to be a prerequisite of a binding contract. However, the issue is not subjective, as noted by Lord Clarke \( ^{16} \) :
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[137, 568, 887, 686]]&lt;|/det|&gt;
+The general principles are not in doubt. Whether there is a binding contract between the parties and if so, upon what terms depends on what they have agreed. It depends not upon their subjective state of mind, but upon a consideration of what was communicated between them by words or conduct and whether that leads objectively to a conclusion that they intended to create legal relations and had agreed upon all the terms which they regard or the law requires as essential for the formation of legally binding relations. Even if certain terms of economic or other significance to the parties have not been finalised, an objective appraisal of their words and conduct may lead to the conclusion that they did not intend agreement of such terms to be a pre-condition to a concluded and legally binding agreement.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[104, 697, 844, 714]]&lt;|/det|&gt;
+As Andrew Smith J. expressed it in Bear Stearns Bank plc v. Forum Global Equity Ltd \( ^{17} \) :
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 729, 885, 755]]&lt;|/det|&gt;
+12 [2010] 2 Lloyd’s Rep. 152, at para. 28 and see also TTMI Sarl v. Statoil ASA (The Sibolelle) [2011] 2 Lloyd’s Rep. 220, at para. 31.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[130, 755, 366, 768]]&lt;|/det|&gt;
+13 (1878) 3 App. Cas. 1124, 1151.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 768, 885, 793]]&lt;|/det|&gt;
+14 See Pagnan v. Feed Products [1987] 2 Lloyd’s Rep. 601, 619; Spectra International v. Tiscali [2002] All E.R.(D) 209.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 794, 886, 845]]&lt;|/det|&gt;
+15 Ibid. at p. 611. This is a description which the courts have repeatedly adopted: see, e.g., RTS Flexible Systems Ltd v. Molenski Alois Muller GmbH & Co. [2010] 1 W.L.R. 753 and Air Studios (Lyndhurst) Ltd v. Lombard North Central (T/A Air Entertainment Group) [2013] 1 Lloyd’s Rep. 63, where Males J. set out the principles concerning the present issue with great clarity at paras 5–12.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 845, 885, 871]]&lt;|/det|&gt;
+16 RTS Flexible Systems Ltd v. Molenski Alois Muller GmbH & Co. [2011] 1 W.L.R. 753; and see Barbudev v. Eurocom Cable Management Bulgaria EOOD [2012] 2 All E.R. (Comm) 963.
+&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[103, 871, 885, 897]]&lt;|/det|&gt;
+17 [2007] EWHC 1576 (Comm), at para. 171; and the same judge in Macro Volatility Master Fund v. Rouvray [2009] 1 Lloyd’s Rep. 475, at para. 223.
+</code></pre>
+</details>
+
+<details class="border rounded p-3 mb-3">
+  <summary><strong>Primer Free OCR prepoznavanja (otvori)</strong></summary>
+  <p class="mt-3 mb-2">Komentar: u ovom režimu se bolje izvlači kompletan tekst, uključujući fusnote, ali je struktura (hijerarhija naslova/sekcija) obično manje uredna.</p>
+  <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code class="language-text">not be underplayed. In Papas Olio JSC v. Grains & Fourrages,\(^{12}\) Toulson L.J. said that, in most cases, the recap fulfils a dual function of confirming evidentially the making of the oral agreement and also superseding the oral agreement by providing a document to which the parties can then look as the expression of their bargain. As Lord Blackburn said in Rossiter v. Miller\(^{13}\):
+It is a necessary part of the plaintiff’s case to show that the two parties had come to a final and complete agreement, for, if not, there was no contract. So long as they are only in negotiation either party may retract; and though the parties may have agreed on all the cardinal points of the intended contract, yet, if some particulars essential to the agreement still remain to be settled afterwards, there is no contract. The parties, in such a case, are still only in negotiation. But the mere fact that the parties have expressly stipulated that there shall afterwards be a formal agreement prepared, embodying the terms, which shall be signed by the parties does not, by itself, show that they continue merely in negotiation. It is a matter to be taken into account in construing the evidence and determining whether the parties have really come to a final agreement or not. But as soon as the fact is established of the final mutual assent of the parties so that those who draw up the formal agreement have not the power to vary the terms already settled, I think the contract is completed.
+1.4 Those particulars that are “essential to the agreement” and that must therefore be settled before a binding contract exists, may fall into two categories, namely:
+(i) terms that, if not settled, render the entire agreement unworkable, or void for uncertainty, with the result that the court is unable to enforce it, whatever the parties may have intended;
+(ii) terms, the agreement upon which is regarded by the parties themselves as an essential prerequisite of the making of a binding contract.\(^{14}\)
+**Matters which must be agreed if the contract is not to be unworkable or void for uncertainty**
+1.5 As Bingham J. said in *Pagnan v. Feed Products*,\(^{15}\) “the parties are to be regarded as masters of their contractual fate”, and it is primarily up to them whether agreement upon any particular matter is to be a prerequisite of a binding contract. However, the issue is not subjective, as noted by Lord Clarke\(^{16}\):
+The general principles are not in doubt. Whether there is a binding contract between the parties and if so, upon what terms depends on what they have agreed. It depends not upon their subjective state of mind, but upon a consideration of what was communicated between them by words or conduct and whether that leads objectively to a conclusion that they intended to create legal relations and had agreed upon all the terms which they regard or the law requires as essential for the formation of legally binding relations. Even if certain terms of economic or other significance to the parties have not been finalised, an objective appraisal of their words and conduct may lead to the conclusion that they did not intend agreement of such terms to be a pre-condition to a concluded and legally binding agreement.
+As Andrew Smith J. expressed it in *Bear Stearns Bank plc v. Forum Global Equity Ltd\(^{17}\)*:
+12 [2010] 2 Lloyd’s Rep. 152, at para. 28 and see also *TTMI Sarl v. Statoil ASA (The Sibolelle)* [2011] 2 Lloyd’s Rep. 220, at para. 31.
+13 (1878) 3 App. Cas. 1124, 1151.
+14 See *Pagnan v. Feed Products* [1987] 2 Lloyd’s Rep. 601, 619; *Spectra International v. Tiscali* [2002] All E.R.(D) 209.
+15 *Ibid.* at p. 611. This is a description which the courts have repeatedly adopted: see, e.g., *RTS Flexible Systems Ltd v. Molenski Alois Muller GmbH & Co.* [2010] 1 W.L.R. 753 and *Air Studios (Lyndhurst) Ltd v. Lombard North Central (T/A Air Entertainment Group)* [2013] 1 Lloyd’s Rep. 63, where Males J. set out the principles concerning the present issue with great clarity at paras 5–12.
+16 *RTS Flexible Systems Ltd v. Molenski Alois Muller GmbH & Co.* [2009] 1 W.L.R. 753; and see *Barbudev v. Eurocom Cable Management Bulgaria EOOD* [2012] 2 All E.R. (Comm) 963.
+17 [2007] EWHC 1576 (Comm), at para. 171; and the same judge in *Macro Volatility Master Fund v. Rouvray* [2009] 1 Lloyd’s Rep. 475, at para. 223.
+</code></pre>
+</details>
+
 <ul>
   <li>Pokušaji poboljšanja rezultata kroz eksperimentisanje sa promptovima nisu dali primetan dobitak.</li>
   <li>U praksi su stabilno radila samo dva režima: „convert to markdown“ i „Free OCR“.</li>
