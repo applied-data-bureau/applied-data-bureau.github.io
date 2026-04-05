@@ -1,0 +1,160 @@
+---
+layout: post
+title: "Telegram Bot for Order Picking Verification from Invoice and Product Photos"
+type: post
+excerpt: "How order picking verification was automated: an employee sends invoice and product photos, OpenAI compares them and returns a structured JSON conclusion, and the Telegram bot returns the result per item."
+---
+
+<p>The client had an operational issue in order picking: some orders were assembled incorrectly, which led to returns, extra shipping, and additional team effort.</p>
+
+<p>The business goal was straightforward: automate picking verification before shipment. The employee takes a photo of the invoice and photos of products on the table (with visible SKUs), and the system automatically checks whether actual picking matches the document.</p>
+
+<h2>What mattered for the business</h2>
+<ul>
+  <li>Reduce the share of incorrect pickings before shipping to the customer.</li>
+  <li>Lower costs of returns and reshipments.</li>
+  <li>Speed up quality control without assigning a dedicated checker to every order.</li>
+  <li>Make verification transparent and standardized across the whole shift.</li>
+  <li>Get a conclusion quickly in the same channel employees already use.</li>
+</ul>
+
+<p>The key idea: replace manual visual checking with automated verification. OpenAI parsed the invoice separately and parsed products/tags from photos separately, then returned a structured conclusion on whether the picking was correct.</p>
+
+<p class="mt-4">If you have a similar task (picking control, invoice/product photos, pre-shipment verification) and need to reduce operational losses, you can send details via the brief form.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_telegram_invoice_recognition_submit_brief">Submit brief</a>
+</p>
+
+<h2>What was implemented</h2>
+<ul>
+  <li>A workflow was built to accept a batch of photos: invoice + products with visible SKUs.</li>
+  <li>OpenAI-based analysis was configured with a task-specific prompt for picking verification.</li>
+  <li>A split extraction approach was implemented: invoice parsing and product photo parsing as separate stages.</li>
+  <li>A structured JSON response was produced with the conclusion: picking is correct or incorrect.</li>
+  <li>A Telegram bot was implemented to return a clear verification status for each photo set.</li>
+  <li>Error scenarios were handled: low photo quality, unreadable SKUs, incomplete photo set.</li>
+</ul>
+
+<h2>Practical outcome</h2>
+<p>In day-to-day operations, picking verification became faster and more consistent: employees sent photos, and the bot returned a verification conclusion.</p>
+
+<ul>
+  <li>Pre-shipment checks stopped relying only on the attention of a specific employee.</li>
+  <li>A single decision format was introduced: “picking correct / incorrect” with structured details.</li>
+  <li>The risk of missed errors that lead to returns and extra logistics was reduced.</li>
+  <li>The team got a tool that fits the existing Telegram workflow without a separate UI.</li>
+</ul>
+
+<p>Based on working statistics, about <strong>90%</strong> of checks returned “picking correct.” The remaining <strong>10%</strong> were usually also correct, but required attention due to OCR mistakes or missing readable SKUs in photos. As a result, employee attention shifted from rechecking all orders to targeted recheck of only those 10%.</p>
+
+<style>
+  .post-figure-1 {
+    width: 60%;
+  }
+  @media (max-width: 767.98px) {
+    .post-figure-1 {
+      width: 100%;
+    }
+  }
+</style>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-bot.jpg">
+    <img src="/assets/posts/2026-04-05-bot.jpg" class="img-fluid border rounded post-figure-1" alt="Telegram bot screenshot: a gallery of photos is uploaded, and the bot returns picking status per photo">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> Telegram bot in a real flow: a gallery is sent, and the bot returns verification results per photo.</small></p>
+
+<h2>OpenAI cost profile</h2>
+<p>Before packaging the solution into the Telegram bot, actual processing cost was measured in a test environment. This made it possible to provide the client with a per-photo cost estimate in advance and forecast budget for production volume.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-openai.jpeg">
+    <img src="/assets/posts/2026-04-05-openai.jpeg" class="img-fluid border rounded" alt="OpenAI usage panel: 92 requests and total spend of 0.51 dollars in a test setup">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 2.</strong> Test OpenAI spend: 92 requests, $0.51. This was used to estimate per-photo processing cost before production rollout.</small></p>
+
+<h2>Why Telegram was chosen</h2>
+<p>The team already had an active Telegram workflow, so a separate web interface at the start would add unnecessary overhead. Verification was embedded directly into the existing process without extra onboarding or system switching.</p>
+
+<h2>Technical details</h2>
+<p>Below is the implementation outline that proved practical for scaling to similar document/visual verification tasks.</p>
+
+<h3>1. Delivery sequence: n8n first, Telegram bot second</h3>
+<ul>
+  <li>The first stage was a standalone workflow built and tested in n8n.</li>
+  <li>After accuracy and logic were confirmed with the client, the same flow was packaged into a Telegram bot.</li>
+  <li>This approach validated the business hypothesis quickly without front-loading bot interface complexity.</li>
+</ul>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-n8n.jpeg">
+    <img src="/assets/posts/2026-04-05-n8n.jpeg" class="img-fluid border rounded" alt="Screenshot of the n8n test bench used for picking verification workflow validation">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 3.</strong> n8n test bench where the logic was validated before packaging into the Telegram bot.</small></p>
+
+<h3>2. Processing flow</h3>
+<ol>
+  <li>An employee sends a batch of photos to the bot: invoice + products on a table with visible SKUs.</li>
+  <li>Images are sent to OpenAI with a prompt designed for picking verification.</li>
+  <li>The model extracts invoice data and product/tag data separately.</li>
+  <li>A document-vs-actual comparison is performed by SKU and positions.</li>
+  <li>A structured JSON conclusion is returned for picking correctness.</li>
+  <li>The bot returns verification status to the employee per photo set/order.</li>
+</ol>
+
+<h3>3. What was validated separately</h3>
+<ul>
+  <li>Invoice readability and sufficient data for line extraction.</li>
+  <li>SKU readability on product photos (tags, labels, shooting angle).</li>
+  <li>Completeness of photo set for a specific order.</li>
+  <li>Empty or low-confidence recognition routed to manual review.</li>
+</ul>
+
+<h3>4. User roles and Telegram command access</h3>
+<ul>
+  <li>Access control was implemented with user whitelists.</li>
+  <li>Administrators could manage whitelists (add/remove/update access).</li>
+  <li>Administrative statistics were available through slash commands in Telegram.</li>
+  <li>Regular employees did not have access to admin commands or statistics.</li>
+  <li>The <code>/help</code> command was role-aware: admins saw full command set, employees saw only operational commands.</li>
+</ul>
+
+<h3>5. Two bot environments: test and production</h3>
+<ul>
+  <li>Two bots were maintained in parallel: a test bot and a production bot.</li>
+  <li>Each bot had its own environment with separate settings and tokens.</li>
+  <li>Changes were applied to the test bot first and confirmed with the client.</li>
+  <li>After confirmation, the same code was deployed to production.</li>
+</ul>
+
+<p>Why this is good in practice: it reduces risk of production incidents, makes releases predictable, and enables customer sign-off on real scenarios before rollout. For business operations, this means fewer outages, fewer rollback events, and a more stable picking process.</p>
+
+<h3>6. Practical OCR and visual-verification notes</h3>
+<ul>
+  <li>In this case, photo quality affected results less than expected; the critical factor was that text should not be rotated by 90/180 degrees.</li>
+  <li>For reliable comparison, SKUs on product photos should be visible separately and not overlap.</li>
+  <li>The best outcome came from a hybrid approach: automated verification plus manual recheck of disputed cases.</li>
+</ul>
+
+<h3>7. Separate challenge: Telegram photo gallery handling</h3>
+<p>A significant implementation challenge was gallery handling: Telegram does not provide a reliable way to know upfront how many images are in a specific gallery, and there is no explicit “gallery complete” signal at the moment each individual image arrives.</p>
+
+<p>This complicates concurrent processing: photos must be grouped correctly, premature analysis of incomplete sets must be avoided, and unnecessary locks for other incoming orders must be avoided at the same time. In production, this required dedicated buffering and synchronization logic before final verification was triggered.</p>
+
+<h3>8. Two-pass experiment (via n8n)</h3>
+<p>A separate two-pass approach was tested in n8n: first, OCR-only extraction produced JSON for invoice and products; then a second stage analyzed that JSON for picking correctness.</p>
+
+<p>This performed noticeably worse. In practice, when the model saw raw photos directly, it had better context and produced more accurate one-pass conclusions. The final production path therefore used one-pass flow: “photos -> analysis -> conclusion.”</p>
+
+<h3>9. What to keep in mind when replicating this in another project</h3>
+<ul>
+  <li>Define a photo capture standard for staff first (angle, light, SKU visibility).</li>
+  <li>Design error handling and resubmission flow explicitly, not just the happy path.</li>
+  <li>Track metrics from day one: wrong-picking rate, manual recheck share, and verification time per order.</li>
+</ul>
+
+<p>If needed, the next iteration can add bot UI screenshots, a sample JSON schema, and fixed before/after metrics as a compact case-study package for proposals.</p>

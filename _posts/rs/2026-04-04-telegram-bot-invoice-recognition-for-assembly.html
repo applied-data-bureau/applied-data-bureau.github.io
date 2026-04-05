@@ -1,0 +1,160 @@
+---
+layout: post
+title: "Telegram bot za proveru kompletacije porudžbine po otpremnici i fotografijama robe"
+type: post
+excerpt: "Kako je automatizovana provera kompletacije: zaposleni šalje fotografije otpremnice i robe, OpenAI poredi podatke i vraća strukturisan JSON zaključak, a Telegram bot vraća rezultat po stavkama."
+---
+
+<p>Klijent je imao operativni problem u kompletaciji porudžbina: deo porudžbina je izlazio sa greškama, što je vodilo ka povratima, dodatnoj poštarini i dodatnom opterećenju tima.</p>
+
+<p>Biznis cilj je bio jasan: automatizovati proveru ispravnosti kompletacije pre slanja. Zaposleni fotografiše otpremnicu i robu na stolu (sa vidljivim šiframa/artiklima), a sistem automatski proverava da li se stvarna kompletacija poklapa sa dokumentom.</p>
+
+<h2>Šta je bilo važno za biznis</h2>
+<ul>
+  <li>Smanjiti udeo pogrešno kompletiranih porudžbina pre isporuke kupcu.</li>
+  <li>Smanjiti troškove povrata i ponovnog slanja.</li>
+  <li>Ubrzati kontrolu kvaliteta bez posebnog kontrolora za svaku porudžbinu.</li>
+  <li>Učiniti proveru transparentnom i standardizovanom za celu smenu.</li>
+  <li>Dobijati zaključak brzo, u istom kanalu u kom zaposleni već rade.</li>
+</ul>
+
+<p>Ključna ideja: umesto ručne provere „okom“, uvedena je automatska verifikacija. OpenAI je odvojeno parsirao otpremnicu i odvojeno prepoznavao robu/etikete sa fotografija, a zatim vraćao strukturisan zaključak o ispravnosti kompletacije.</p>
+
+<p class="mt-4">Ako imate sličan zadatak (kontrola kompletacije, fotografije robe i otpremnice, provera pre slanja) i želite da smanjite operativne gubitke, detalje možete poslati kroz brif.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_telegram_invoice_recognition_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Šta je bilo urađeno</h2>
+<ul>
+  <li>Sastavljen je workflow koji prima paket fotografija: otpremnica + roba sa vidljivim šiframa/artiklima.</li>
+  <li>Podešen je OpenAI analizni korak sa promptom specifičnim za proveru kompletacije.</li>
+  <li>Implementirana je odvojena obrada: posebno otpremnica, posebno stvarna roba na fotografijama.</li>
+  <li>Formiran je strukturisan JSON odgovor sa zaključkom: kompletacija je ispravna ili nije.</li>
+  <li>Implementiran je Telegram bot koji vraća jasan status provere za svaki set fotografija.</li>
+  <li>Obrađeni su scenariji grešaka: loš kvalitet slike, nečitljive šifre/artikli, nepotpun set fotografija.</li>
+</ul>
+
+<h2>Rezultat u praksi</h2>
+<p>U operativnom toku provera kompletacije je postala brža i ujednačenija: zaposleni šalje fotografije, a bot vraća zaključak provere.</p>
+
+<ul>
+  <li>Provera pre slanja više nije zavisila samo od pažnje konkretnog zaposlenog.</li>
+  <li>Uveden je jedinstven format odluke: „kompletacija ispravna / neispravna“ sa strukturisanim detaljima.</li>
+  <li>Smanjen je rizik propuštenih grešaka koje vode do povrata i dodatne logistike.</li>
+  <li>Tim je dobio alat koji se uklapa u postojeći Telegram proces bez posebnog interfejsa.</li>
+</ul>
+
+<p>Po radnoj statistici, oko <strong>90%</strong> provera je vraćalo zaključak „kompletacija ispravna“. Preostalih <strong>10%</strong> je u većini slučajeva takođe bilo ispravno, ali je zahtevalo pažnju zbog OCR grešaka ili nedostatka čitljivih šifri/artikala na fotografijama. Time je pažnja zaposlenih preusmerena sa potpune provere svih porudžbina na ciljanu proveru tih 10%.</p>
+
+<style>
+  .post-figure-1 {
+    width: 60%;
+  }
+  @media (max-width: 767.98px) {
+    .post-figure-1 {
+      width: 100%;
+    }
+  }
+</style>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-bot.jpg">
+    <img src="/assets/posts/2026-04-05-bot.jpg" class="img-fluid border rounded post-figure-1" alt="Snimak Telegram bota: poslata je galerija fotografija, a bot vraća status kompletacije po fotografiji">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Interfejs Telegram bota u realnom toku: šalje se galerija, bot vraća rezultat provere po svakoj fotografiji.</small></p>
+
+<h2>Ekonomika provere kroz OpenAI</h2>
+<p>Pre pakovanja rešenja u Telegram bot, stvarni trošak obrade je posebno izmeren u test okruženju. To je omogućilo da se klijentu unapred da procena cene obrade jedne fotografije i predvidi budžet za operativni obim.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-openai.jpeg">
+    <img src="/assets/posts/2026-04-05-openai.jpeg" class="img-fluid border rounded" alt="OpenAI panel troškova: 92 zahteva i ukupno 0.51 dolara u testnom okruženju">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 2.</strong> Test trošak OpenAI: 92 zahteva, $0.51. Na toj osnovi je procenjena cena obrade jedne fotografije pre produkcionog puštanja.</small></p>
+
+<h2>Zašto je izabran Telegram</h2>
+<p>Tim je već radio u Telegram konturi, pa bi poseban web interfejs na startu bio nepotreban sloj. Verifikacija je ugrađena direktno u postojeći proces, bez dodatnog obučavanja i bez prebacivanja između sistema.</p>
+
+<h2>Tehnički detalji</h2>
+<p>Ispod je tehnički okvir koji se pokazao praktičnim za skaliranje na slične zadatke verifikacije dokumenata i fotografija.</p>
+
+<h3>1. Redosled implementacije: prvo n8n, pa Telegram bot</h3>
+<ul>
+  <li>Prva faza je bila poseban workflow sastavljen i testiran u n8n.</li>
+  <li>Nakon potvrde tačnosti i logike sa klijentom, isti tok je upakovan u Telegram bot.</li>
+  <li>Ovaj pristup je brzo potvrdio biznis hipotezu bez ranog povećanja složenosti interfejsa bota.</li>
+</ul>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-04-05-n8n.jpeg">
+    <img src="/assets/posts/2026-04-05-n8n.jpeg" class="img-fluid border rounded" alt="Snimak n8n testnog okruženja za proveru workflow-a kompletacije">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 3.</strong> n8n testni stand na kome je logika proverena pre pakovanja u Telegram bot.</small></p>
+
+<h3>2. Tok obrade</h3>
+<ol>
+  <li>Zaposleni šalje botu paket fotografija: otpremnica i roba na stolu sa vidljivim šiframa/artiklima.</li>
+  <li>Slike se šalju u OpenAI sa promptom za verifikaciju kompletacije.</li>
+  <li>Model odvojeno izvlači podatke iz otpremnice i odvojeno prepoznaje robu/etikete.</li>
+  <li>Radi se poređenje „dokument vs stvarno stanje" po šiframa i stavkama.</li>
+  <li>Na izlazu se formira strukturisan JSON sa zaključkom o ispravnosti kompletacije.</li>
+  <li>Telegram bot vraća status provere zaposlenom za svaki set fotografija/porudžbinu.</li>
+</ol>
+
+<h3>3. Šta je validirano odvojeno</h3>
+<ul>
+  <li>Čitljivost otpremnice i dovoljan obim podataka za izdvajanje stavki.</li>
+  <li>Čitljivost šifri/artikala na fotografijama robe (etikete, oznake, ugao snimanja).</li>
+  <li>Kompletnost seta fotografija za konkretnu porudžbinu.</li>
+  <li>Prazna ili niskokonfidencijska prepoznavanja su slata na ručnu proveru.</li>
+</ul>
+
+<h3>4. Uloge korisnika i pristup Telegram komandama</h3>
+<ul>
+  <li>Implementirana je kontrola pristupa kroz whitelist korisnika.</li>
+  <li>Administratorima je omogućeno upravljanje whitelist-om (dodavanje/uklanjanje/ažuriranje pristupa).</li>
+  <li>Administratorska statistika je bila dostupna kroz slash komande u Telegram-u.</li>
+  <li>Obični zaposleni nisu imali pristup admin komandama ni statistici.</li>
+  <li>Komanda <code>/help</code> je bila role-aware: admin vidi pun skup komandi, zaposleni samo operativne komande.</li>
+</ul>
+
+<h3>5. Dva bot okruženja: test i produkcija</h3>
+<ul>
+  <li>Paralelno su vođena dva bota: test i produkcioni.</li>
+  <li>Svaki bot je imao sopstveno okruženje sa odvojenim podešavanjima i tokenima.</li>
+  <li>Izmene su prvo puštane na test bot i potvrđivane sa klijentom.</li>
+  <li>Posle potvrde, isti kod je deploy-ovan na produkcioni bot.</li>
+</ul>
+
+<p>Zašto je to dobro u praksi: smanjuje rizik produkcionih kvarova, čini release predvidivim i omogućava potvrdu na realnim scenarijima pre puštanja. Za biznis to znači manje zastoja, manje rollback-a i stabilniji operativni tok kompletacije.</p>
+
+<h3>6. Praktične napomene za OCR i vizuelnu verifikaciju</h3>
+<ul>
+  <li>U ovom slučaju kvalitet fotografije je uticao manje nego što se očekivalo; kritično je bilo da tekst ne bude rotiran za 90/180 stepeni.</li>
+  <li>Za pouzdano poređenje je važno da šifre/artikli na fotografijama budu vidljivi odvojeno i bez preklapanja.</li>
+  <li>Najbolji rezultat je dao hibrid: automatska provera + ručna provera spornih slučajeva.</li>
+</ul>
+
+<h3>7. Poseban challenge: obrada galerije fotografija u Telegram-u</h3>
+<p>Značajna složenost se pojavila kod obrade galerija: Telegram ne daje pouzdan mehanizam da se unapred zna koliko fotografija ima konkretna galerija, niti postoji eksplicitan signal „galerija je završena" u trenutku prijema pojedinačne slike.</p>
+
+<p>Zbog toga je složenija višedretvena obrada: potrebno je korektno grupisati fotografije, ne pokretati prevremenu analizu nepotpunog seta i istovremeno ne držati nepotrebne lock-ove za druge ulazne porudžbine. U radnom konturu to je zahtevalo posebnu logiku baferovanja i sinhronizacije pre finalne provere kompletacije.</p>
+
+<h3>8. Eksperiment sa dvoprolaznom šemom (preko n8n)</h3>
+<p>Posebno je testirana dvostepena logika u n8n: prvo čist OCR sa formiranjem JSON-a za otpremnicu i robu, a zatim poseban korak analize tog JSON-a za proveru kompletacije.</p>
+
+<p>Ovaj pristup je dao slabiji rezultat. U praksi je model koji direktno vidi originalne fotografije imao bolji kontekst i davao tačniji zaključak u jednom prolazu. Zato je u radnom konturu zadržan jednoprolazni scenario: „fotografije -> analiza -> zaključak“.</p>
+
+<h3>9. Šta je važno pri prenosu ovog rešenja u drugi projekat</h3>
+<ul>
+  <li>Prvo definisati standard fotografisanja za zaposlene (ugao, osvetljenje, vidljivost šifri/artikala).</li>
+  <li>Eksplicitno projektovati obradu grešaka i ponovnog slanja, a ne samo happy path.</li>
+  <li>Pratiti metrike od prvog dana: udeo grešaka u kompletaciji, udeo ručnih provera i vreme provere po porudžbini.</li>
+</ul>
+
+<p>Po potrebi, u sledećoj iteraciji mogu se dodati dodatni screenshot-ovi interfejsa bota, primer JSON strukture i fiksirane pre/posle metrike kao kompaktan case paket za freelancing prijave.</p>
