@@ -32,7 +32,7 @@ permalink: /blog/
     {% for post in posts %}
       <article class="blog-list-item">
         <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-        <div class="date">{{ post.date | date: "%Y-%m-%d" }}</div>
+        <div class="date">{% include formatted-date.html date=post.date %}</div>
         <p>{{ post.excerpt | strip_html | truncate: 240 }}</p>
         <a href="{{ post.url }}">{% if site.lang == "ru" %}Читать материал{% endif %}{% if site.lang == "rs" %}Pročitaj članak{% endif %}{% if site.lang == "en" %}Read post{% endif %}</a>
       </article>

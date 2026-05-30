@@ -6,16 +6,24 @@ layout: default
   <div class="container">
     <div class="row">
       <div class="col-12 col-lg-9">
-        <h1>{{ page.title }}</h1>
-        <p class="mb-0">{{ page.date | date: "%Y-%m-%d" }}</p>
-        <p class="mb-0">
-          <a href="/blog/">{% if site.lang == "ru" %}← Назад в блог{% endif %}{% if site.lang == "rs" %}← Nazad na blog{% endif %}{% if site.lang == "en" %}← Back to blog{% endif %}</a>
-        </p>
-        {% if page.service_tags %}
-        <p class="mb-0">
-          {% if site.lang == "ru" %}Теги услуг:{% endif %}{% if site.lang == "rs" %}Oznake usluga:{% endif %}{% if site.lang == "en" %}Service tags:{% endif %}{% for service_tag in page.service_tags %} {% assign linked_service = site.services | where: "slug", service_tag | first %}{% if linked_service %}<a href="{{ linked_service.url | relative_url }}">{{ linked_service.tag_title | default: linked_service.title }}</a>{% unless forloop.last %} ·{% endunless %}{% endif %}{% endfor %}
-        </p>
+        {% if site.lang == "ru" %}
+          {% assign back_link_text = "← Все материалы" %}
+          {% assign services_label = "Услуги:" %}
+        {% elsif site.lang == "rs" %}
+          {% assign back_link_text = "← Svi materijali" %}
+          {% assign services_label = "Usluge:" %}
+        {% elsif site.lang == "en" %}
+          {% assign back_link_text = "← All materials" %}
+          {% assign services_label = "Services:" %}
         {% endif %}
+
+        <p class="mb-3">
+          <a href="{{ '/blog/' | relative_url }}">{{ back_link_text }}</a>
+        </p>
+        <h1>{{ page.title }}</h1>
+        <p class="mb-0">
+          {% include formatted-date.html date=page.date %}{% if page.service_tags %} · {{ services_label }}{% for service_tag in page.service_tags %} {% assign linked_service = site.services | where: "slug", service_tag | first %}{% if linked_service %}<a href="{{ linked_service.url | relative_url }}">{{ linked_service.tag_title | default: linked_service.title }}</a>{% unless forloop.last %} ·{% endunless %}{% endif %}{% endfor %}{% endif %}
+        </p>
       </div>
     </div>
   </div>

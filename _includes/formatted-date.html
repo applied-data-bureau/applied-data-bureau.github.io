@@ -1,0 +1,28 @@
+{% assign date_day = include.date | date: "%-d" %}
+{% assign date_month_number = include.date | date: "%-m" %}
+{% assign date_year = include.date | date: "%Y" %}
+
+{% case date_month_number %}
+  {% when "1" %}{% assign date_month_ru = "января" %}{% assign date_month_rs = "januar" %}{% assign date_month_en = "January" %}
+  {% when "2" %}{% assign date_month_ru = "февраля" %}{% assign date_month_rs = "februar" %}{% assign date_month_en = "February" %}
+  {% when "3" %}{% assign date_month_ru = "марта" %}{% assign date_month_rs = "mart" %}{% assign date_month_en = "March" %}
+  {% when "4" %}{% assign date_month_ru = "апреля" %}{% assign date_month_rs = "april" %}{% assign date_month_en = "April" %}
+  {% when "5" %}{% assign date_month_ru = "мая" %}{% assign date_month_rs = "maj" %}{% assign date_month_en = "May" %}
+  {% when "6" %}{% assign date_month_ru = "июня" %}{% assign date_month_rs = "jun" %}{% assign date_month_en = "June" %}
+  {% when "7" %}{% assign date_month_ru = "июля" %}{% assign date_month_rs = "jul" %}{% assign date_month_en = "July" %}
+  {% when "8" %}{% assign date_month_ru = "августа" %}{% assign date_month_rs = "avgust" %}{% assign date_month_en = "August" %}
+  {% when "9" %}{% assign date_month_ru = "сентября" %}{% assign date_month_rs = "septembar" %}{% assign date_month_en = "September" %}
+  {% when "10" %}{% assign date_month_ru = "октября" %}{% assign date_month_rs = "oktobar" %}{% assign date_month_en = "October" %}
+  {% when "11" %}{% assign date_month_ru = "ноября" %}{% assign date_month_rs = "novembar" %}{% assign date_month_en = "November" %}
+  {% when "12" %}{% assign date_month_ru = "декабря" %}{% assign date_month_rs = "decembar" %}{% assign date_month_en = "December" %}
+{% endcase %}
+
+{% if site.lang == "ru" -%}
+  {{ date_day }} {{ date_month_ru }} {{ date_year }}
+{%- elsif site.lang == "rs" -%}
+  {{ date_day }}. {{ date_month_rs }} {{ date_year }}.
+{%- elsif site.lang == "en" -%}
+  {{ date_month_en }} {{ date_day }}, {{ date_year }}
+{%- else -%}
+  {{ include.date | date: "%Y-%m-%d" }}
+{%- endif %}
