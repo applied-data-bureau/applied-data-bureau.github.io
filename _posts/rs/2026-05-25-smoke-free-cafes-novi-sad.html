@@ -1,0 +1,44 @@
+---
+layout: post
+title: "Smoke Free Cafes Novi Sad: interaktivna mapa lokala bez duvanskog dima"
+excerpt: "Studija slučaja o gradskoj mapi kafića i restorana bez duvanskog dima u Novom Sadu: kako se rasuto lokalno znanje pretvara u strukturisan katalog sa filterima, mapom, Viber botom za povratne informacije i praktičnim korisničkim tokom."
+og: /assets/posts/2026-05-25-smoke-free-cafes-novi-sad-rs.jpg
+---
+
+<p>Smoke Free Cafes Novi Sad je gradski katalog lokala u Novom Sadu u kojima se može provesti vreme bez duvanskog dima. Projekat je napravljen kao interaktivna mapa: korisnik otvara sajt, vidi tačke na mapi, filtrira ih po tipu lokala i bira odgovarajuće mesto.</p>
+
+<p>Za slične kartografske projekte nisu važni samo markeri na podlozi, već i struktura podataka: koordinate, kategorije, lokalizovani natpisi i jasan način za ažuriranje informacija.</p>
+
+<p>Infrastruktura za ovakvu mapu može biti potpuno besplatna: jednom se deploy-uje statički sajt i, uz umereno opterećenje, može godinama da radi sa nultim troškom serverskog dela i hostinga.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_smoke_free_cafes_submit_brief">Pošalji brif</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-25-smoke-free-cafes-novi-sad-rs.jpg">
+    <img src="/assets/posts/2026-05-25-smoke-free-cafes-novi-sad-rs.jpg" class="img-fluid" alt="Interaktivna mapa Smoke Free Cafes Novi Sad sa označenim lokalima bez duvanskog dima">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Mapa Smoke Free Cafes Novi Sad: korisnik odmah vidi raspored lokala po delovima grada i može da pređe na odgovarajuću tačku.</small></p>
+
+<h2>Tehnički okvir</h2>
+<ul>
+  <li><strong>Frontend:</strong> statički sajt.</li>
+  <li><strong>Mapa:</strong> Leaflet + OpenStreetMap.</li>
+  <li><strong>Podaci:</strong> lista lokala sa koordinatama, kategorijama i lokalizovanim natpisima.</li>
+  <li><strong>Lokalizacija:</strong> RU / RS / EN.</li>
+  <li><strong>Povratne informacije:</strong> Viber bot za predloge i ispravke.</li>
+  <li><strong>Objavljivanje:</strong> statički hosting, bez posebne serverske aplikacije.</li>
+</ul>
+
+<p>Statički pristup ovde dobro funkcioniše iz ugla troškova održavanja: mapa se brzo učitava, lako se hostuje, a za mali gradski katalog nije potreban težak backend dok je obim izmena umeren.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Pojavio se poseban javni katalog lokala bez duvanskog dima u Novom Sadu.</li>
+  <li>Lista mesta je postala interaktivni alat sa geografijom i filterima, a ne samo tekstualni izbor.</li>
+  <li>Projekat je dobio tri jezičke verzije i postao razumljiv različitim publikama u gradu.</li>
+  <li>Viber bot je otvorio kanal koji pomaže da podaci ostanu ažurni.</li>
+  <li>Ovaj slučaj je kompaktan primer data-first projekta: podaci, mapa, korisnički tok i povratne informacije spojeni su u jedan radni proizvod.</li>
+</ul>

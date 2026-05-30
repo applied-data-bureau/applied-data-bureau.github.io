@@ -1,0 +1,44 @@
+---
+layout: post
+title: "Smoke Free Cafes Novi Sad: an interactive map of smoke-free venues"
+excerpt: "A case study about a city map of smoke-free cafes and restaurants in Novi Sad: turning scattered local knowledge into a structured directory with filters, a map, a Viber bot for feedback, and a practical user flow."
+og: /assets/posts/2026-05-25-smoke-free-cafes-novi-sad-en.jpg
+---
+
+<p>Smoke Free Cafes Novi Sad is a city directory of places in Novi Sad where people can spend time without tobacco smoke. The project is built as an interactive map: a user opens the website, sees points on the map, filters them by venue type, and chooses a suitable place.</p>
+
+<p>For similar mapping projects, the value is not only in markers on a basemap, but also in the data structure: coordinates, categories, localized labels, and a clear way to keep information updated.</p>
+
+<p>The infrastructure for this kind of map can be fully free: deploy the static website once, and with moderate traffic it can run for years with zero server-side and hosting cost.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_smoke_free_cafes_submit_brief">Submit brief</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-25-smoke-free-cafes-novi-sad-en.jpg">
+    <img src="/assets/posts/2026-05-25-smoke-free-cafes-novi-sad-en.jpg" class="img-fluid" alt="Interactive Smoke Free Cafes Novi Sad map with markers for smoke-free venues">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> Smoke Free Cafes Novi Sad map: users can immediately see how venues are distributed across the city and move to a suitable point.</small></p>
+
+<h2>Technical Outline</h2>
+<ul>
+  <li><strong>Frontend:</strong> static website.</li>
+  <li><strong>Map:</strong> Leaflet + OpenStreetMap.</li>
+  <li><strong>Data:</strong> a list of venues with coordinates, categories, and localized labels.</li>
+  <li><strong>Localization:</strong> RU / RS / EN.</li>
+  <li><strong>Feedback:</strong> Viber bot for suggestions and updates.</li>
+  <li><strong>Publishing:</strong> static hosting, without a separate server application.</li>
+</ul>
+
+<p>The static approach fits this project well from a maintenance-cost perspective: the map loads quickly, is easy to host, and does not need a heavy backend while the update volume remains moderate.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>A separate public directory of smoke-free venues in Novi Sad was launched.</li>
+  <li>The venue list became an interactive tool with geography and filters, not just a text selection.</li>
+  <li>The project got three language versions and became understandable for different city audiences.</li>
+  <li>The Viber bot created a channel that helps keep the data up to date.</li>
+  <li>The case became a compact example of a data-first project: data, map, user flow, and feedback are combined into one working product.</li>
+</ul>
