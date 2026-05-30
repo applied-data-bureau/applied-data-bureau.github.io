@@ -1,0 +1,137 @@
+---
+layout: post
+title: "LaTeX case study: Fisher's iris paper"
+excerpt: "A case study on preparing an English LaTeX version of R. A. Fisher's classic iris paper: document structure, formulas, tables, TikZ graphics, rendered pages, and raw TeX source."
+og: /assets/posts/fisher-latex/fisher1.jpg
+service_tags: [latex, data]
+---
+
+<p>This case is an example of clean LaTeX typesetting for a scientific text with formulas, tables, illustrations, and reproducible source files. The project prepares an English version of R. A. Fisher's paper “The use of Multiple Measurements in Taxonomic Problems” using the iris data set: from the source TeX file to a compiled PDF.</p>
+
+<p>GitHub project: <a href="https://github.com/raskumandrin/fisher">raskumandrin/fisher</a><br>
+Raw LaTeX source: <a href="https://raw.githubusercontent.com/raskumandrin/fisher/main/fisher.tex">fisher.tex</a></p>
+
+<p>This type of work is useful when a scientific, educational, or methodological text needs more than simple text entry. Formulas must compile correctly, tables must stay stable, images must be connected to the document, and the final PDF must read as a coherent article.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_fisher_latex_submit_brief">Submit brief</a>
+</p>
+
+<p class="text-center">
+  <a href="{{ '/assets/posts/fisher-latex/fisher1.jpg' | relative_url }}">
+    <img src="{{ '/assets/posts/fisher-latex/fisher1.jpg' | relative_url }}" class="img-fluid fisher-page-image" alt="First page of the English LaTeX version of Fisher's iris paper">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> First page of the English version: title, author, and abstract.</small></p>
+
+<h2>Task</h2>
+<p>The task was to prepare an English version of a classic statistical paper in a format suitable for reading, review, and future editing. The main requirements were:</p>
+<ul>
+  <li>build the document in LaTeX, not in a visual editor;</li>
+  <li>support mathematical formulas and scientific names;</li>
+  <li>typeset large numerical tables;</li>
+  <li>include illustrations and diagrams;</li>
+  <li>keep the TeX source public and verifiable;</li>
+  <li>produce a PDF that works as a standalone article.</li>
+</ul>
+
+<h2>Technical Outline</h2>
+<ul>
+  <li><strong>Format:</strong> LaTeX project for a scientific article.</li>
+  <li><strong>Languages:</strong> English and Russian versions in one repository; this case shows the English version.</li>
+  <li><strong>Subject:</strong> Fisher's paper on discriminant functions and the iris data set.</li>
+  <li><strong>Output:</strong> PDF and source <code>.tex</code> file.</li>
+  <li><strong>Source publishing:</strong> GitHub + raw link to the TeX file.</li>
+</ul>
+
+<h2>What Mattered in the Typesetting</h2>
+<p>The complexity of this document is not one isolated formula, but the combination of different content types. A single article may contain scientific prose, Latin species names, multi-line formulas, large tables, and references to numbered tables or equations. The LaTeX project therefore needs to be treated as a technical document, not as a set of manual visual fixes.</p>
+
+<p>For example, the preamble sets up mathematical packages, table support, graphics, and TikZ:</p>
+
+<pre><code class="language-latex">\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}</code></pre>
+
+<p>Formulas are kept as proper display blocks so they remain readable and compile reliably:</p>
+
+<pre><code class="language-latex">\[
+X = \lambda_{1} x_{1} + \lambda_{2} x_{2}
+  + \lambda_{3} x_{3} + \lambda_{4} x_{4}
+\]</code></pre>
+
+<p>Large tables use <code>tabularx</code>. This helps keep the table inside the page width and avoids manual column tuning after text or font changes.</p>
+
+<pre><code class="language-latex">\begin{table}[H]
+\centering
+\footnotesize
+\caption{Sums of squares and products of four measurements}
+\label{tab:3}
+\begin{tabularx}{\textwidth}{|*{5}{>{\centering\arraybackslash}X|}}
+...
+\end{tabularx}
+\end{table}</code></pre>
+
+<h2>TikZ: Power and Challenges</h2>
+<p>The project also includes a separate TikZ file for the diagram with distributions and mean values: <a href="https://raw.githubusercontent.com/raskumandrin/fisher/main/tikz_fisher.tex">raw tikz_fisher.tex</a>. This is an important part of the LaTeX work: the figure is not a random inserted bitmap, but code that can be rebuilt, inspected, and changed.</p>
+
+<p>The power of TikZ is that graphics become part of the document source. If intervals, labels, arrow coordinates, or scale need to change, the update happens in code instead of a manual image editor. For scientific and educational materials, this is especially useful because the diagram remains reproducible and connected to the data.</p>
+
+<p>The challenge is that TikZ requires engineering discipline. Coordinates, scale, loops, labels, element overlap, and PDF readability all need attention. A small mistake in one coefficient can visually move an arrow or make bars inconsistent.</p>
+
+<pre><code class="language-latex">\foreach \i/\v in {
+1/6,2/5,3/10,4/5,5/9,6/7,7/4,8/2,9/1,10/1}
+{
+  \pgfmathsetmacro{\xleft}{(\xmina + (\i-1)*\wa)/10}
+  \pgfmathsetmacro{\xright}{(\xmina + \i*\wa)/10}
+  \draw[] (\xleft,10pt-6pt) rectangle
+    (\xright, 10pt -6pt+ \cella*\v);
+}</code></pre>
+
+<p>This snippet shows the approach: values are defined as a list, and rectangles are generated in a loop. That style fits documents where a figure should be verifiable, not decorative: the construction logic can be recovered and the result can be repeated without manual redrawing.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>An English LaTeX document was built as a 13-page article.</li>
+  <li>The source contains formulas, tables, references, illustrations, and a TikZ diagram workflow.</li>
+  <li>The raw TeX source is public: <a href="https://raw.githubusercontent.com/raskumandrin/fisher/main/fisher.tex">raw fisher.tex</a>.</li>
+  <li>The project works as a practical example for scientific, educational, and data-heavy document typesetting.</li>
+  <li>The case is connected to the <a href="{{ '/latex.html' | relative_url }}">LaTeX typesetting service</a>.</li>
+</ul>
+
+<h2>All Pages of the English Article</h2>
+<p>Below are all pages of the compiled English version. Each page can be opened separately.</p>
+
+{% for page_number in (1..13) %}
+{% assign page_image = '/assets/posts/fisher-latex/fisher' | append: page_number | append: '.jpg' %}
+<p class="text-center">
+  <a href="{{ page_image | relative_url }}">
+    <img src="{{ page_image | relative_url }}" class="img-fluid fisher-page-image" alt="Page {{ page_number }} of the English LaTeX version of Fisher's iris paper">
+  </a>
+</p>
+<p class="text-center"><small><strong>Page {{ page_number }}.</strong> English LaTeX version of Fisher's paper.</small></p>
+{% endfor %}
+
+<h2>Who This Format Fits</h2>
+<ul>
+  <li>Authors of scientific and educational materials with formulas, tables, and charts.</li>
+  <li>Teachers and editors who need a clean PDF and editable source files.</li>
+  <li>Teams adapting technical materials across languages.</li>
+  <li>Projects where documents must be reproducible: source files, build process, final PDF.</li>
+</ul>
+
+<p>If you need a similar document, the starting point is the source material, a target formatting example, and a short description of the expected result. The output is a PDF and TeX source files that can be maintained further.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_fisher_latex_bottom_submit_brief">Submit brief</a>
+</p>
+
+<style>
+  .fisher-page-image {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  }
+</style>
