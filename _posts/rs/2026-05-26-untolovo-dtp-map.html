@@ -1,0 +1,91 @@
+---
+layout: post
+title: "Saobraćajne nezgode na mapi Untolova: interaktivna mapa udesa sa povređenima"
+excerpt: "Studija slučaja o opštinskoj mapi saobraćajnih nezgoda u Untolovu: kako se podaci saobraćajne policije za 2016-2020 pretvaraju u jasnu mapu, statistiku o pešacima, biciklistima i deci, kao i alat za javnu kontrolu bezbednosti saobraćaja."
+og: /assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg
+---
+
+<p>„Saobraćajne nezgode na mapi Untolova” je mali javni data-first projekat o bezbednosti saobraćaja u opštinskom okrugu Untolovo. Umesto rasutih kartica nezgoda i suvih statistika, korisnik dobija mapu mesta koncentracije udesa sa povređenima, zbirne tabele i kontekst: gde se dešavaju naleti na pešake i bicikliste, kada su nezgode češće i kako se dinamika menja po godinama.</p>
+
+<p>Otvori projekat „Saobraćajne nezgode u Untolovu”: <a href="https://untolovo-dtp.github.io/">https://untolovo-dtp.github.io/</a></p>
+
+<p>Za ovakve projekte vizualizacija nije jedini važan deo. Prvo treba razumeti izvor podataka, ograničenja statistike, granice teritorije i korisnički scenario: stanovnicima, opštinskim predstavnicima, aktivistima i novinarima nije potrebna apstraktna mapa, već proverljiv argument za razgovor o bezbednosti ulica.</p>
+
+<p>Projekat je deploy-ovan na besplatnoj infrastrukturi i radi od 2020. godine sa nultim troškom hostinga. Mapa i statističke stranice mogu da se otvore bez posebnog backend-a, a podaci ostaju dostupni kao jasna javna vitrina.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_untolovo_dtp_submit_brief">Pošalji brif</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg">
+    <img src="/assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg" class="img-fluid" alt="Interaktivna mapa saobraćajnih nezgoda u Untolovu sa označenim udesima za 2020. godinu">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Mapa saobraćajnih nezgoda u Untolovu: korisnik vidi granice opštinskog okruga, tačke udesa i može da menja godinu i tip nezgode.</small></p>
+
+<h2>Zadatak</h2>
+<p>Cilj je bio da se saobraćajne nezgode prikažu ne kao opšti gradski šum, već kao lokalni problem konkretne teritorije. Projekat je trebalo da:</p>
+<ul>
+  <li>prikupi podatke o saobraćajnim nezgodama sa povređenima i poginulima za 2016-2020;</li>
+  <li>odvoji nezgode važne za stanovnike Untolova od udesa na graničnim magistralama;</li>
+  <li>prikaže mesta koncentracije nezgoda na mapi;</li>
+  <li>izdvoji posebno osetljive grupe: pešake, bicikliste, putnike i decu;</li>
+  <li>obezbedi javnu statistiku koja može da se koristi u diskusijama, obraćanjima i materijalima o urbanoj sredini.</li>
+</ul>
+
+<h2>Izvor i struktura podataka</h2>
+<p>U projektu su korišćeni podaci za 2016-2020 sa sajta ruske saobraćajne policije „Pokazatelji bezbednosti saobraćaja”. Uključene su nezgode sa poginulima ili povređenima; nezgode bez povređenih nisu prikazane u tom izvoru statistike.</p>
+
+<p>Ograničenja uzorka su posebno zabeležena: deo nezgoda koje se formalno odnose na teritoriju, na Zapadnom brzom dijametru i Kamyshovaya ulici, nije bio u glavnom fokusu jer slabije opisuje svakodnevne rizike stanovnika samog opštinskog okruga. Istovremeno, nezgode na graničnim raskrsnicama su uračunate ako se odnose na ulične čvorove važne za Untolovo.</p>
+
+<h2>Šta su pokazali podaci</h2>
+<ul>
+  <li>U javnoj vitrini su sakupljene 384 nezgode za 2016-2020.</li>
+  <li>Posebno je označeno 46 nezgoda sa decom.</li>
+  <li>Za taj period je evidentirano 13 poginulih i 448 povređenih.</li>
+  <li>152 događaja su naleti na pešake, 42 su naleti na bicikliste, a 19 su padovi putnika.</li>
+  <li>Nezgode sa pešacima i biciklistima izdvojene su u posebnu grupu, jer su ti učesnici češće povezani sa lokalnom teritorijom i kvalitetom urbane sredine.</li>
+</ul>
+
+<h2>Tehnički okvir</h2>
+<ul>
+  <li><strong>Frontend:</strong> statički sajt.</li>
+  <li><strong>Mapa:</strong> interaktivna mapa sa izborom godine i tipa nezgode.</li>
+  <li><strong>Podaci:</strong> kartice nezgoda, agregati po godinama, tipovima nezgoda, dobu dana i mesecima.</li>
+  <li><strong>Izvori:</strong> otvorena statistika saobraćajne policije i javni opštinski materijali.</li>
+  <li><strong>Objavljivanje:</strong> GitHub Pages, bez posebne serverske aplikacije.</li>
+  <li><strong>Diskusija:</strong> javni Telegram kanal za povratne informacije o problemu.</li>
+</ul>
+
+<p>Za mali civic tech projekat ovakav okvir dobro funkcioniše iz ugla troškova održavanja: podaci mogu da se pripreme unapred, stranice se brzo otvaraju, a rezultat je lako poslati kao link u prepisci, obraćanju ili publikaciji.</p>
+
+<h2>Korisnički scenario</h2>
+<p>Korisnik može da počne od mape, da bi video konkretna mesta nezgoda, ili od statistike, da bi procenio razmere problema. Zatim prelazi na godine, tipove nezgoda i povezane materijale: izvor podataka, regulatorne dokumente i opštinski budžet za prevenciju povreda u saobraćaju.</p>
+
+<p>Tako mapa nije dekorativni widget, već ulaz u istraživanje: gde su opasne tačke, koje grupe učesnika češće stradaju, kada se nezgode dešavaju i koja pitanja treba postaviti nadležnim službama.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Pojavila se javna mapa saobraćajnih nezgoda u Untolovu, vezana za godine i tipove nezgoda.</li>
+  <li>Sirove kartice i tabele pretvorene su u vitrinu razumljivu ljudima koji ne rade sa izvornim izvozima podataka.</li>
+  <li>Projekat je pokazao lokalne rizike za pešake, bicikliste, putnike i decu.</li>
+  <li>Statistika je postala upotrebljiva za javnu kontrolu: može da se koristi u razgovorima o urbanoj sredini i bezbednosti saobraćaja.</li>
+  <li>Slučaj dobro pokazuje praktičnu mehaniku data-first pristupa: izvor podataka, čišćenje, ograničenja uzorka, mapa, statistika i jasan korisnički scenario.</li>
+</ul>
+
+<h2>Kome odgovara ovakav format</h2>
+<ul>
+  <li>Opštinskim i gradskim projektima koji treba da prikažu problem na mapi.</li>
+  <li>Javnim inicijativama kojima su potrebni proverljivi podaci za argumentaciju.</li>
+  <li>Redakcijama i istraživačkim timovima koji žele da pretvore tabele u interaktivnu publikaciju.</li>
+  <li>Biznisima i neprofitnim projektima gde su geografija, kategorije i filteri važniji od složenog backend-a.</li>
+</ul>
+
+<p>Ako je potreban sličan rezultat: pomažem da se podaci prikupe, prevedu u stabilnu strukturu, napravi mapa, pripreme statističke stranice i sve upakuje u upotrebljivu javnu vitrinu.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_untolovo_dtp_bottom_submit_brief">Pošalji brif</a>
+</p>
+
+<p><small>Javni projekat: <a href="https://untolovo-dtp.github.io/">Saobraćajne nezgode u Untolovu</a>.</small></p>

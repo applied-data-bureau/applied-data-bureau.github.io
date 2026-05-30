@@ -1,0 +1,91 @@
+---
+layout: post
+title: "Traffic accidents on the Untolovo map: an interactive map of crashes with injuries"
+excerpt: "A case study about a municipal traffic accident map for Untolovo: turning traffic police data for 2016-2020 into a clear map, statistics on pedestrians, cyclists, and children, and a tool for public oversight of road safety."
+og: /assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg
+---
+
+<p>“Traffic accidents on the Untolovo map” is a small public data-first project about road safety in the Untolovo municipal district. Instead of scattered crash records and dry statistics, the user gets a map of accident concentration points with injuries, summary tables, and context: where pedestrian and cyclist collisions happen, when crashes are more frequent, and how the situation changes by year.</p>
+
+<p>Open the “Traffic accidents in Untolovo” project: <a href="https://untolovo-dtp.github.io/">https://untolovo-dtp.github.io/</a></p>
+
+<p>For projects like this, visualization is only one part of the work. First, you need to understand the data source, the limitations of the statistics, the territorial boundaries, and the user flow: residents, municipal representatives, activists, and journalists need a verifiable argument for discussions about street safety, not an abstract map.</p>
+
+<p>The project is deployed on free infrastructure and has been running since 2020 with zero hosting cost. The map and statistics pages can be opened without a separate backend, while the data remains available as a clear public display.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_untolovo_dtp_submit_brief">Submit brief</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg">
+    <img src="/assets/posts/2026-05-26-untolovo-dtp-map-ru.jpg" class="img-fluid" alt="Interactive traffic accident map of Untolovo with crash markers for 2020">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> Traffic accident map of Untolovo: users can see the municipal boundary, crash points, and switch between year and accident type.</small></p>
+
+<h2>Task</h2>
+<p>The goal was to show road crashes not as generic city noise, but as a local issue on a specific territory. The project needed to:</p>
+<ul>
+  <li>collect data on traffic accidents with injuries and fatalities for 2016-2020;</li>
+  <li>separate crashes relevant to Untolovo residents from accidents on boundary highways;</li>
+  <li>show accident concentration points on a map;</li>
+  <li>highlight especially sensitive groups: pedestrians, cyclists, passengers, and children;</li>
+  <li>provide public statistics that can be used in discussions, appeals, and materials about the urban environment.</li>
+</ul>
+
+<h2>Data Source and Structure</h2>
+<p>The project used 2016-2020 data from the Russian traffic police road safety statistics website. Only accidents with fatalities or injuries were included; crashes without injuries are not represented in that statistics source.</p>
+
+<p>The dataset limitations were recorded separately: some crashes formally assigned to the area on the Western High-Speed Diameter and Kamyshovaya Street were not included in the main focus because they describe everyday risks for residents of the municipal district less accurately. At the same time, accidents at boundary intersections were counted when they related to street nodes important for Untolovo.</p>
+
+<h2>What the Data Showed</h2>
+<ul>
+  <li>The public display includes 384 accidents for 2016-2020.</li>
+  <li>46 accidents involving children are marked separately.</li>
+  <li>The period includes 13 fatalities and 448 injured people.</li>
+  <li>152 incidents are pedestrian collisions, 42 are cyclist collisions, and 19 are passenger falls.</li>
+  <li>Accidents involving pedestrians and cyclists were placed into a separate group because these participants are more often connected with the local territory and the quality of the urban environment.</li>
+</ul>
+
+<h2>Technical Outline</h2>
+<ul>
+  <li><strong>Frontend:</strong> static website.</li>
+  <li><strong>Map:</strong> interactive map with switching by year and accident type.</li>
+  <li><strong>Data:</strong> accident records, aggregates by year, accident type, time of day, and month.</li>
+  <li><strong>Sources:</strong> open traffic police statistics and public municipal materials.</li>
+  <li><strong>Publishing:</strong> GitHub Pages, without a separate server application.</li>
+  <li><strong>Discussion:</strong> public Telegram channel for feedback on the issue.</li>
+</ul>
+
+<p>For a small civic tech project, this setup works well from a maintenance-cost perspective: the data can be prepared in advance, pages load quickly, and the result is easy to share as a link in correspondence, an appeal, or a publication.</p>
+
+<h2>User Flow</h2>
+<p>A user can start with the map to see specific crash locations, or with the statistics to assess the scale of the issue. From there, they can move to years, accident types, and related materials: the data source, regulatory documents, and the municipal budget for preventing road traffic injuries.</p>
+
+<p>This turns the map from a decorative widget into an entry point for research: where the dangerous points are, which participant groups are affected more often, when accidents happen, and what questions should be asked of responsible services.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>A public traffic accident map of Untolovo was launched, with binding to years and accident types.</li>
+  <li>Raw records and tables became a display understandable to people who do not work with source exports.</li>
+  <li>The project showed local risks for pedestrians, cyclists, passengers, and children.</li>
+  <li>The statistics became suitable for public oversight: they can be used in discussions of the urban environment and road safety.</li>
+  <li>The case shows the applied mechanics of a data-first approach: data source, cleaning, sample limitations, map, statistics, and a clear user flow.</li>
+</ul>
+
+<h2>Who This Format Fits</h2>
+<ul>
+  <li>Municipal and city projects that need to show a problem on a map.</li>
+  <li>Public initiatives that need verifiable data for argumentation.</li>
+  <li>Editorial and research teams that want to turn tables into an interactive publication.</li>
+  <li>Businesses and nonprofit projects where geography, categories, and filters matter more than a complex backend.</li>
+</ul>
+
+<p>If you need a similar result: I help collect data, bring it into a stable structure, build the map, prepare statistics pages, and package everything into a usable public display.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_untolovo_dtp_bottom_submit_brief">Submit brief</a>
+</p>
+
+<p><small>Public project: <a href="https://untolovo-dtp.github.io/">Traffic accidents in Untolovo</a>.</small></p>
