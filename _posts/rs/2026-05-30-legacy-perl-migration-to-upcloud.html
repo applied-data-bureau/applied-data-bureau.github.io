@@ -1,0 +1,120 @@
+---
+layout: post
+title: "Migracija legacy Perl aplikacije sa starog servera na UpCloud"
+excerpt: "Prikaz realizovanog projekta: migracija stare Perl aplikacije iz single-server okruženja na UpCloud, prenos MySQL baze, priprema object storage-a za slike i pažljivo upravljanje trenutkom prebacivanja."
+og: /assets/posts/2026-05-29-perl-to-upcloud.jpg
+service_tags: [legacy, perl, data]
+---
+
+{% assign upcloud_url = site.upcloud_referral_url | default: "https://signup.upcloud.com/?promo=29PH38" %}
+
+<p>U ovom projektu trebalo je prebaciti staru Perl web aplikaciju sa jednog fizičkog servera na savremeniju cloud infrastrukturu. Zadatak nije bio da se aplikacija prepiše od nule, već da se radni sistem pažljivo premesti, da se podaci razdvoje po normalnim infrastrukturnim slojevima i da se smanje operativni rizici.</p>
+
+<p>Početno stanje je bilo tipično production okruženje iz 2000-ih: jedan server, Apache, Perl aplikacija, MySQL na istoj mašini i nekoliko gigabajta slika na lokalnom disku. Kod aplikacije nije bio veliki, ali se ceo sistem oslanjao na stare pretpostavke: lokalne putanje, Apache pravila, strukturu fajlova i specifičnosti stare MySQL baze.</p>
+
+<p>Za novu infrastrukturu izabran je <a href="{{ upcloud_url }}" rel="nofollow sponsored">UpCloud</a>: aplikacija je mogla da se izdvoji na poseban compute, baza u managed MySQL, a slike u object storage sa S3-kompatibilnim API-jem. Takav pristup traži više pažljive migracione pripreme nego prenos "kao što jeste" na jedan VPS, ali daje jasniji model održavanja posle pokretanja.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_legacy_perl_upcloud_submit_brief">Pošalji brif</a>
+</p>
+
+<h2>Zadatak</h2>
+<p>Trebalo je premestiti legacy aplikaciju na novu infrastrukturu bez gubitka podataka i bez nepotrebnog zadiranja u staru poslovnu logiku. Za to je bilo potrebno:</p>
+<ul>
+  <li>razumeti staru vezu između Apache-a, Perla, MySQL-a i fajlova sa slikama;</li>
+  <li>pripremiti ciljno okruženje na UpCloud-u;</li>
+  <li>preneti MySQL bazu veličine oko 5 GB;</li>
+  <li>pripremiti prenos nekoliko gigabajta slika u object storage;</li>
+  <li>sačuvati rad starih URL-ova i pravila za isporuku fajlova;</li>
+  <li>dogovoriti trenutak zamrzavanja podataka pre finalnog prebacivanja;</li>
+  <li>ostaviti stari server kao fallback tokom perioda posle go-live trenutka.</li>
+</ul>
+
+<h2>Zašto ovo nije samo kopiranje fajlova</h2>
+<p>Legacy aplikacije često izgledaju male po količini koda, ali su složene po okruženju. U takvim projektima glavni posao ne počinje pisanjem novih funkcija, već razumevanjem skrivenih zavisnosti: gde se nalaze fajlovi, koja Apache pravila učestvuju u isporuci slika, kako se aplikacija povezuje na bazu, koje putanje su upisane u konfiguraciji i koje osobine stare šeme podataka su godinama bile podrazumevane.</p>
+
+<p>Stari server je radio po principu "sve na jednom mestu": aplikacija, baza, web server i slike živeli su na istoj mašini. To je zgodno za početno pokretanje, ali vremenom postaje rizik: ažuriranja, backup, oporavak, bezbednost i dijagnostika zavise od jednog čvora.</p>
+
+<p>Ciljna šema je razdvajala odgovornosti:</p>
+<ul>
+  <li><strong>compute:</strong> runtime za Perl aplikaciju i web server;</li>
+  <li><strong>managed MySQL:</strong> odvojen upravljani sloj za bazu podataka;</li>
+  <li><strong>object storage:</strong> odvojeno skladište za slike;</li>
+  <li><strong>stari server:</strong> privremeni fallback za slučaj vraćanja posle prebacivanja.</li>
+</ul>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-29-perl-to-upcloud.jpg">
+    <img src="/assets/posts/2026-05-29-perl-to-upcloud.jpg" class="img-fluid" alt="Šema migracije legacy Perl aplikacije sa starog servera na UpCloud">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Migracija legacy Perl aplikacije: aplikacija, baza podataka i slike razdvajaju se između compute sloja, managed MySQL-a i object storage-a.</small></p>
+
+<h2>Migracioni plan</h2>
+<p>Za klijenta je bilo važno opisati migraciju kao kontrolisan proces, a ne kao jednokratno "prebacivanje" servera. Plan je bio zasnovan na jasnim fazama:</p>
+<ol>
+  <li>Pripremiti servise na UpCloud-u.</li>
+  <li>Napraviti pun backup starog sistema.</li>
+  <li>Podignuti okruženje za Perl aplikaciju.</li>
+  <li>Importovati bazu u UpCloud Managed MySQL.</li>
+  <li>Preneti slike u object storage.</li>
+  <li>Proveriti aplikaciju, URL-ove i isporuku fajlova.</li>
+  <li>Po potrebi uraditi finalnu sinhronizaciju.</li>
+  <li>Dogovoriti prebacivanje production saobraćaja.</li>
+  <li>Pratiti sistem posle pokretanja.</li>
+  <li>Sačuvati stari server dostupan kao fallback.</li>
+</ol>
+
+<p>Posebno je definisan freeze point: posle uzimanja backup-a i početka prenosa, nove izmene na starom serveru više ne prelaze automatski u novi sistem. Za ovakve migracije to je kritičan organizacioni detalj. Ako se ne dogovori unapred, tehnički prenos može biti korektan, ali podaci mogu da se raziđu u trenutku prebacivanja.</p>
+
+<h2>MySQL: problem stare šeme</h2>
+<p>Najneprijatniji deo nije bio u Perl kodu, već u razlikama između pretpostavki stare baze i managed MySQL-a. U legacy bazi su postojale tabele bez primary key-a. Na starom self-hosted MySQL-u to je radilo, ali upravljani MySQL servis može biti stroži zbog zahteva za replikaciju, backup i oporavak.</p>
+
+<p>Zbog toga direktan import dump-a ne prolazi uvek. Ako je u servisu uključeno obavezno postojanje primary key-a, staru šemu treba prilagoditi: dodati surrogate primary key u problematične tabele i pažljivo uskladiti dump sa novom strukturom.</p>
+
+<p>Tu postoji važna tehnička zamka. Ako se doda nova kolona sa primary key-em, stari izrazi oblika <code>INSERT INTO table VALUES (...)</code> mogu da se pokvare: broj i redosled kolona više ne odgovaraju starom dump-u. Zato za takve tabele treba prepisati insert u formu sa eksplicitnim spiskom kolona.</p>
+
+<pre><code class="language-sql">INSERT INTO old_table (old_column_1, old_column_2, old_column_3)
+VALUES (...);</code></pre>
+
+<p>Ovo je mali primer zašto migracija stare baze u managed servis nije samo pitanje brzine importa. Treba proveriti koje tehničke pretpostavke je stari MySQL godinama tolerisao, a novo okruženje ih više ne prihvata.</p>
+
+<h2>Slike i object storage</h2>
+<p>Slike su bile poseban deo posla. U starom sistemu nalazile su se na lokalnom disku i isporučivale preko Apache pravila. Pritom su pravila pristupa na starom serveru mogla da ometaju normalnu isporuku slika, pa nije bilo dovoljno proveriti samo da fajlovi postoje. Trebalo je proveriti ceo put od URL-a do odgovora web servera.</p>
+
+<p>U novoj šemi slike su planirane za UpCloud Object Storage. To je S3-kompatibilno skladište, pa se za upload mogu koristiti poznati alati kao što je AWS CLI, ali sa UpCloud endpoint-om i credentials podešavanjima.</p>
+
+<p>U praksi "S3-compatible" ne znači da svaki klijent sa podrazumevanim podešavanjima odmah radi savršeno sa svakim skladištem. Tokom upload-a pojavila se greška <code>XAmzContentSHA256Mismatch</code> na <code>PutObject</code>. Takve probleme treba hvatati na realnim fajlovima, jer zavise od potpisa zahteva, checksum-a, payload signing-a i osobina konkretnog S3-compatible endpoint-a.</p>
+
+<p>Za projekat je to značilo da prenos slika nije mogao da se tretira kao običan <code>rsync</code>. Trebalo je osmisliti layout bucket-a, mapiranje starih putanja na nove URL-ove i posebno proveriti isporuku fajlova posle prenosa.</p>
+
+<h2>Zašto UpCloud</h2>
+<p>U ovakvim zadacima uvek postoji iskušenje da se sve prebaci na jedan novi VPS i što vernije ponovi stara arhitektura. To je brže i traži manje izmena, ali ostavlja isti operativni model: samostalno održavanje MySQL-a, backup-a, ažuriranja, bezbednosti i oporavka.</p>
+
+<p>Varijanta sa <a href="{{ upcloud_url }}" rel="nofollow sponsored">UpCloud-om</a> bila je zanimljiva upravo kao upravljivija infrastruktura: aplikacija ostaje mali compute sloj, baza prelazi u managed MySQL, a teški fajlovi odlaze u object storage. Za staru, ali i dalje korisnu aplikaciju to je često razuman kompromis između "prepisati sve" i "ostaviti kako je bilo".</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Razmotren je stari single-server setup sa Apache-om, Perl-om, MySQL-om i lokalnim slikama.</li>
+  <li>Pripremljena je ciljna šema migracije na UpCloud sa razdvajanjem aplikacije, baze i fajl skladišta.</li>
+  <li>Obrađen je prenos MySQL dump-a od oko 5 GB uz tabele bez primary key-a.</li>
+  <li>Opisan je pristup prilagođavanju dump-a: surrogate primary keys i eksplicitni spiskovi kolona u insert izrazima.</li>
+  <li>Razmotren je prenos slika u S3-compatible object storage i povezani edge cases.</li>
+  <li>Za klijenta je fiksiran migration plan: backup, import, test, cutover, monitoring i fallback.</li>
+  <li>Posebno je označen freeze point kako se pri prebacivanju ne bi izgubile izmene napravljene na starom serveru posle backup-a.</li>
+</ul>
+
+<h2>Kome odgovara ovakav format</h2>
+<ul>
+  <li>Projektima na Perl-u, PHP-u ili drugom legacy stack-u koji i dalje rade i donose vrednost.</li>
+  <li>Sistemima gde je istorijski sve na jednom serveru: aplikacija, baza, fajlovi i web server.</li>
+  <li>Vlasnicima projekata kojima treba migracija bez potpunog prepisivanja poslovne logike.</li>
+  <li>Timovima koji žele da izmeste bazu u managed servis, a fajlove u object storage.</li>
+  <li>Projektima gde je važno unapred isplanirati downtime, sinhronizaciju podataka i fallback.</li>
+</ul>
+
+<p>Ako je potreban sličan rezultat: pomažem da se razume staro okruženje, pripremi plan migracije, prenesu baza i fajlovi, proveri aplikacija posle preseljenja i sačuvaju podaci u trenutku prebacivanja.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_legacy_perl_upcloud_bottom_submit_brief">Pošalji brif</a>
+</p>
