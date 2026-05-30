@@ -3,6 +3,7 @@ layout: post
 title: Stabilizing email sync from an external API in n8n (eliminating hangs and overlapping runs)
 excerpt: "I rebuilt an email sync process from an external API in n8n: removed conflicting parallel runs, added export-readiness waiting and API rate-limit handling, and merged load + cleanup into one stable flow."
 og: /assets/posts/2026-02-23-en.png
+service_tags: [n8n, data, bots]
 ---
 
 <p>The client (an online project with a Telegram bot and email-based access) already had an n8n automation that loaded emails from an external API, but it was unstable: exports stalled, new runs started before previous ones finished, and API errors often required manual restarts.</p>
@@ -109,4 +110,3 @@ og: /assets/posts/2026-02-23-en.png
   <li>External API errors and limits no longer break the whole process.</li>
   <li>The bot keeps working even during temporary API-side issues.</li>
 </ul>
-

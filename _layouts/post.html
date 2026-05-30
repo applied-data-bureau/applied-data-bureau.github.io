@@ -11,6 +11,11 @@ layout: default
         <p class="mb-0">
           <a href="/blog/">{% if site.lang == "ru" %}← Назад в блог{% endif %}{% if site.lang == "rs" %}← Nazad na blog{% endif %}{% if site.lang == "en" %}← Back to blog{% endif %}</a>
         </p>
+        {% if page.service_tags %}
+        <p class="mb-0">
+          {% if site.lang == "ru" %}Теги услуг:{% endif %}{% if site.lang == "rs" %}Oznake usluga:{% endif %}{% if site.lang == "en" %}Service tags:{% endif %}{% for service_tag in page.service_tags %} {% assign linked_service = site.services | where: "slug", service_tag | first %}{% if linked_service %}<a href="{{ linked_service.url | relative_url }}">{{ linked_service.tag_title | default: linked_service.title }}</a>{% unless forloop.last %} ·{% endunless %}{% endif %}{% endfor %}
+        </p>
+        {% endif %}
       </div>
     </div>
   </div>

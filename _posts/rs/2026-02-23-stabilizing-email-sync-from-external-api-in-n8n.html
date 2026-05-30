@@ -3,6 +3,7 @@ layout: post
 title: Stabilizacija sinhronizacije email adresa iz spoljašnjeg API-ja u n8n (uklanjanje zastoja i preklapanja pokretanja)
 excerpt: "Preprojektovao sam proces sinhronizacije email adresa iz spoljašnjeg API-ja u n8n: uklonio konfliktna paralelna pokretanja, dodao čekanje spremnosti izvoza i obradu API limita i spojio učitavanje + uklanjanje u jedan stabilan tok."
 og: /assets/posts/2026-02-23-rs.png
+service_tags: [n8n, data, bots]
 ---
 
 <p>Klijent (online projekat sa Telegram botom i pristupom preko email-a) je već imao n8n automatizaciju za učitavanje email adresa iz spoljašnjeg API-ja, ali je radila nestabilno: izvoz bi se zaglavio, nova pokretanja su kretala pre završetka prethodnih, a API greške su često tražile ručno ponovno pokretanje.</p>
@@ -109,4 +110,3 @@ og: /assets/posts/2026-02-23-rs.png
   <li>Greške i limiti spoljašnjeg API-ja više ne ruše ceo proces.</li>
   <li>Bot nastavlja da radi i tokom privremenih problema na strani API-ja.</li>
 </ul>
-

@@ -68,6 +68,30 @@ layout: default
         {% else %}
         {{ content }}
         {% endif %}
+        {% assign related_posts_count = 0 %}
+        {% for post in site.posts %}
+        {% if post.service_tags contains page.slug %}
+        {% assign related_posts_count = related_posts_count | plus: 1 %}
+        {% endif %}
+        {% endfor %}
+        {% if related_posts_count > 0 %}
+        <section class="service-related-posts pt-5">
+          <h2>{% if site.lang == "ru" %}Материалы и кейсы по услуге{% endif %}{% if site.lang == "rs" %}Materijali i case study tekstovi za uslugu{% endif %}{% if site.lang == "en" %}Service Materials and Case Studies{% endif %}</h2>
+          {% for post in site.posts %}
+          {% if post.service_tags contains page.slug %}
+          <article class="blog-list-item">
+            <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+            <div class="date">{{ post.date | date: "%Y-%m-%d" }}</div>
+            <p>{{ post.excerpt | strip_html | truncate: 220 }}</p>
+            <a href="{{ post.url | relative_url }}">{% if site.lang == "ru" %}Читать материал{% endif %}{% if site.lang == "rs" %}Pročitaj materijal{% endif %}{% if site.lang == "en" %}Read material{% endif %}</a>
+          </article>
+          {% endif %}
+          {% endfor %}
+          <p class="mb-0">
+            <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="service_related_posts_submit_brief">{% if site.lang == "ru" %}Обсудить похожую задачу{% endif %}{% if site.lang == "rs" %}Razgovarajmo o sličnom zadatku{% endif %}{% if site.lang == "en" %}Discuss a similar task{% endif %}</a>
+          </p>
+        </section>
+        {% endif %}
       </div>
     </div>
   </div>
