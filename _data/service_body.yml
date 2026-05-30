@@ -148,6 +148,62 @@ data:
       - "Transparent transformation rules for every output field."
     closing: "We usually start with a test sample to validate the approach quickly, then apply the same logic to full volume."
 
+calculators:
+  ru:
+    intro: "Бизнес-калькулятор полезен там, где расчет зависит от множества параметров, справочников и исключений. Это может быть виджет для клиента, внутренний инструмент для менеджера или API, который считает стоимость внутри интернет-магазина."
+    when:
+      - "Менеджеры считают стоимость вручную в Excel, и результаты расходятся между сотрудниками."
+      - "Есть тарифы, скидки, сезонные ограничения, регионы, коэффициенты или другие исключения."
+      - "Клиенту нужно быстро получить предварительную оценку на сайте без переписки с менеджером."
+      - "Внутренней системе нужен расчетный API для заказа, доставки, сметы или проверки условий."
+    scope:
+      - "Разбираю текущие правила расчета и перевожу их в формальную логику."
+      - "Собираю расчетное ядро: формулы, справочники, условия, ограничения и проверки."
+      - "Делаю веб-интерфейс для клиента или бэк-офиса: поля, подсказки, результаты и понятные ошибки."
+      - "При необходимости добавляю API, чтобы калькулятор можно было подключить к сайту, CRM или интернет-магазину."
+    deliverables:
+      - "Рабочий веб-калькулятор или расчетный API под конкретный бизнес-процесс."
+      - "Проверенные тестовые примеры, чтобы сверить расчеты с вашими текущими правилами."
+      - "Понятная логика обновления тарифов, коэффициентов и справочников."
+      - "Рекомендации по развитию: сохранение расчетов, экспорт, интеграции, аналитика и контроль ошибок."
+    closing: "Обычно начинаем с набора реальных расчетов: правильный вход, ожидаемый результат и спорные исключения. По ним быстро видно, где логика уже формализована, а где ее нужно аккуратно восстановить из документов и практики."
+  rs:
+    intro: "Biznis kalkulator je koristan tamo gde obračun zavisi od mnogo parametara, šifarnika i izuzetaka. To može biti widget za klijenta, interni alat za menadžera ili API koji računa cenu unutar internet prodavnice."
+    when:
+      - "Menadžeri računaju cenu ručno u Excelu, pa se rezultati razlikuju između zaposlenih."
+      - "Postoje tarife, popusti, sezonska ograničenja, regioni, koeficijenti ili drugi izuzeci."
+      - "Klijent treba brzo da dobije preliminarnu procenu na sajtu bez dopisivanja sa menadžerom."
+      - "Internom sistemu je potreban računski API za porudžbinu, dostavu, predračun ili proveru uslova."
+    scope:
+      - "Analiziram postojeća pravila obračuna i prevodim ih u formalnu logiku."
+      - "Gradim računsko jezgro: formule, šifarnike, uslove, ograničenja i provere."
+      - "Pravim web interfejs za klijenta ili back office: polja, objašnjenja, rezultate i jasne greške."
+      - "Po potrebi dodajem API da se kalkulator može povezati sa sajtom, CRM-om ili internet prodavnicom."
+    deliverables:
+      - "Radni web kalkulator ili računski API za konkretan poslovni proces."
+      - "Provereni test primeri za poređenje sa vašim postojećim pravilima."
+      - "Jasna logika ažuriranja tarifa, koeficijenata i šifarnika."
+      - "Preporuke za razvoj: čuvanje obračuna, eksport, integracije, analitika i kontrola grešaka."
+    closing: "Obično počinjemo od skupa realnih obračuna: ispravan ulaz, očekivani rezultat i sporni izuzeci. Po njima se brzo vidi gde je logika već formalizovana, a gde je treba pažljivo obnoviti iz dokumenata i prakse."
+  en:
+    intro: "A business calculator is useful when calculation depends on many parameters, reference tables, and exceptions. It can be a customer-facing widget, an internal tool for managers, or an API that calculates cost inside an online store."
+    when:
+      - "Managers calculate prices manually in Excel, and results differ between employees."
+      - "There are tariffs, discounts, seasonal limits, regions, coefficients, or other exceptions."
+      - "Customers need a quick preliminary estimate on the website without messaging a manager."
+      - "An internal system needs a calculation API for orders, delivery, estimates, or condition checks."
+    scope:
+      - "I analyze current calculation rules and translate them into formal logic."
+      - "I build the calculation core: formulas, reference data, conditions, constraints, and checks."
+      - "I create a web interface for customers or back office users: fields, hints, results, and clear errors."
+      - "When needed, I add an API so the calculator can connect to a website, CRM, or online store."
+    deliverables:
+      - "A working web calculator or calculation API for a specific business process."
+      - "Verified test examples to compare results with your current rules."
+      - "Clear logic for updating tariffs, coefficients, and reference data."
+      - "Development recommendations: saved calculations, exports, integrations, analytics, and error control."
+    closing: "We usually start with real calculations: valid input, expected result, and disputed exceptions. This quickly shows where the logic is already formalized and where it needs to be carefully reconstructed from documents and practice."
+
 jekyll:
   ru:
     intro: "Сайт-витрина должен быть быстрым, простым в поддержке и понятным для SEO. На Jekyll это решается аккуратно и без лишней инфраструктуры."

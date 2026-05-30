@@ -58,6 +58,26 @@ data:
     timeline: "After the brief and a sample file, we fix phases: pilot on a subset, then full run on total volume."
     collaboration: "You send the brief and sample data → we align processing rules → I show a test output → we run full volume."
 
+calculators:
+  ru:
+    problem: "Расчеты живут в Excel, PDF-инструкциях или голове сотрудников: стоимость, доставка, скидки и исключения считаются вручную и легко дают ошибки."
+    solution: "Проектирую веб-калькулятор или расчетный API под ваши правила: формулы, справочники, ограничения, подсказки и интеграцию с сайтом или бэк-офисом."
+    result: "Команда и клиенты получают единый способ расчета: быстрее ответы, меньше ошибок и прозрачная логика вместо разрозненных таблиц."
+    timeline: "После брифа разбираем правила и тестовые примеры. Сначала собираем расчетное ядро, затем интерфейс, API и проверку на реальных сценариях."
+    collaboration: "Вы присылаете правила, примеры расчетов и ограничения → я формализую логику → собираю прототип → сверяем результаты → запускаем рабочую версию."
+  rs:
+    problem: "Obračuni žive u Excelu, PDF uputstvima ili u glavama zaposlenih: cena, dostava, popusti i izuzeci računaju se ručno i lako dovode do grešaka."
+    solution: "Projektujem web kalkulator ili računski API prema vašim pravilima: formule, šifarnici, ograničenja, objašnjenja i integracija sa sajtom ili back office-om."
+    result: "Tim i klijenti dobijaju jedinstven način obračuna: brži odgovori, manje grešaka i transparentna logika umesto razdvojenih tabela."
+    timeline: "Posle brifa prolazimo kroz pravila i test primere. Prvo gradimo računsko jezgro, zatim interfejs, API i proveru na realnim scenarijima."
+    collaboration: "Šaljete pravila, primere obračuna i ograničenja → formalizujem logiku → pravim prototip → proveravamo rezultate → puštamo radnu verziju."
+  en:
+    problem: "Calculations live in Excel, PDF instructions, or employees' heads: cost, delivery, discounts, and exceptions are handled manually and easily produce errors."
+    solution: "I design a web calculator or calculation API around your rules: formulas, reference data, constraints, hints, and integration with the website or back office."
+    result: "Your team and customers get one calculation flow: faster answers, fewer errors, and transparent logic instead of scattered spreadsheets."
+    timeline: "After the brief, we review rules and test examples. First comes the calculation core, then the interface, API, and validation on real scenarios."
+    collaboration: "You send rules, calculation examples, and constraints → I formalize the logic → build a prototype → we verify results → launch the working version."
+
 jekyll:
   ru:
     problem: "Нужен быстрый и надежный сайт без тяжелой CMS, но при этом с управляемым контентом и SEO-базой."

@@ -1,0 +1,23 @@
+---
+layout: post
+title: "Postal Delivery Calculator from Saint Petersburg"
+type: post
+excerpt: "A postal delivery calculator from Saint Petersburg: a calculation API for an online store, with a web form built on top of the same service."
+service_tags: [calculators, data, legacy]
+---
+
+<p>This project did not start as a standalone public form. It started as a calculation service for an online store. At that time, the Russian Post website did not have an efficient calculator that could be conveniently used from a back office and connected to the order workflow.</p>
+
+<p>The calculation rules were described in large Russian Post documents. They contained many conditions and exceptions: tariffs, regions, restrictions, and delivery specifics for hard-to-reach locations. One separate complication was seasonality: for some northern regions, delivery depended on the time of year, because during muddy road seasons some routes could become unavailable.</p>
+
+<p>In practice, this was a small microservice for calculating delivery from Saint Petersburg. It had an API connected to the online store, so the system could automatically receive delivery cost estimates and warnings about hard-to-reach regions without manually checking the documents.</p>
+
+<p>The web form appeared alongside that work. Since the API already existed, it could be exposed through a simple interface: the user entered shipment parameters and received the same calculation that was used inside the store.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2014-09-15-postal-delivery-calculator.png">
+    <img src="/assets/posts/2014-09-15-postal-delivery-calculator.png" class="img-fluid" alt="Postal delivery calculator from Saint Petersburg">
+  </a>
+</p>
+
+<p>For the bureau, this remains a useful early example of applied automation: complex rules from documents were turned into a working API and a simple web interface, while delivery calculation became faster and more reliable.</p>

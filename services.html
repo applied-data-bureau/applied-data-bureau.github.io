@@ -18,10 +18,6 @@ permalink: /services/
 {% if site.lang == "rs" %}Za svaki zahtev biramo praktično rešenje: od automatizacije procesa do dorade postojećeg sistema.{% endif %}
 {% if site.lang == "en" %}Each request gets a practical solution: from process automation to extending existing systems.{% endif %}
         </p>
-        <p class="mb-0">
-          <a class="button me-2" href="/blog/">{% if site.lang == "ru" %}Блог и проекты{% endif %}{% if site.lang == "rs" %}Blog i projekti{% endif %}{% if site.lang == "en" %}Blog and case studies{% endif %}</a>
-          <a class="button button-outline" href="/">{% if site.lang == "ru" %}На главную{% endif %}{% if site.lang == "rs" %}Početna{% endif %}{% if site.lang == "en" %}Home{% endif %}</a>
-        </p>
       </div>
       <div class="col-12 col-md-5 col-lg-6">
         <img class="intro-image" src="{{ '/img/illustrations/pointing.svg' | relative_url }}" alt="Illustration">
@@ -42,8 +38,8 @@ permalink: /services/
       <div class="col-12 col-md-6 service-summary">
         <h2 class="service-title"><a href="{{ service.url }}">{{ service.title }}</a></h2>
         <p>{{ service.excerpt | strip_html | truncate: 170 }}</p>
-        <p class="mb-0">
-          <a class="button" href="{{ service.url }}">{% if site.lang == "ru" %}Описание услуги{% endif %}{% if site.lang == "rs" %}Opis usluge{% endif %}{% if site.lang == "en" %}Service details{% endif %}</a>
+        <p class="service-summary-link">
+          <a href="{{ service.url }}">{% if site.lang == "ru" %}Открыть описание{% endif %}{% if site.lang == "rs" %}Otvori opis{% endif %}{% if site.lang == "en" %}Open service description{% endif %}</a>
         </p>
       </div>
 {% capture primary_urls %}{{ primary_urls }}{{ service.url }}|{% endcapture %}
@@ -68,8 +64,8 @@ permalink: /services/
       <div class="col-12 col-md-6 service-summary">
         <h2 class="service-title"><a href="{{ service.url }}">{{ service.title }}</a></h2>
         <p>{{ service.excerpt | strip_html | truncate: 170 }}</p>
-        <p class="mb-0">
-          <a class="button" href="{{ service.url }}">{% if site.lang == "ru" %}Описание услуги{% endif %}{% if site.lang == "rs" %}Opis usluge{% endif %}{% if site.lang == "en" %}Service details{% endif %}</a>
+        <p class="service-summary-link">
+          <a href="{{ service.url }}">{% if site.lang == "ru" %}Открыть описание{% endif %}{% if site.lang == "rs" %}Otvori opis{% endif %}{% if site.lang == "en" %}Open service description{% endif %}</a>
         </p>
       </div>
 {% endunless %}

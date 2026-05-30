@@ -1,0 +1,23 @@
+---
+layout: post
+title: "Kalkulator poštanske dostave iz Sankt Peterburga"
+type: post
+excerpt: "Kalkulator poštanske dostave iz Sankt Peterburga: računski API za internet prodavnicu i web forma napravljena iznad istog servisa."
+service_tags: [calculators, data, legacy]
+---
+
+<p>Ovaj projekat nije počeo kao zasebna javna forma. Počeo je kao računski servis za internet prodavnicu. U tom trenutku sajt Pošte Rusije nije imao dovoljno efikasan kalkulator koji bi mogao zgodno da se koristi iz back office-a i poveže sa procesom obrade porudžbina.</p>
+
+<p>Pravila obračuna bila su opisana u velikim dokumentima Pošte Rusije. U njima je bilo mnogo uslova i izuzetaka: tarife, regioni, ograničenja i posebnosti dostave u teško dostupna mesta. Posebna komplikacija bila je sezonalnost: za neke severne regione dostava je zavisila od doba godine, jer tokom perioda loših puteva neke rute nisu bile dostupne.</p>
+
+<p>U praksi, to je bio mali mikroservis za računanje dostave iz Sankt Peterburga. Imao je API povezan sa internet prodavnicom, tako da je sistem mogao automatski da dobije cenu dostave i upozorenja o teško dostupnim regionima bez ručne provere dokumenata.</p>
+
+<p>Web forma se pojavila usput. Pošto je API već postojao, mogao je da se izloži kroz jednostavan interfejs: korisnik unese parametre pošiljke i dobije isti obračun koji se koristio unutar prodavnice.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2014-09-15-postal-delivery-calculator.png">
+    <img src="/assets/posts/2014-09-15-postal-delivery-calculator.png" class="img-fluid" alt="Kalkulator poštanske dostave iz Sankt Peterburga">
+  </a>
+</p>
+
+<p>Za biro je ovo dobar rani primer praktične automatizacije: složena pravila iz dokumenata pretvorena su u radni API i jednostavan web interfejs, a obračun dostave postao je brži i pouzdaniji.</p>
