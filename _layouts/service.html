@@ -76,7 +76,7 @@ layout: default
         {% endfor %}
         {% if related_posts_count > 0 %}
         <section class="service-related-posts pt-5">
-          <h2>{% if site.lang == "ru" %}Материалы и кейсы по услуге{% endif %}{% if site.lang == "rs" %}Materijali i case study tekstovi za uslugu{% endif %}{% if site.lang == "en" %}Service Materials and Case Studies{% endif %}</h2>
+          <h2>{% if site.lang == "ru" %}Материалы и проекты по услуге{% endif %}{% if site.lang == "rs" %}Materijali i projekti po usluzi{% endif %}{% if site.lang == "en" %}Service Materials and Case Studies{% endif %}</h2>
           {% for post in site.posts %}
           {% if post.service_tags contains page.slug %}
           <article class="blog-list-item">

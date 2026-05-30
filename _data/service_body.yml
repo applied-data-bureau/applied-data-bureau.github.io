@@ -162,7 +162,7 @@ jekyll:
     deliverables:
       - "Готовый статический сайт с чистой архитектурой."
       - "Понятная структура файлов и процесс обновления контента."
-      - "Основа для дальнейшего роста блога, кейсов и лидогенерации."
+      - "Основа для дальнейшего роста блога, проектов из практики и лидогенерации."
     closing: "Если не уверены в структуре, начнем с короткого брифа и соберем рабочий каркас, который можно быстро проверить на живой аудитории."
   rs:
     intro: "Prezentacioni sajt treba da bude brz, lak za održavanje i jasan za SEO. Sa Jekyll-om to radimo bez nepotrebne infrastrukture."
@@ -177,7 +177,7 @@ jekyll:
     deliverables:
       - "Gotov statički sajt sa čistom arhitekturom."
       - "Jasna organizacija fajlova i proces ažuriranja sadržaja."
-      - "Stabilna osnova za dalje širenje bloga i case studija."
+      - "Stabilna osnova za dalje širenje bloga, projekata iz prakse i generisanje upita."
     closing: "Ako struktura još nije definisana, krećemo od kratkog brifa i pravimo radni kostur koji brzo testiramo na realnoj publici."
   en:
     intro: "A service website should be fast, easy to maintain, and clear for SEO. Jekyll gives you that without CMS overhead."
@@ -192,7 +192,7 @@ jekyll:
     deliverables:
       - "A production-ready static website with clean architecture."
       - "Clear file structure and maintainable content update workflow."
-      - "A solid base for future blog, cases, and inbound growth."
+      - "A solid base for future blog, case studies, and inbound growth."
     closing: "If structure is still uncertain, we start with a short brief and build a testable skeleton for fast feedback."
 
 n8n:

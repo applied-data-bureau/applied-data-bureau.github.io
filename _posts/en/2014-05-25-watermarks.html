@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Watermarks for E-commerce Images: A Batch Processing Case (Hundreds of Thousands of Files)"
+title: "Watermarks for E-commerce Images: A Batch Processing Case Study (Hundreds of Thousands of Files)"
 type: post
-excerpt: "A practical case about processing several hundred thousand e-commerce images: watermark generation, resizing, AWS S3 storage, and a custom Perl + ImageMagick pipeline from the pre-Cloudflare Images era."
+excerpt: "A practical case study about processing several hundred thousand e-commerce images: watermark generation, resizing, AWS S3 storage, and a custom Perl + ImageMagick pipeline from the pre-Cloudflare Images era."
 og: /assets/posts/2014-05-25-raspberry-ru.jpg
 service_tags: [data, legacy]
 ---
 
-<p>This is an older but still useful case: the task was to build a reliable pipeline for processing <strong>several hundred thousand images</strong> for online stores, including watermarks, resizing, and repeatable batch execution without manual work.</p>
+<p>This is an older but still useful case study: the task was to build a reliable pipeline for processing <strong>several hundred thousand images</strong> for online stores, including watermarks, resizing, and repeatable batch execution without manual work.</p>
 
-<h2>1. Business-side case</h2>
+<h2>1. Business Context</h2>
 
 <p>The goal was not "make a nice picture in Photoshop", but a production pipeline for catalog assets:</p>
 <ul>
@@ -270,4 +270,4 @@ perl watermark.pl input.jpg /tmp/example-shop-watermark.png output.jpg
   </a>
 </p>
 
-<p>For new projects today, I would usually look at Cloudflare Images or similar managed services first. But as a case showing custom high-volume image processing logic, this example is still useful.</p>
+<p>For new projects today, I would usually look at Cloudflare Images or similar managed services first. But as a case study showing custom high-volume image processing logic, this example is still useful.</p>

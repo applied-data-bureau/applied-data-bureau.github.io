@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Vodeni žigovi za slike internet prodavnice: case study batch obrade stotina hiljada fajlova"
+title: "Vodeni žigovi za slike internet prodavnice: prikaz batch obrade stotina hiljada fajlova"
 type: post
-excerpt: "Praktičan case study o obradi nekoliko stotina hiljada slika za e-commerce: generisanje vodenih žigova, resize, skladištenje u AWS S3 i custom Perl + ImageMagick pipeline iz perioda pre Cloudflare Images."
+excerpt: "Praktičan prikaz projekta obrade nekoliko stotina hiljada slika za e-commerce: generisanje vodenih žigova, resize, skladištenje u AWS S3 i custom Perl + ImageMagick pipeline iz perioda pre Cloudflare Images."
 og: /assets/posts/2014-05-25-raspberry-ru.jpg
 service_tags: [data, legacy]
 ---
 
-<p>Ovo je stariji, ali i dalje koristan case study: zadatak je bio da se napravi pouzdan pipeline za obradu <strong>nekoliko stotina hiljada slika</strong> za internet prodavnice, sa vodenim žigovima, resize-om i ponovljivim batch izvršavanjem bez ručnog rada.</p>
+<p>Ovo je stariji, ali i dalje koristan primer iz prakse: zadatak je bio da se napravi pouzdan pipeline za obradu <strong>nekoliko stotina hiljada slika</strong> za internet prodavnice, sa vodenim žigovima, resize-om i ponovljivim batch izvršavanjem bez ručnog rada.</p>
 
-<h2>1. Case sa poslovne strane</h2>
+<h2>1. Poslovni kontekst</h2>
 
 <p>Cilj nije bio "napraviti lepu sliku u Photoshopu", već produkcioni pipeline za katalog:</p>
 <ul>
@@ -270,4 +270,4 @@ perl watermark.pl input.jpg /tmp/example-shop-watermark.png output.jpg
   </a>
 </p>
 
-<p>Za nove projekte danas bih najpre gledao Cloudflare Images ili slične managed servise. Ali kao case koji pokazuje logiku custom obrade velikog broja slika, ovaj primer je i dalje koristan.</p>
+<p>Za nove projekte danas bih najpre gledao Cloudflare Images ili slične managed servise. Ali kao primer koji pokazuje logiku custom obrade velikog broja slika, ovaj projekat je i dalje koristan.</p>
