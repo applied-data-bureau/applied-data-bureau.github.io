@@ -1,0 +1,97 @@
+---
+layout: post
+title: "Club ship PURGA: an event landing page with a request form"
+excerpt: "A case study about the PURGA club ship landing page: one-page layout from a mockup, an event request form, hour selection, and careful handling of Russian word forms in the interface."
+og: /assets/posts/2026-05-28-purga-landing-ru.jpg
+---
+
+<p>The PURGA club ship landing page is an older but useful example of a one-page website built from a provided design mockup. The task was to create a page with the ability to send an event request.</p>
+
+<p>Open the original project description: <a href="https://raskumandrin.pages.dev/purga">https://raskumandrin.pages.dev/purga</a></p>
+
+<p>In tasks like this, quality is not only about matching the mockup. Interactive elements also need to behave naturally: the form should not break the request flow, fields should be clear, and dynamic text should not turn into mechanical phrases such as “1 hours” or “2 hours” in the wrong context.</p>
+
+<p>For event promo pages, a static landing page remains a practical format: it loads quickly, is easy to hand over to the project owner or contractor, and does not require heavy infrastructure when the business logic is limited to a request form and a few interactive elements.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_purga_landing_submit_brief">Submit brief</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-28-purga-landing-ru.jpg">
+    <img src="/assets/posts/2026-05-28-purga-landing-ru.jpg" class="img-fluid" alt="PURGA club ship landing page with an event request form">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> PURGA club ship landing page: a promo page with a request form and event parameters.</small></p>
+
+<h2>Task</h2>
+<p>The task was to turn a mockup into a working HTML page. The landing page needed to:</p>
+<ul>
+  <li>preserve the visual structure of the source mockup;</li>
+  <li>give the user a clear path to submitting a request;</li>
+  <li>support hour selection for the event;</li>
+  <li>show correct Russian word forms next to the number of hours;</li>
+  <li>remain simple to publish and hand over to the client.</li>
+</ul>
+
+<h2>Attention to Detail</h2>
+<p>The mockup showed the variant “5 hours”. If only the number changes, the interface quickly starts to feel careless in Russian: “1 часов”, “2 часов”, “3 часов”. This looks like a small detail, but details like this affect the perceived quality of the page.</p>
+
+<p>When a web form has dynamic values — hours, guests, products, files, or any other entities — the text next to the number should also change correctly. It is more pleasant for the user to read a form that speaks naturally instead of mechanically inserting the same word after every number.</p>
+
+<p>This is especially important for multilingual websites: word forms work differently in different languages, and a rule for Russian cannot simply be copied to English, Serbian, or another language. Such labels should be designed as part of the interface logic, not as static text in a mockup.</p>
+
+<p>Below is an example specifically for Russian: the function receives a number and three word forms, then returns the correct label — “1 час”, “2 часа”, “5 часов”.</p>
+
+<pre><code class="language-javascript">function plural(n, form1, form2, form5) {
+  n = Math.abs(n) % 100;
+  var n1 = n % 10;
+
+  if (n > 10 && n < 20) {
+    return form5;
+  }
+  if (n1 > 1 && n1 < 5) {
+    return form2;
+  }
+  if (n1 == 1) {
+    return form1;
+  }
+
+  return form5;
+}</code></pre>
+
+<p>The formatter.js library was also used for formatted form input. This helped make input cleaner without overcomplicating the whole project.</p>
+
+<h2>Technical Outline</h2>
+<ul>
+  <li><strong>Format:</strong> one-page promo website.</li>
+  <li><strong>Frontend:</strong> HTML/CSS layout from a mockup.</li>
+  <li><strong>Interactivity:</strong> JavaScript for parameter selection and word-form handling.</li>
+  <li><strong>Form:</strong> request form with formatted input fields.</li>
+  <li><strong>Backend:</strong> minimal setup sufficient for the request scenario.</li>
+</ul>
+
+<p>The main engineering point is simple: if a landing page sells an event or service, the interface should be precise in small details as well as visually accurate. The user should not stumble over incorrect text next to commercially important request parameters.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>The mockup was turned into a working one-page landing page.</li>
+  <li>The page got a request flow for event inquiries.</li>
+  <li>The number of hours was displayed with correct Russian word forms.</li>
+  <li>Form fields received formatted input handling.</li>
+  <li>The case shows a practical approach to landing pages: not only building the screen, but also bringing interactive details to a normal user-facing level.</li>
+</ul>
+
+<h2>Who This Format Fits</h2>
+<ul>
+  <li>Event projects that need a fast promo landing page for a venue or event.</li>
+  <li>Small businesses where the request form matters more than a complex catalog or account area.</li>
+  <li>Teams that already have a mockup and need clean frontend work without excess architecture.</li>
+  <li>Projects in Russian or other inflected languages where dynamic interfaces need proper word forms and input formatting.</li>
+</ul>
+
+<p>If you need a similar result: I help build landing pages from mockups, assemble request forms, design dynamic labels, and prepare pages for publication.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_purga_landing_bottom_submit_brief">Submit brief</a>
+</p>

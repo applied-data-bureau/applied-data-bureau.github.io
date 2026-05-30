@@ -1,0 +1,97 @@
+---
+layout: post
+title: "Klupski brod „PURGA”: landing page za događaj sa formom za upit"
+excerpt: "Studija slučaja o landing stranici klupskog broda „PURGA”: jednostranična izrada po maketi, forma za upit, izbor broja sati i pažljiva obrada ruskih oblika reči u interfejsu."
+og: /assets/posts/2026-05-28-purga-landing-ru.jpg
+---
+
+<p>Landing page klupskog broda „PURGA” je stariji, ali dobar primer jednostraničnog sajta napravljenog po zadatoj maketi. Prema zadatku, trebalo je izraditi stranicu sa mogućnošću slanja upita za događaj.</p>
+
+<p>Otvori izvorni opis projekta: <a href="https://raskumandrin.pages.dev/purga">https://raskumandrin.pages.dev/purga</a></p>
+
+<p>U ovakvim zadacima kvalitet nije samo poklapanje sa maketom. Važno je i da se interaktivni elementi ponašaju prirodno: forma ne sme da kvari scenario upita, polja treba da budu jasna, a dinamički tekst ne treba da deluje robotski.</p>
+
+<p>Za promo stranice događaja statički landing page ostaje praktičan format: brzo se učitava, lako se predaje izvođaču ili vlasniku projekta i ne traži tešku infrastrukturu kada je poslovna logika ograničena na upit i nekoliko interaktivnih elemenata.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_purga_landing_submit_brief">Pošalji brif</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-28-purga-landing-ru.jpg">
+    <img src="/assets/posts/2026-05-28-purga-landing-ru.jpg" class="img-fluid" alt="Landing page klupskog broda „PURGA” sa formom za upit za događaj">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Landing page klupskog broda „PURGA”: promo stranica sa formom za upit i izborom parametara događaja.</small></p>
+
+<h2>Zadatak</h2>
+<p>Trebalo je pretvoriti maketu u radnu HTML stranicu. Landing page je trebalo da:</p>
+<ul>
+  <li>sačuva vizuelnu strukturu izvorne makete;</li>
+  <li>korisniku da jasan put do slanja upita;</li>
+  <li>podrži izbor broja sati za događaj;</li>
+  <li>ispravno prikaže ruske oblike reči pored broja sati;</li>
+  <li>ostane jednostavan za objavljivanje i predaju klijentu.</li>
+</ul>
+
+<h2>Pažnja prema detaljima</h2>
+<p>U maketi je bio prikazan oblik „5 часов”. Ako se menja samo broj, interfejs na ruskom brzo počinje da izgleda nemarno: „1 часов”, „2 часов”, „3 часов”. Formalno je to mala stvar, ali baš takvi detalji utiču na utisak kvaliteta.</p>
+
+<p>Kada u web formi postoji dinamika — broj sati, gostiju, proizvoda, fajlova ili bilo kojih drugih entiteta — tekst pored broja takođe treba da se menja ispravno. Korisniku je prijatnije da čita formu koja govori normalnim jezikom, umesto da mehanički ubacuje istu reč posle svakog broja.</p>
+
+<p>Ovu specifičnost je posebno važno uzeti u obzir na višejezičkim sajtovima: u različitim jezicima oblici reči nastaju potpuno različito, i pravilo za ruski ne može se jednostavno preneti na engleski, srpski ili drugi jezik. Zato takve natpise treba projektovati kao deo logike interfejsa, a ne kao statičan tekst u maketi.</p>
+
+<p>Ispod je primer upravo za ruski jezik: funkcija dobija broj i tri oblika reči, a vraća ispravan natpis — „1 час”, „2 часа”, „5 часов”.</p>
+
+<pre><code class="language-javascript">function plural(n, form1, form2, form5) {
+  n = Math.abs(n) % 100;
+  var n1 = n % 10;
+
+  if (n > 10 && n < 20) {
+    return form5;
+  }
+  if (n1 > 1 && n1 < 5) {
+    return form2;
+  }
+  if (n1 == 1) {
+    return form1;
+  }
+
+  return form5;
+}</code></pre>
+
+<p>Za formatirano popunjavanje polja forme korišćena je i biblioteka formatter.js. To je pomoglo da unos bude uredniji bez nepotrebnog komplikovanja celog projekta.</p>
+
+<h2>Tehnički okvir</h2>
+<ul>
+  <li><strong>Format:</strong> jednostranični promo sajt.</li>
+  <li><strong>Frontend:</strong> HTML/CSS izrada po maketi.</li>
+  <li><strong>Interaktivnost:</strong> JavaScript za izbor parametara i obradu oblika reči.</li>
+  <li><strong>Forma:</strong> upit sa formatiranim unosom polja.</li>
+  <li><strong>Backend:</strong> minimalan okvir dovoljan za scenario upita.</li>
+</ul>
+
+<p>Glavna inženjerska ideja je jednostavna: ako landing page prodaje događaj ili uslugu, interfejs treba da bude ne samo vizuelno tačan, već i precizan u sitnicama. Korisnik ne treba da zapinje o neispravan tekst pored komercijalno važnih parametara upita.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Maketa je pretvorena u radni jednostranični landing page.</li>
+  <li>Na stranici se pojavio scenario slanja upita za događaj.</li>
+  <li>Broj sati se prikazivao sa ispravnim ruskim oblicima reči.</li>
+  <li>Polja forme su dobila formatirano popunjavanje.</li>
+  <li>Ovaj slučaj pokazuje praktičan pristup landing stranicama: ne samo izraditi ekran, već dovesti interaktivne detalje do normalnog korisničkog nivoa.</li>
+</ul>
+
+<h2>Kome odgovara ovakav format</h2>
+<ul>
+  <li>Event projektima kojima treba brz promo landing page za događaj ili prostor.</li>
+  <li>Malim biznisima gde je upit važniji od složenog kataloga ili ličnog naloga.</li>
+  <li>Timovima koji već imaju maketu i potreban im je uredan frontend bez suvišne arhitekture.</li>
+  <li>Projektima na ruskom ili drugim jezicima sa složenim oblicima reči, gde dinamički interfejs treba da uzme u obzir deklinaciju i formatiranje unosa.</li>
+</ul>
+
+<p>Ako je potreban sličan rezultat: pomažem da se izversta landing page po maketi, sastavi forma za upit, osmisle dinamički natpisi i stranica pripremi za objavljivanje.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_purga_landing_bottom_submit_brief">Pošalji brif</a>
+</p>
