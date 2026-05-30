@@ -9,45 +9,45 @@
   {% if page.name == "index.html" %}
     {% if site.lang == "ru" %}
       {% assign page_title = "Data-first автоматизация и интеграции для бизнеса" %}
-      {% assign page_description = "Бюро прикладных данных: автоматизация процессов, интеграции, обработка данных, n8n, Perl и поддержка legacy-систем для бизнеса." %}
+      {% assign page_description = "Бюро прикладных данных: автоматизация процессов, AI/LLM-пайплайны, интеграции, обработка данных, n8n, Perl и поддержка legacy-систем для бизнеса." %}
     {% endif %}
     {% if site.lang == "rs" %}
       {% assign page_title = "Data-first automatizacija i integracije za biznis" %}
-      {% assign page_description = "Biro za primenjene podatke: automatizacija procesa, integracije, obrada podataka, n8n, Perl i podrška legacy sistemima." %}
+      {% assign page_description = "Biro za primenjene podatke: automatizacija procesa, AI/LLM pipeline-ovi, integracije, obrada podataka, n8n, Perl i podrška legacy sistemima." %}
     {% endif %}
     {% if site.lang == "en" %}
       {% assign page_title = "Data-first automation and integrations for business" %}
-      {% assign page_description = "Applied Data Bureau delivers process automation, integrations, data workflows, n8n, Perl, and legacy system support for business operations." %}
+      {% assign page_description = "Applied Data Bureau delivers process automation, AI/LLM pipelines, integrations, data workflows, n8n, Perl, and legacy system support for business operations." %}
     {% endif %}
   {% endif %}
 
   {% if page.name == "services.html" %}
     {% if site.lang == "ru" %}
-      {% assign page_title = "Услуги: автоматизация, данные, интеграции, legacy" %}
-      {% assign page_description = "Услуги Бюро прикладных данных: от интеграций и data-пайплайнов до поддержки legacy и внедрения n8n под задачи бизнеса." %}
+      {% assign page_title = "Услуги: AI/LLM, автоматизация, данные, интеграции" %}
+      {% assign page_description = "Услуги Бюро прикладных данных: AI/LLM-пайплайны, OpenAI, локальные модели, n8n, интеграции, data-пайплайны и поддержка legacy под задачи бизнеса." %}
     {% endif %}
     {% if site.lang == "rs" %}
-      {% assign page_title = "Usluge: automatizacija, podaci, integracije, legacy" %}
-      {% assign page_description = "Usluge biroa: od integracija i data pipeline-a do podrške legacy sistemima i uvođenja n8n rešenja za biznis." %}
+      {% assign page_title = "Usluge: AI/LLM, automatizacija, podaci, integracije" %}
+      {% assign page_description = "Usluge biroa: AI/LLM pipeline-ovi, OpenAI, lokalni modeli, n8n, integracije, data pipeline-ovi i podrška legacy sistemima za biznis." %}
     {% endif %}
     {% if site.lang == "en" %}
-      {% assign page_title = "Services: automation, data, integrations, legacy support" %}
-      {% assign page_description = "Explore Applied Data Bureau services: integrations, data pipelines, business automation, n8n workflows, and legacy system support." %}
+      {% assign page_title = "Services: AI/LLM, automation, data, integrations" %}
+      {% assign page_description = "Explore Applied Data Bureau services: AI/LLM pipelines, OpenAI, local models, n8n, integrations, data pipelines, and legacy system support." %}
     {% endif %}
   {% endif %}
 
   {% if page.name == "blog.html" %}
     {% if site.lang == "ru" %}
       {% assign page_title = "Блог: кейсы, автоматизация и инженерная практика" %}
-      {% assign page_description = "Практические статьи и кейсы о data-first автоматизации, интеграциях, n8n, Perl и поддержке рабочих процессов." %}
+      {% assign page_description = "Практические статьи и кейсы о data-first автоматизации, AI/LLM-пайплайнах, интеграциях, n8n, Perl и поддержке рабочих процессов." %}
     {% endif %}
     {% if site.lang == "rs" %}
       {% assign page_title = "Blog: studije slučaja, automatizacija i praksa" %}
-      {% assign page_description = "Praktični članci i studije slučaja o data-first automatizaciji, integracijama, n8n, Perl-u i operativnim procesima." %}
+      {% assign page_description = "Praktični članci i studije slučaja o data-first automatizaciji, AI/LLM pipeline-ovima, integracijama, n8n, Perl-u i operativnim procesima." %}
     {% endif %}
     {% if site.lang == "en" %}
       {% assign page_title = "Blog: case studies, automation, and engineering practice" %}
-      {% assign page_description = "Read practical posts on data-first automation, integrations, n8n, Perl, and delivery patterns from real client work." %}
+      {% assign page_description = "Read practical posts on data-first automation, AI/LLM pipelines, integrations, n8n, Perl, and delivery patterns from real client work." %}
     {% endif %}
   {% endif %}
 
@@ -90,9 +90,9 @@
   {% endif %}
 
   {% if page_description == "" %}
-    {% if site.lang == "ru" %}{% assign page_description = "Бюро прикладных данных: автоматизация, интеграции, обработка данных и поддержка legacy-систем." %}{% endif %}
-    {% if site.lang == "rs" %}{% assign page_description = "Biro za primenjene podatke: automatizacija, integracije, obrada podataka i podrška legacy sistemima." %}{% endif %}
-    {% if site.lang == "en" %}{% assign page_description = "Applied Data Bureau: automation, integrations, data workflows, and legacy system support." %}{% endif %}
+    {% if site.lang == "ru" %}{% assign page_description = "Бюро прикладных данных: AI/LLM-пайплайны, автоматизация, интеграции, обработка данных и поддержка legacy-систем." %}{% endif %}
+    {% if site.lang == "rs" %}{% assign page_description = "Biro za primenjene podatke: AI/LLM pipeline-ovi, automatizacija, integracije, obrada podataka i podrška legacy sistemima." %}{% endif %}
+    {% if site.lang == "en" %}{% assign page_description = "Applied Data Bureau: AI/LLM pipelines, automation, integrations, data workflows, and legacy system support." %}{% endif %}
   {% endif %}
 
   {% assign page_path = page.url | default: "/" %}

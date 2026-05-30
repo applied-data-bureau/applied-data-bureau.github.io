@@ -3,7 +3,7 @@ layout: post
 title: "Russian city district list: from a failed SQL plan to n8n + Wikipedia API + OpenAI"
 excerpt: "A case study about building a list of city districts across Russia: I first expected a single SQL query against \"КЛАДР\", then tried \"ГАР\" (a ~50 GB archive with download and unpacking constraints), and ultimately delivered a complete result via n8n, Wikipedia API, and OpenAI."
 og: /assets/posts/2026-01-02-ru-districts-with-n8n-openai.png
-service_tags: [n8n, data]
+service_tags: [n8n, data, ai]
 ---
 
 <p>This was a small urgent order with a very specific output: a list in the format <code>region; city; city district</code> for cities across Russia, and if a city has no district division, the row should be returned without a district value.</p>

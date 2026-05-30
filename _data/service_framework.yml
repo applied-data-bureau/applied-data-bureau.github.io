@@ -18,6 +18,26 @@ bots:
     timeline: "Draft scenario and estimate follow your brief. MVP is usually launched quickly, then expanded iteratively."
     collaboration: "You submit the brief → we align scenarios and integrations → launch MVP → improve from real conversations."
 
+ai:
+  ru:
+    problem: "Команда уже видит пользу от AI, но обычный чат не масштабируется: данные копируются вручную, формат ответа плавает, качество сложно контролировать."
+    solution: "Собираю управляемый LLM-пайплайн под задачу: OpenAI API или локальные модели, n8n/API-интеграции, структурированный output, проверки качества и fallback-сценарии."
+    result: "Повторяемый процесс для обработки документов, таблиц, заявок или контента без ручного копипаста и с понятными правилами контроля результата."
+    timeline: "После брифа берем тестовую выборку, проверяем качество на реальных данных, затем запускаем полный объем и фиксируем правила поддержки."
+    collaboration: "Вы описываете задачу и даете примеры данных → согласуем критерии качества → запускаю pilot → масштабируем pipeline на рабочий объем."
+  rs:
+    problem: "Tim već vidi vrednost AI-ja, ali običan chat se ne skalira: podaci se kopiraju ručno, format odgovora varira, a kvalitet je teško kontrolisati."
+    solution: "Gradim kontrolisan LLM pipeline za konkretan zadatak: OpenAI API ili lokalni modeli, n8n/API integracije, strukturisan output, provere kvaliteta i fallback scenariji."
+    result: "Ponovljiv proces za obradu dokumenata, tabela, upita ili sadržaja bez ručnog copy-paste rada i sa jasnim pravilima kontrole kvaliteta."
+    timeline: "Posle brifa uzimamo test uzorak, proveravamo kvalitet na realnim podacima, zatim pokrećemo pun obim i definišemo pravila podrške."
+    collaboration: "Opisujete zadatak i dajete primere podataka → usaglašavamo kriterijume kvaliteta → pokrećem pilot → skaliramo pipeline na radni obim."
+  en:
+    problem: "Your team already sees value in AI, but a normal chat does not scale: data is copied manually, response format drifts, and quality is hard to control."
+    solution: "I build a controlled LLM pipeline for the task: OpenAI API or local models, n8n/API integrations, structured output, quality checks, and fallback scenarios."
+    result: "A repeatable process for documents, spreadsheets, requests, or content without manual copy-paste and with clear quality control rules."
+    timeline: "After the brief, we take a test sample, validate quality on real data, then run the full volume and define support rules."
+    collaboration: "You describe the task and provide sample data → we align quality criteria → I run a pilot → we scale the pipeline to production volume."
+
 data:
   ru:
     problem: "Данные разбросаны по файлам, много дублей и ручных операций, из-за чего отчеты медленные и ненадежные."

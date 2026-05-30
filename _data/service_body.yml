@@ -45,6 +45,62 @@ bots:
       - "A roadmap for the next bot iteration based on usage signals."
     closing: "If you only have a rough idea and no formal spec, that is fine. We start from the brief and turn it into a working flow."
 
+ai:
+  ru:
+    intro: "AI полезен бизнесу не как отдельная игрушка, а как часть рабочего процесса: принять входные данные, обработать их по правилам, проверить качество и вернуть результат в нужный формат."
+    when:
+      - "Нужно обрабатывать много текстов, таблиц, заявок, документов или карточек товара."
+      - "Обычный чат с LLM уже помогает, но ручное копирование и проверка результата съедают эффект."
+      - "Нужен контролируемый pipeline с логами, повторяемостью, проверками качества и понятной экономикой."
+      - "Важно выбирать между OpenAI API, локальными моделями или гибридным сценарием под ограничения данных и бюджета."
+    scope:
+      - "Проектирую сценарий обработки: входные данные, правила, формат ответа, проверки и точки ручного контроля."
+      - "Подключаю LLM через OpenAI API, локальные модели или гибридный контур в зависимости от задачи."
+      - "Собираю автоматизацию в n8n, скриптах или API-интеграции с вашими таблицами, CRM, ботами и внутренними сервисами."
+      - "Настраиваю structured output, JSON-схемы, retry/fallback и quality-gate для проблемных фрагментов."
+    deliverables:
+      - "Рабочий AI/LLM-pipeline под конкретный бизнес-процесс."
+      - "Тестовый прогон на реальных данных с зафиксированными критериями качества."
+      - "Документированная логика промптов, проверок, ошибок и дальнейшего масштабирования."
+      - "Рекомендации по стеку: OpenAI API, локальные модели, n8n, OCR, перевод, извлечение и нормализация данных."
+    closing: "Обычно начинаем не с большого внедрения, а с небольшой выборки. Так быстро видно, где LLM дает экономию, где нужна ручная проверка, а где лучше оставить классическую обработку данных."
+  rs:
+    intro: "AI je koristan za biznis ne kao odvojena igračka, već kao deo radnog procesa: primiti ulazne podatke, obraditi ih po pravilima, proveriti kvalitet i vratiti rezultat u potrebnom formatu."
+    when:
+      - "Treba obraditi mnogo tekstova, tabela, upita, dokumenata ili kartica proizvoda."
+      - "Običan chat sa LLM-om već pomaže, ali ručno kopiranje i provera rezultata pojedu efekat."
+      - "Potreban je kontrolisan pipeline sa logovima, ponovljivošću, proverama kvaliteta i jasnom ekonomikom."
+      - "Važno je izabrati između OpenAI API-ja, lokalnih modela ili hibridnog scenarija prema ograničenjima podataka i budžeta."
+    scope:
+      - "Projektujem scenario obrade: ulazne podatke, pravila, format odgovora, provere i tačke ručne kontrole."
+      - "Povezujem LLM preko OpenAI API-ja, lokalnih modela ili hibridnog okruženja u zavisnosti od zadatka."
+      - "Sastavljam automatizaciju u n8n-u, skriptama ili API integraciji sa vašim tabelama, CRM-om, botovima i internim servisima."
+      - "Podešavam structured output, JSON šeme, retry/fallback i quality-gate za problematične fragmente."
+    deliverables:
+      - "Radni AI/LLM pipeline za konkretan poslovni proces."
+      - "Test pokretanje na realnim podacima sa definisanim kriterijumima kvaliteta."
+      - "Dokumentovana logika promptova, provera, grešaka i daljeg skaliranja."
+      - "Preporuke za stack: OpenAI API, lokalni modeli, n8n, OCR, prevođenje, ekstrakcija i normalizacija podataka."
+    closing: "Obično ne počinjemo velikim uvođenjem, već malim uzorkom. Tako se brzo vidi gde LLM štedi vreme, gde treba ručna provera, a gde je bolja klasična obrada podataka."
+  en:
+    intro: "AI is useful for business when it becomes part of a workflow: accept input data, process it by rules, check quality, and return the result in the required format."
+    when:
+      - "You need to process many texts, spreadsheets, requests, documents, or product records."
+      - "A normal LLM chat already helps, but manual copying and result checking consume the benefit."
+      - "You need a controlled pipeline with logs, repeatability, quality checks, and clear economics."
+      - "You need to choose between OpenAI API, local models, or a hybrid setup based on data and budget constraints."
+    scope:
+      - "I design the processing scenario: inputs, rules, response format, checks, and manual control points."
+      - "I connect LLMs through OpenAI API, local models, or a hybrid setup depending on the task."
+      - "I build automation in n8n, scripts, or API integrations with your spreadsheets, CRM, bots, and internal services."
+      - "I configure structured output, JSON schemas, retry/fallback logic, and quality gates for problematic fragments."
+    deliverables:
+      - "A working AI/LLM pipeline for a specific business process."
+      - "A test run on real data with agreed quality criteria."
+      - "Documented prompt, validation, error-handling, and scaling logic."
+      - "Stack recommendations: OpenAI API, local models, n8n, OCR, translation, extraction, and data normalization."
+    closing: "We usually start with a small sample, not a large rollout. This quickly shows where LLM saves time, where human review is needed, and where classic data processing is still the better tool."
+
 data:
   ru:
     intro: "Когда данные живут в десятках файлов, бизнес начинает принимать решения вслепую. Помогаю собрать единый контур, где цифрам можно доверять."
