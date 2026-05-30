@@ -1,0 +1,103 @@
+---
+layout: post
+title: "Viber-бот для сайта некурящих кафе в Нови-Саде"
+excerpt: "Разбор проекта Viber-бота для Smoke Free Cafes Novi Sad: выбор языка и категории, запрос геолокации, поиск 7 ближайших некурящих кафе и канал связи с администраторами проекта."
+og: /assets/posts/viber-smokefree/smokefreens-viber-ru-results.jpg
+service_tags: [bots, maps, data, supabase]
+---
+
+<p>Для проекта <a href="{{ '/smoke-free-cafes-novi-sad' | relative_url }}">Smoke Free Cafes Novi Sad</a> был добавлен Viber-бот. Он работает как мобильный интерфейс к тем же данным, на которых построена интерактивная карта некурящих кафе и ресторанов в Нови-Саде, и даёт клиентам прямой канал связи с администраторами проекта.</p>
+
+<p>Открыть бот в Viber: <a href="viber://pa?chatURI=smokefreens">viber://pa?chatURI=smokefreens</a></p>
+
+<p>Задача была не просто сделать чат с приветствием. Бот должен был помочь человеку быстро найти ближайшие места без табачного дыма, уточнить категорию заведения и дать простой канал для предложений, правок и новых точек.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_viber_smokefree_submit_brief">Отправить бриф</a>
+</p>
+
+<style>
+  .viber-post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 320px));
+    gap: 24px;
+    align-items: start;
+    justify-content: center;
+  }
+  .viber-post-figure img {
+    width: 100%;
+    max-width: 320px;
+  }
+  @media (max-width: 767.98px) {
+    .viber-post-grid {
+      grid-template-columns: minmax(0, 320px);
+    }
+  }
+</style>
+
+<h2>Что делает бот</h2>
+<ul>
+  <li>Показывает приветствие и клавиатуру на трёх языках: русском, английском и сербском.</li>
+  <li>Перед запросом геолокации предлагает выбрать все категории или одну категорию заведения.</li>
+  <li>Открывает выбор точки на карте через Viber location picker.</li>
+  <li>После получения геолокации возвращает 7 ближайших некурящих заведений.</li>
+  <li>Фильтрует выдачу по выбранной категории: кафе, десерты, международная кухня, пицца и другие типы заведений.</li>
+  <li>Принимает текстовые сообщения, картинки, видео, ссылки и контакты как обратную связь по проекту.</li>
+  <li>Пересылает обращения администраторам проекта в Viber и позволяет ответить пользователю так, чтобы ответ пришёл клиенту из бота.</li>
+</ul>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-ru-welcome.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-ru-welcome.jpg" class="img-fluid border rounded" alt="Приветствие Viber-бота SmokeFreeNS на русском языке">
+    </a>
+    <p><small><strong>Рисунок 1.</strong> Приветствие и базовая клавиатура: поиск заведений и переключение языка.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-ru-categories.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-ru-categories.jpg" class="img-fluid border rounded" alt="Выбор категории в Viber-боте SmokeFreeNS">
+    </a>
+    <p><small><strong>Рисунок 2.</strong> Перед геолокацией бот предлагает выбрать все категории или конкретный тип заведения.</small></p>
+  </div>
+</div>
+
+<h2>Пользовательский сценарий</h2>
+<ol>
+  <li>Пользователь открывает бот и выбирает язык.</li>
+  <li>Нажимает <strong>Get locations</strong>.</li>
+  <li>Выбирает все категории или отдельный тип заведения.</li>
+  <li>Передаёт точку на карте через стандартный интерфейс Viber.</li>
+  <li>Получает список ближайших заведений с расстоянием, адресом и ссылкой на Google Maps.</li>
+</ol>
+
+<p>Для городского справочника это удобнее, чем просить человека открывать сайт, искать себя на карте и вручную сравнивать расстояния. Сценарий в боте короче: выбрать категорию, отправить точку, получить ближайшие варианты.</p>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-ru-category-location.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-ru-category-location.jpg" class="img-fluid border rounded" alt="Viber-бот просит отправить точку на карте после выбора категории">
+    </a>
+    <p><small><strong>Рисунок 3.</strong> После выбора категории бот показывает отдельную кнопку для передачи точки на карте.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-ru-results.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-ru-results.jpg" class="img-fluid border rounded" alt="Viber-бот возвращает ближайшие некурящие заведения с адресами и ссылками">
+    </a>
+    <p><small><strong>Рисунок 4.</strong> Результат: ближайшие некурящие заведения, расстояние, адрес и ссылка на карту.</small></p>
+  </div>
+</div>
+
+<h2>Обратная связь</h2>
+<p>Отдельная часть проекта — приём правок. Пользователь может написать, что в заведении изменились условия, отправить новую точку, картинку, видео, ссылку или контакт. Бот пересылает обращение администраторам проекта в Viber, а у администраторов есть возможность ответить пользователю. Ответ приходит клиенту из бота.</p>
+
+<h2>Технические детали</h2>
+<p>Бот работает на той же базе заведений, что и сайт Smoke Free Cafes Novi Sad. Инфраструктура проекта укладывается в бесплатные лимиты: сайт, API со списком кафе и Viber-бот не требуют постоянной оплаты серверов при текущем масштабе.</p>
+
+<h2>Результат</h2>
+<ul>
+  <li>У проекта Smoke Free Cafes Novi Sad появился отдельный Viber-интерфейс для пользователей, которым удобнее искать места в мессенджере.</li>
+  <li>Поиск ближайших некурящих кафе стал доступен через геолокацию и категории.</li>
+  <li>Администраторы проекта получили канал для правок и предложений без отдельной CRM или админки.</li>
+  <li>Сайт, карта и бот используют одну и ту же базу заведений, поэтому данные не нужно поддерживать в нескольких местах.</li>
+  <li>Проект стал более полезным для жителей и гостей Нови-Сада: можно открыть карту на сайте или быстро получить ближайшие варианты через Viber.</li>
+</ul>

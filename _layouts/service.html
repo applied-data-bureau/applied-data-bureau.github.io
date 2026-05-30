@@ -81,7 +81,7 @@ layout: default
           {% if post.service_tags contains page.slug %}
           <article class="blog-list-item">
             <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-            <div class="date">{{ post.date | date: "%Y-%m-%d" }}</div>
+            <div class="date">{% include formatted-date.html date=post.date %}</div>
             <p>{{ post.excerpt | strip_html | truncate: 220 }}</p>
             <a href="{{ post.url | relative_url }}">{% if site.lang == "ru" %}Читать материал{% endif %}{% if site.lang == "rs" %}Pročitaj materijal{% endif %}{% if site.lang == "en" %}Read material{% endif %}</a>
           </article>

@@ -1,0 +1,103 @@
+---
+layout: post
+title: "Viber bot for a smoke-free cafes website in Novi Sad"
+excerpt: "A case study of the Viber bot for Smoke Free Cafes Novi Sad: language and category selection, geolocation request, 7 nearest smoke-free venues, and a direct channel to project administrators."
+og: /assets/posts/viber-smokefree/smokefreens-viber-en-results.jpg
+service_tags: [bots, maps, data, supabase]
+---
+
+<p>A Viber bot was added to the <a href="{{ '/smoke-free-cafes-novi-sad' | relative_url }}">Smoke Free Cafes Novi Sad</a> project. It works as a mobile interface to the same data used by the interactive map of smoke-free cafes and restaurants in Novi Sad, and gives users a direct channel to the project administrators.</p>
+
+<p>Open the bot in Viber: <a href="viber://pa?chatURI=smokefreens">viber://pa?chatURI=smokefreens</a></p>
+
+<p>The goal was not just to make a chat with a greeting. The bot needed to help people quickly find nearby smoke-free places, narrow the search by venue category, and provide a simple channel for suggestions, corrections, and new places.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_viber_smokefree_submit_brief">Submit brief</a>
+</p>
+
+<style>
+  .viber-post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 320px));
+    gap: 24px;
+    align-items: start;
+    justify-content: center;
+  }
+  .viber-post-figure img {
+    width: 100%;
+    max-width: 320px;
+  }
+  @media (max-width: 767.98px) {
+    .viber-post-grid {
+      grid-template-columns: minmax(0, 320px);
+    }
+  }
+</style>
+
+<h2>What the bot does</h2>
+<ul>
+  <li>Shows a greeting and keyboard in three languages: Russian, English, and Serbian.</li>
+  <li>Before requesting geolocation, asks the user to choose all categories or one venue category.</li>
+  <li>Opens point selection through the Viber location picker.</li>
+  <li>After receiving geolocation, returns 7 nearest smoke-free venues.</li>
+  <li>Filters results by selected category: cafes, desserts, international cuisine, pizza, and other venue types.</li>
+  <li>Accepts text messages, pictures, videos, links, and contacts as project feedback.</li>
+  <li>Forwards user messages to project administrators in Viber and lets them reply so the client receives the answer from the bot.</li>
+</ul>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-en-welcome.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-en-welcome.jpg" class="img-fluid border rounded" alt="SmokeFreeNS Viber bot greeting in English">
+    </a>
+    <p><small><strong>Figure 1.</strong> Greeting and base keyboard: venue search and language switching.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-en-categories.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-en-categories.jpg" class="img-fluid border rounded" alt="Category selection in the SmokeFreeNS Viber bot">
+    </a>
+    <p><small><strong>Figure 2.</strong> Before geolocation, the bot asks the user to choose all categories or a specific venue type.</small></p>
+  </div>
+</div>
+
+<h2>User Flow</h2>
+<ol>
+  <li>The user opens the bot and chooses a language.</li>
+  <li>Taps <strong>Get locations</strong>.</li>
+  <li>Chooses all categories or a specific venue type.</li>
+  <li>Shares a point on the map through the standard Viber interface.</li>
+  <li>Receives a list of nearby venues with distance, address, and Google Maps link.</li>
+</ol>
+
+<p>For a city directory, this is more convenient than asking a person to open the website, find themselves on the map, and manually compare distances. The bot flow is shorter: choose a category, share a point, get nearby options.</p>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-en-category-location.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-en-category-location.jpg" class="img-fluid border rounded" alt="The Viber bot asks the user to share a map point after category selection">
+    </a>
+    <p><small><strong>Figure 3.</strong> After category selection, the bot shows a separate button for sharing a point on the map.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-en-results.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-en-results.jpg" class="img-fluid border rounded" alt="The Viber bot returns nearby smoke-free venues with addresses and links">
+    </a>
+    <p><small><strong>Figure 4.</strong> Result: nearby smoke-free venues, distance, address, and map link.</small></p>
+  </div>
+</div>
+
+<h2>Feedback</h2>
+<p>A separate part of the project is accepting updates. A user can report that conditions changed at a venue, send a new point, picture, video, link, or contact. The bot forwards the message to project administrators in Viber, and administrators can reply to the user. The client receives the reply from the bot.</p>
+
+<h2>Technical Details</h2>
+<p>The bot uses the same venue database as the Smoke Free Cafes Novi Sad website. The project infrastructure stays within free tiers: the website, cafe list API, and Viber bot do not require recurring server payments at the current scale.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>Smoke Free Cafes Novi Sad got a separate Viber interface for users who prefer to search in a messenger.</li>
+  <li>Nearby smoke-free cafe search became available through geolocation and categories.</li>
+  <li>Project administrators got a channel for corrections and suggestions without a separate CRM or admin panel.</li>
+  <li>The website, map, and bot use the same venue database, so the data does not need to be maintained in multiple places.</li>
+  <li>The project became more useful for residents and visitors of Novi Sad: they can open the website map or quickly get nearby options through Viber.</li>
+</ul>

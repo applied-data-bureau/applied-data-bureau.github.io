@@ -1,0 +1,103 @@
+---
+layout: post
+title: "Viber bot za sajt lokala bez duvanskog dima u Novom Sadu"
+excerpt: "Prikaz projekta Viber bota za Smoke Free Cafes Novi Sad: izbor jezika i kategorije, zahtev za geolokaciju, 7 najbližih lokala bez duvanskog dima i kanal za komunikaciju sa administratorima projekta."
+og: /assets/posts/viber-smokefree/smokefreens-viber-rs-results.jpg
+service_tags: [bots, maps, data, supabase]
+---
+
+<p>Za projekat <a href="{{ '/smoke-free-cafes-novi-sad' | relative_url }}">Smoke Free Cafes Novi Sad</a> dodat je Viber bot. On radi kao mobilni interfejs za iste podatke na kojima je napravljena interaktivna mapa kafića i restorana bez duvanskog dima u Novom Sadu, i daje korisnicima direktan kanal za komunikaciju sa administratorima projekta.</p>
+
+<p>Otvori bot u Viberu: <a href="viber://pa?chatURI=smokefreens">viber://pa?chatURI=smokefreens</a></p>
+
+<p>Zadatak nije bio samo da se napravi chat sa pozdravnom porukom. Bot je trebalo da pomogne osobi da brzo pronađe najbliža mesta bez duvanskog dima, suzi pretragu po kategoriji lokala i pošalje predlog, ispravku ili novo mesto.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_viber_smokefree_submit_brief">Pošalji brif</a>
+</p>
+
+<style>
+  .viber-post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 320px));
+    gap: 24px;
+    align-items: start;
+    justify-content: center;
+  }
+  .viber-post-figure img {
+    width: 100%;
+    max-width: 320px;
+  }
+  @media (max-width: 767.98px) {
+    .viber-post-grid {
+      grid-template-columns: minmax(0, 320px);
+    }
+  }
+</style>
+
+<h2>Šta bot radi</h2>
+<ul>
+  <li>Prikazuje pozdrav i tastaturu na tri jezika: ruskom, engleskom i srpskom.</li>
+  <li>Pre zahteva za geolokaciju nudi izbor svih kategorija ili jedne kategorije lokala.</li>
+  <li>Otvara izbor tačke na mapi kroz Viber location picker.</li>
+  <li>Posle dobijanja geolokacije vraća 7 najbližih lokala bez duvanskog dima.</li>
+  <li>Filtrira rezultate po izabranoj kategoriji: kafići, dezerti, internacionalna kuhinja, pica i drugi tipovi lokala.</li>
+  <li>Prima tekstualne poruke, slike, video, linkove i kontakte kao povratne informacije o projektu.</li>
+  <li>Prosleđuje poruke administratorima projekta u Viberu i omogućava odgovor korisniku tako da odgovor stigne klijentu iz bota.</li>
+</ul>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-rs-welcome.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-rs-welcome.jpg" class="img-fluid border rounded" alt="Pozdrav Viber bota SmokeFreeNS na srpskom jeziku">
+    </a>
+    <p><small><strong>Slika 1.</strong> Pozdrav i osnovna tastatura: pretraga lokala i promena jezika.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-rs-categories.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-rs-categories.jpg" class="img-fluid border rounded" alt="Izbor kategorije u Viber botu SmokeFreeNS">
+    </a>
+    <p><small><strong>Slika 2.</strong> Pre geolokacije bot nudi izbor svih kategorija ili konkretnog tipa lokala.</small></p>
+  </div>
+</div>
+
+<h2>Korisnički tok</h2>
+<ol>
+  <li>Korisnik otvara bot i bira jezik.</li>
+  <li>Pritisne <strong>Get locations</strong>.</li>
+  <li>Bira sve kategorije ili poseban tip lokala.</li>
+  <li>Šalje tačku na mapi kroz standardni Viber interfejs.</li>
+  <li>Dobija listu najbližih lokala sa udaljenošću, adresom i linkom ka Google Maps.</li>
+</ol>
+
+<p>Za gradski katalog ovo je praktičnije nego tražiti od osobe da otvori sajt, pronađe sebe na mapi i ručno poredi udaljenosti. Tok u botu je kraći: izabrati kategoriju, poslati tačku, dobiti najbliže opcije.</p>
+
+<div class="viber-post-grid">
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-rs-category-location.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-rs-category-location.jpg" class="img-fluid border rounded" alt="Viber bot traži slanje tačke na mapi posle izbora kategorije">
+    </a>
+    <p><small><strong>Slika 3.</strong> Posle izbora kategorije bot prikazuje posebno dugme za slanje tačke na mapi.</small></p>
+  </div>
+  <div class="viber-post-figure text-center">
+    <a href="/assets/posts/viber-smokefree/smokefreens-viber-rs-results.jpg">
+      <img src="/assets/posts/viber-smokefree/smokefreens-viber-rs-results.jpg" class="img-fluid border rounded" alt="Viber bot vraća najbliže lokale bez duvanskog dima sa adresama i linkovima">
+    </a>
+    <p><small><strong>Slika 4.</strong> Rezultat: najbliži lokali bez duvanskog dima, udaljenost, adresa i link ka mapi.</small></p>
+  </div>
+</div>
+
+<h2>Povratne informacije</h2>
+<p>Poseban deo projekta je prijem ispravki. Korisnik može da napiše da su se uslovi u lokalu promenili, pošalje novu tačku, sliku, video, link ili kontakt. Bot prosleđuje poruku administratorima projekta u Viberu, a administratori mogu da odgovore korisniku. Klijent dobija odgovor iz bota.</p>
+
+<h2>Tehnički detalji</h2>
+<p>Bot koristi istu bazu lokala kao sajt Smoke Free Cafes Novi Sad. Infrastruktura projekta ostaje u besplatnim limitima: sajt, API sa listom lokala i Viber bot ne zahtevaju stalno plaćanje servera na trenutnom obimu.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Smoke Free Cafes Novi Sad je dobio poseban Viber interfejs za korisnike kojima je lakše da pretražuju u messengeru.</li>
+  <li>Pretraga najbližih lokala bez duvanskog dima postala je dostupna kroz geolokaciju i kategorije.</li>
+  <li>Administratori projekta dobili su kanal za ispravke i predloge bez posebnog CRM-a ili admin panela.</li>
+  <li>Sajt, mapa i bot koriste istu bazu lokala, pa podatke ne treba održavati na više mesta.</li>
+  <li>Projekat je postao korisniji za stanovnike i goste Novog Sada: mogu da otvore mapu na sajtu ili brzo dobiju najbliže opcije kroz Viber.</li>
+</ul>
