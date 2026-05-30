@@ -49,7 +49,7 @@ data:
     problem: "Podaci su rasuti po fajlovima, ima duplikata i ručnih operacija, pa su izveštaji spori i nepouzdani."
     solution: "Spajam izvore u jedinstven pipeline: čišćenje, normalizacija, obogaćivanje i izvoz u traženi format."
     result: "Spreman skup podataka za CRM, analitiku ili kampanje bez svakodnevnog ručnog sklapanja tabela."
-    timeline: "Posle brifa i test fajla fiksiram faze: pilot na uzorku, zatim puni obrada na kompletnom obimu."
+    timeline: "Posle brifa i test fajla fiksiram faze: pilot na uzorku, zatim puna obrada kompletnog obima."
     collaboration: "Šaljete brif i primer podataka → usaglašavamo pravila obrade → pokazujem test rezultat → pokrećemo pun obim."
   en:
     problem: "Data is spread across files with duplicates and manual handling, so reporting stays slow and unreliable."
@@ -70,7 +70,7 @@ jekyll:
     solution: "Razvijam statički sajt na Jekyll-u: struktura, šabloni, sadržajni blokovi i automatski deploy."
     result: "Lagani sajt sa visokim performansama, čistim kodom i jednostavnim procesom ažuriranja sadržaja."
     timeline: "Nakon brifa fiksiramo strukturu i obim. Prvo skelet i ključne stranice, zatim sadržaj i finalna dorada."
-    collaboration: "Popunjavate brif sa ciljevima i strukturom → pravim prototip → usaglašavamo izmene → puštamo produkciju."
+    collaboration: "Popunjavate brif sa ciljevima i strukturom → pravim prototip → usaglašavamo izmene → puštamo u produkciju."
   en:
     problem: "You need a fast and reliable website without CMS overhead, while keeping content control and SEO basics."
     solution: "I build a static Jekyll website: page structure, templates, content sections, and automated deployment."
