@@ -1,0 +1,100 @@
+---
+layout: post
+title: "Softverski sloj gradske mreže za monitoring vazduha"
+excerpt: "Prikaz realizovanog projekta: rad na softverskom sloju gradske mreže za monitoring vazduha u Sankt Peterburgu, sa stanicama, gasnim analizatorima, Tiny Core Linux-om, dokumentacijom i kontrolisanom isporukom koda."
+og: /assets/posts/2026-05-31-air-monitoring-offline-map.jpg
+service_tags: [data, legacy]
+---
+
+<p>Sredinom 2010-ih radio sam na softverskom sloju projekta povezanog sa gradskom infrastrukturom za monitoring atmosferskog vazduha u Sankt Peterburgu. To nije bio običan web razvoj, već deo gradske infrastrukture: automatske stanice po gradskim delovima, gasni analizatori, redovna merenja, slanje podataka u centar za prikupljanje i obradu, čuvanje merenja i objavljivanje informacija.</p>
+
+<p>U praksi, to je bio industrijski sistem sa fizičkim instrumentima i udaljenim prikupljanjem podataka pre nego što je termin "Internet of Things" postao uobičajen. Sistem je imao stvarne uređaje, COM portove, modemsku vezu, međufajlove sa merenjima, centralnu obradu, izveštavanje i zahteve za pouzdanošću. Moj rad se odnosio na jedan softverski sloj već postojeće gradske infrastrukture: ceo sistem nije pravljen od nule, ali je stanični deo trebalo dovesti u stanje koje se lakše održava.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_air_monitoring_submit_brief">Pošalji brif</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg" class="img-fluid" alt="Offline mapa Sankt Peterburga sa tačkama stanica za monitoring vazduha">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 1.</strong> Offline mapa sa tačkama stanica za monitoring vazduha. Te fizičke tačke posmatranja bile su glavni izvor podataka za softverski sloj.</small></p>
+
+<h2>Kontekst sistema</h2>
+<p>Gradski sistem se koristio za ekološki monitoring atmosferskog vazduha. Automatske stanice su kontinuirano merile zagađujuće materije, a rezultati su u redovnim intervalima stizali u centralnu bazu i dalje se koristili za obradu, izveštavanje i informisanje.</p>
+
+<p>U ovakvim sistemima softverski sloj ne radi sa apstraktnim prijavama iz forme, već sa tokom fizičkih merenja. Sa jedne strane su instrumenti, senzori, portovi, modemi, lokalni fajlovi i inženjeri koji dolaze na stanicu. Sa druge strane su centralna obrada, čuvanje, kontrola kvaliteta podataka i objavljivanje rezultata.</p>
+
+<p>Sistem je automatski merio ugljen-monoksid, azot-monoksid, azot-dioksid, suspendovane čestice PM10 i sumpor-dioksid. Neautomatizovano su praćeni benzen, toluen, etilbenzen, ksileni i fenol. Deo takvih merenja mogao je da uključuje poluautomatsko uzorkovanje i naknadnu laboratorijsku analizu.</p>
+
+<h2>Početno stanje</h2>
+<p>U trenutku mog rada glavni problem nije bio samo u kodu, već i u načinu eksploatacije. Softverski deo je već radio u produkciji, ali oko njega skoro da nije postojao normalan inženjerski okvir: dokumentacija, ponovljivo pokretanje, jasna istorija izmena i pažljiv proces isporuke ažuriranja.</p>
+
+<p>Takvo stanje je tipično za dugovečne industrijske sisteme. Kod živi blizu opreme, menja se kada se pojave problemi, deo znanja ostaje kod pojedinaca, a dokumentacija nastaje kasnije od samog sistema. Dok sve radi, to može izgledati prihvatljivo. Ali zamena stanice, odlazak inženjera na objekat, povezivanje novog instrumenta ili ispravka greške postaju ručna operacija sa visokim rizikom.</p>
+
+<h2>Šta je trebalo uraditi</h2>
+<ul>
+  <li>Prebaciti radni kod u repozitorijum i učiniti ga glavnim izvorom.</li>
+  <li>Opisati proces izmena: zadaci, grane, commit-i, provera i ulazak izmena u produkciju.</li>
+  <li>Pripremiti dokumentaciju za stanični deo: instalacija OS-a, okruženje, konfiguracija instrumenata, pokretanje servisa, backup i ažuriranje koda.</li>
+  <li>Pojednostaviti održavanje stanica za inženjere koji dolaze na objekat i treba brzo da razumeju šta i kako ažuriraju.</li>
+  <li>Uključiti praktikante i mlađe stručnjake tako da mogu da pomognu sa dokumentacijom, proverama i prenosom znanja bez rizika za produkciju.</li>
+  <li>Sačuvati rad postojećeg sistema: ovo je bio infrastrukturni posao, a ne greenfield projekat u kome sve može da se prepiše.</li>
+</ul>
+
+<h2>Repozitorijum, dokumentacija i isporuka</h2>
+<p>Prvi sloj posla bio je organizaciono-inženjerski: dovesti kod i dokumentaciju u stanje sa kojim može da se živi. Za izmene je uveden proces kroz zadatke i posebne grane. Commit-i su se vezivali za zadatke, izmene su se testirale pre spajanja, a grana <code>master</code> se tretirala kao verzija za produkciju koja može da se instalira na radnu stanicu.</p>
+
+<p>To nije bio savremeni cloud CI/CD u smislu kontejnera, staging klastera i automatskog deploy-a na svaku stanicu. Stanice su mogle da imaju ograničenja u vezi, a deo ažuriranja se radio na licu mesta. Ali to je bio važan korak ka kontrolisanoj isporuci: kod je prestao da bude skup fajlova "negde u produkciji", pojavila se istorija izmena, pojavila su se pravila ulaska u produkciju, pojavila se test stanica i jasan način da se radne stanice ažuriraju iz repozitorijuma.</p>
+
+<p>Posebno je pripremljena operativna dokumentacija: kako sve pripremiti, koji radni direktorijumi su potrebni, gde se nalaze konfiguracije, kako se instrumenti vezuju za portove, kako se pokreće monitoring u realnom vremenu, kako se podešava backup merenja i automatsko pokretanje staničnih procesa.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg" class="img-fluid" alt="Šema rada softvera stanice za monitoring atmosferskog vazduha">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 2.</strong> Šema rada softvera stanice za monitoring iz radnih materijala projekta.</small></p>
+
+<h2>Stanični deo</h2>
+<p>Stanica nije bila apstraktni "API klijent", već računar pored merne opreme. Na njega su bili povezani gasni analizatori, meteorološki senzori, senzori zračenja i servisna oprema. Veliki deo komunikacije išao je preko serijskih portova, pa je dokumentacija posebno opisivala MOXA ploče za proširenje broja COM portova i vezivanje konkretnih instrumenata za konkretne uređaje kao što su <code>/dev/ttyM0</code>, <code>/dev/ttyM3</code> ili <code>/dev/ttyS0</code>.</p>
+
+<p>U radnim materijalima bili su opisani različiti tipovi instrumenata: ThermoElectron, Environnement, Horiba, Automet, WXT520, DKGRAD, FDS. Za njih su bili zabeleženi mereni parametri i jedinice: NO, NO2, SO2, CO, O3, PM10/PM2.5, temperatura, vlažnost, pritisak, brzina i smer vetra, radijaciona pozadina. To dobro pokazuje prirodu zadatka: softverski sloj je morao da bude pouzdan posrednik između fizičkih instrumenata i dalje obrade podataka.</p>
+
+<p>Podaci se nisu čitali sa lepog interfejsa na ekranu, već sa porta: sirove vrednosti koje je trebalo ispravno pročitati, normalizovati, sačuvati i poslati dalje.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg" class="img-fluid" alt="Ekran gasnog analizatora sa očitavanjima NO, NO2 i NOx">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 3.</strong> Očitavanja instrumenta na stanici: NO, NO2 i NOx u mg/m³.</small></p>
+
+<p>Unutar staničnog dela postojali su posebni procesi za prikupljanje i kontrolu podataka. Rezultati merenja su se upisivali u radne direktorijume, a centar je mogao da preuzima pripremljene fajlove. Za inženjera na stanici važne su bile ponovljive komande: šta pokrenuti, gde pogledati živa očitavanja, kako proveriti port i kako ne izgubiti podatke posle restartovanja.</p>
+
+<h2>Tiny Core Linux</h2>
+<p>Poseban deo projekta bio je stanični operativni sistem na Tiny Core Linux-u. To je bio pragmatičan izbor za terenske uslove: sistem se pokretao sa fleš diska, radio iz RAM-a i omogućavao da se potrebna konfiguracija sačuva nazad na nosač. Takav pristup je pojednostavljivao održavanje stanice i smanjivao zavisnost od stanja lokalnog diska.</p>
+
+<p>Radno okruženje stanice uključivalo je Perl, git, minicom, pppd, inetutils, Log::Log4perl, JSON i dodatne pakete za rad sa serijskim portovima. Deo zavisnosti morao je posebno da se kompajlira i pakuje za Tiny Core, na primer Perl moduli za SerialPort i BufferedSelect, MOXA drajveri, mgetty i Vim. To je bio niskonivovski operativni posao: ne samo napisati skriptu, već obezbediti da se ona podigne posle restartovanja stanice i nastavi da radi pored instrumenata.</p>
+
+<h2>Rad sa timom</h2>
+<p>Još jedan deo rezultata bilo je uključivanje ljudi u projekat. Kada sistem postoji samo kao kod u produkciji i usmeno znanje, praktikanta ili mlađeg developera nije moguće bezbedno uključiti. Prvo treba opisati granice: gde je dokumentacija, gde je repozitorijum, kako se otvaraju zadaci, šta sme da se menja, šta se proverava na test stanici i kako izgleda ispravno ažuriranje.</p>
+
+<p>Posle toga praktikanti su mogli da uzimaju ograničene zadatke: sređivanje uputstava, proveru koraka instalacije, beleženje podešavanja, razjašnjavanje konfiguracija i prenos znanja u README fajlove. Za industrijski sistem sa nasleđenim kodom to nije sporedan posao, već način da se smanji zavisnost od jedne osobe i da održavanje postane stabilnije.</p>
+
+<h2>Rezultat</h2>
+<ul>
+  <li>Kod staničnog dela prebačen je u repozitorijum i postao upravljiv artefakt, a ne skup fajlova u produkciji.</li>
+  <li>Opisan je proces izmena: zadaci, grane, commit-i, testiranje i ulazak u produkcionu granu.</li>
+  <li>Pojavila se operativna dokumentacija za Tiny Core Linux, pakete, automatsko pokretanje, ssh, cron, backup i komunikaciju stanice sa centrom.</li>
+  <li>Dokumentovani su konfiguracioni principi za instrumente, portove, isključivanje merenja i pokretanje staničnih procesa.</li>
+  <li>Projekat je postalo lakše predati inženjerima i mlađim stručnjacima: deo znanja je prestao da bude usmen.</li>
+  <li>Sistem je zadržao praktičan fokus: ne prepisivanje radi prepisivanja, već bolja održivost gradske infrastrukture koja radi.</li>
+</ul>
+
+<p>Ako vam treba sličan rezultat: pomažem da se razumeju nasleđeni sistemi oko podataka, obnovi dokumentacija, postave repozitorijum i proces isporuke, upakuje operativno znanje i smanje rizici održavanja.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_air_monitoring_bottom_submit_brief">Pošalji brif</a>
+</p>

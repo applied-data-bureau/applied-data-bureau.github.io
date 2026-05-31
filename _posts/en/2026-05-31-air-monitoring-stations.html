@@ -1,0 +1,100 @@
+---
+layout: post
+title: "Software Layer for an Urban Air Monitoring System"
+excerpt: "A delivered project write-up: work on the software layer of an urban air monitoring system in Saint Petersburg, covering monitoring stations, gas analyzers, Tiny Core Linux, documentation, and controlled code delivery."
+og: /assets/posts/2026-05-31-air-monitoring-offline-map.jpg
+service_tags: [data, legacy]
+---
+
+<p>In the mid-2010s, I worked on the software layer of a project connected with Saint Petersburg's urban air monitoring infrastructure. This was not ordinary web development. It was part of a city-scale infrastructure: automated stations across districts, gas analyzers, regular measurements, data transfer to a collection and processing center, measurement storage, and publication of information.</p>
+
+<p>In practice, it was an industrial system with physical instruments and remote data collection before the term "Internet of Things" became mainstream. The system had real devices, COM ports, modem communication, intermediate measurement files, central processing, reporting, and reliability requirements. My work covered one software layer of an already existing urban infrastructure: the whole system was not built from scratch, but the station-side software had to become more maintainable.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_air_monitoring_submit_brief">Submit brief</a>
+</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg" class="img-fluid" alt="Offline map of Saint Petersburg with air monitoring station points">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 1.</strong> Offline map with air monitoring station points. These physical observation points were the main data source for the software layer.</small></p>
+
+<h2>System Context</h2>
+<p>The city system was used for environmental monitoring of atmospheric air. Automated stations continuously measured pollutants, and results were sent at regular intervals to a central database for processing, reporting, and public information.</p>
+
+<p>In systems like this, the software layer does not work with abstract form submissions. It works with a stream of physical measurements. On one side there are instruments, sensors, ports, modems, local files, and engineers who visit the station. On the other side there is central processing, storage, data quality control, and publication of results.</p>
+
+<p>The system automatically measured carbon monoxide, nitric oxide, nitrogen dioxide, PM10 particulate matter, and sulfur dioxide. Benzene, toluene, ethylbenzene, xylenes, and phenol were monitored in a non-automated mode. Some of these measurements could involve semi-automatic sampling followed by laboratory analysis.</p>
+
+<h2>Initial State</h2>
+<p>At the time of my work, the main problem was not only the code, but also the way it was operated. The software was already running in production, but it had almost no proper engineering framework around it: no sufficient documentation, no reproducible deployment process, no clear change history, and no careful delivery process for updates.</p>
+
+<p>This is common in long-running industrial systems. Code lives close to the equipment, changes are made as problems appear, part of the knowledge stays with individual people, and documentation appears later than the system itself. While everything works, this may look acceptable. But replacing a station, sending an engineer on site, connecting a new instrument, or fixing a bug becomes a manual operation with high risk.</p>
+
+<h2>What Had to Be Done</h2>
+<ul>
+  <li>Move the working code into a repository and make it the primary source.</li>
+  <li>Describe the change process: tasks, branches, commits, checks, and promotion to production.</li>
+  <li>Prepare documentation for the station-side setup: OS installation, environment, instrument configuration, service startup, backups, and code updates.</li>
+  <li>Simplify station maintenance for engineers who visit a site and need to understand quickly what to update and how.</li>
+  <li>Bring interns and junior specialists into the work so they could help with documentation, checks, and knowledge transfer without breaking production.</li>
+  <li>Keep the existing system operational: this was infrastructure work, not a greenfield project where everything could be rewritten.</li>
+</ul>
+
+<h2>Repository, Documentation, Delivery</h2>
+<p>The first layer of work was organizational and engineering-oriented: make the code and documentation livable. A task-based process with separate branches was introduced for changes. Commits were tied to tasks, changes were tested before merging, and the <code>master</code> branch was treated as the production-ready version that could be installed on a working station.</p>
+
+<p>This was not modern cloud CI/CD with containers, staging clusters, and automatic deployment to every station. Stations could have connectivity limits, and some updates were performed on site. But it was an important step toward controlled delivery: the code stopped being a set of files "somewhere in production", change history appeared, rules for promotion to production appeared, a test station appeared, and there was a clear way to update working stations from the repository.</p>
+
+<p>Separate operational documentation was prepared: how to set everything up, which working directories are needed, where configuration files live, how to map instruments to ports, how to run real-time monitoring, how to configure measurement backups, and how to start station processes on boot.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg" class="img-fluid" alt="Software workflow diagram for an air monitoring station">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 2.</strong> Software workflow diagram for a monitoring station from project working materials.</small></p>
+
+<h2>Station-Side Software</h2>
+<p>A station was not an abstract "API client", but a computer next to measurement equipment. Gas analyzers, weather sensors, radiation sensors, and service equipment were connected to it. A large part of the exchange used serial ports, so the documentation separately described MOXA boards for expanding the number of COM ports and mapping specific instruments to specific devices such as <code>/dev/ttyM0</code>, <code>/dev/ttyM3</code>, or <code>/dev/ttyS0</code>.</p>
+
+<p>The working materials described different classes of instruments: ThermoElectron, Environnement, Horiba, Automet, WXT520, DKGRAD, and FDS. For them, measured parameters and units were recorded: NO, NO2, SO2, CO, O3, PM10/PM2.5, temperature, humidity, pressure, wind speed and direction, and radiation background. This shows the nature of the task: the software layer had to be a reliable intermediary between physical instruments and downstream data processing.</p>
+
+<p>Data was not read from a polished screen interface, but from a port: raw values that had to be read correctly, normalized, stored, and transferred further.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg">
+    <img src="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg" class="img-fluid" alt="Gas analyzer screen with NO, NO2, and NOx readings">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 3.</strong> Instrument readings at a station: NO, NO2, and NOx in mg/m³.</small></p>
+
+<p>Inside the station-side software, there were separate processes for data collection and control. Measurement results were written to working directories, and the center could collect prepared files. For an engineer at the station, reproducible commands mattered: what to run, where to view live readings, how to check a port, and how not to lose data after a reboot.</p>
+
+<h2>Tiny Core Linux</h2>
+<p>A separate part of the project was the station operating system based on Tiny Core Linux. It was a pragmatic choice for field conditions: the system booted from a flash drive, ran in RAM, and allowed the required configuration to be saved back to the drive. This simplified station maintenance and reduced dependence on local disk state.</p>
+
+<p>The working station environment included Perl, git, minicom, pppd, inetutils, Log::Log4perl, JSON, and additional packages for serial-port work. Some dependencies had to be built and packaged separately for Tiny Core, including Perl modules for SerialPort and BufferedSelect, MOXA drivers, mgetty, and Vim. This was low-level operational work: not just writing a script, but making sure it started after a station reboot and kept working next to the instruments.</p>
+
+<h2>Working With the Team</h2>
+<p>Another part of the result was bringing people into the project. When a system exists only as production code and oral knowledge, an intern or junior developer cannot be included safely. First, the boundaries have to be described: where the documentation is, where the repository is, how tasks are created, what can be changed, what is checked on the test station, and what a working update looks like.</p>
+
+<p>After that, interns could take limited tasks: clean up instructions, check deployment steps, record setup procedures, clarify configs, and help move knowledge into README files. For an industrial system with inherited code, this is not secondary work. It is a way to reduce dependence on one person and make maintenance more stable.</p>
+
+<h2>Result</h2>
+<ul>
+  <li>The station-side code was moved into a repository and became a managed artifact, not a set of files in production.</li>
+  <li>The change process was described: tasks, branches, commits, testing, and promotion to the production branch.</li>
+  <li>Operational documentation appeared for Tiny Core Linux, packages, boot startup, ssh, cron, backups, and station-to-center communication.</li>
+  <li>Configuration principles were documented for instruments, ports, ignored measurements, and station process startup.</li>
+  <li>The project became easier to hand over to engineers and junior specialists: part of the knowledge stopped being oral.</li>
+  <li>The system kept its applied focus: not rewriting for the sake of rewriting, but improving maintainability for working urban infrastructure.</li>
+</ul>
+
+<p>For similar work, I help analyze inherited data systems, restore documentation, set up repositories and delivery processes, package operational knowledge, and reduce maintenance risk.</p>
+
+<p class="pb-5">
+  <a class="button" href="{{ '/brief.html' | relative_url }}" data-track="cta_click" data-cta-id="post_air_monitoring_bottom_submit_brief">Submit brief</a>
+</p>
