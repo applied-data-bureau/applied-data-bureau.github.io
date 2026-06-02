@@ -19,7 +19,14 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg" class="img-fluid" alt="Offline mapa Sankt Peterburga sa tačkama stanica za monitoring vazduha">
   </a>
 </p>
-<p class="text-center"><small><strong>Slika 1.</strong> Offline mapa sa tačkama stanica za monitoring vazduha. Te fizičke tačke posmatranja bile su glavni izvor podataka za softverski sloj.</small></p>
+<p class="text-center"><small><strong>Slika 1.</strong> Mapa sa tačkama stanica za monitoring vazduha, fotografisana u kancelariji projekta. Te fizičke tačke posmatranja bile su glavni izvor podataka za softverski sloj.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-map.jpg">
+    <img src="/assets/posts/2026-05-31-map.jpg" class="img-fluid" alt="Mapa Sankt Peterburga sa tačkama stanica za monitoring vazduha na sajtu">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 2.</strong> Ista logika na javnoj strani: mapa sa sajta, gde su podaci sa stanica postajali razumljiv gradski interfejs.</small></p>
 
 <h2>Kontekst sistema</h2>
 <p>Gradski sistem se koristio za ekološki monitoring atmosferskog vazduha. Automatske stanice su kontinuirano merile zagađujuće materije, a rezultati su u redovnim intervalima stizali u centralnu bazu i dalje se koristili za obradu, izveštavanje i informisanje.</p>
@@ -55,10 +62,24 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg" class="img-fluid" alt="Šema rada softvera stanice za monitoring atmosferskog vazduha">
   </a>
 </p>
-<p class="text-center"><small><strong>Slika 2.</strong> Šema rada softvera stanice za monitoring iz radnih materijala projekta.</small></p>
+<p class="text-center"><small><strong>Slika 3.</strong> Šema rada softvera stanice za monitoring iz radnih materijala projekta.</small></p>
 
 <h2>Stanični deo</h2>
 <p>Stanica nije bila apstraktni "API klijent", već računar pored merne opreme. Na njega su bili povezani gasni analizatori, meteorološki senzori, senzori zračenja i servisna oprema. Veliki deo komunikacije išao je preko serijskih portova, pa je dokumentacija posebno opisivala MOXA ploče za proširenje broja COM portova i vezivanje konkretnih instrumenata za konkretne uređaje kao što su <code>/dev/ttyM0</code>, <code>/dev/ttyM3</code> ili <code>/dev/ttyS0</code>.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-outside.jpg">
+    <img src="/assets/posts/2026-05-31-outside.jpg" class="img-fluid" alt="Stanica za monitoring atmosferskog vazduha spolja">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 4.</strong> Ovako je stanica za monitoring izgledala spolja: poseban objekat gradske infrastrukture na koji su inženjeri dolazili radi održavanja opreme i softverskog sloja.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-inside.jpg">
+    <img src="/assets/posts/2026-05-31-inside.jpg" class="img-fluid" alt="Stalak sa opremom unutar stanice za monitoring atmosferskog vazduha">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 5.</strong> Stanica iznutra: stalak sa mernom i servisnom opremom, pored koje je radio stanični softverski sloj.</small></p>
 
 <p>U radnim materijalima bili su opisani različiti tipovi instrumenata: ThermoElectron, Environnement, Horiba, Automet, WXT520, DKGRAD, FDS. Za njih su bili zabeleženi mereni parametri i jedinice: NO, NO2, SO2, CO, O3, PM10/PM2.5, temperatura, vlažnost, pritisak, brzina i smer vetra, radijaciona pozadina. To dobro pokazuje prirodu zadatka: softverski sloj je morao da bude pouzdan posrednik između fizičkih instrumenata i dalje obrade podataka.</p>
 
@@ -69,9 +90,16 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg" class="img-fluid" alt="Ekran gasnog analizatora sa očitavanjima NO, NO2 i NOx">
   </a>
 </p>
-<p class="text-center"><small><strong>Slika 3.</strong> Očitavanja instrumenta na stanici: NO, NO2 i NOx u mg/m³.</small></p>
+<p class="text-center"><small><strong>Slika 6.</strong> Očitavanja instrumenta na stanici: NO, NO2 i NOx u mg/m³.</small></p>
 
 <p>Unutar staničnog dela postojali su posebni procesi za prikupljanje i kontrolu podataka. Rezultati merenja su se upisivali u radne direktorijume, a centar je mogao da preuzima pripremljene fajlove. Za inženjera na stanici važne su bile ponovljive komande: šta pokrenuti, gde pogledati živa očitavanja, kako proveriti port i kako ne izgubiti podatke posle restartovanja.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-auto.jpg">
+    <img src="/assets/posts/2026-05-31-auto.jpg" class="img-fluid" alt="Pokretna stanica za monitoring atmosferskog vazduha">
+  </a>
+</p>
+<p class="text-center"><small><strong>Slika 7.</strong> Pored stacionarnih objekata koristila se i pokretna stanica. Unutra je imala sličan stalak sa opremom, pa su zahtevi za održavanje softverskog sloja ostajali jednako praktični: portovi, instrumenti, konfiguracija, prikupljanje podataka i slanje rezultata.</small></p>
 
 <h2>Tiny Core Linux</h2>
 <p>Poseban deo projekta bio je stanični operativni sistem na Tiny Core Linux-u. To je bio pragmatičan izbor za terenske uslove: sistem se pokretao sa fleš diska, radio iz RAM-a i omogućavao da se potrebna konfiguracija sačuva nazad na nosač. Takav pristup je pojednostavljivao održavanje stanice i smanjivao zavisnost od stanja lokalnog diska.</p>

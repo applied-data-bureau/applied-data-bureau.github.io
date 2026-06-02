@@ -19,7 +19,14 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-offline-map.jpg" class="img-fluid" alt="Offline map of Saint Petersburg with air monitoring station points">
   </a>
 </p>
-<p class="text-center"><small><strong>Figure 1.</strong> Offline map with air monitoring station points. These physical observation points were the main data source for the software layer.</small></p>
+<p class="text-center"><small><strong>Figure 1.</strong> Map with air monitoring station points, photographed in the project office. These physical observation points were the main data source for the software layer.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-map.jpg">
+    <img src="/assets/posts/2026-05-31-map.jpg" class="img-fluid" alt="Map of Saint Petersburg with air monitoring station points on the website">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 2.</strong> The same logic on the public side: a website map where station data became a readable city interface.</small></p>
 
 <h2>System Context</h2>
 <p>The city system was used for environmental monitoring of atmospheric air. Automated stations continuously measured pollutants, and results were sent at regular intervals to a central database for processing, reporting, and public information.</p>
@@ -55,10 +62,24 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-software-scheme.jpg" class="img-fluid" alt="Software workflow diagram for an air monitoring station">
   </a>
 </p>
-<p class="text-center"><small><strong>Figure 2.</strong> Software workflow diagram for a monitoring station from project working materials.</small></p>
+<p class="text-center"><small><strong>Figure 3.</strong> Software workflow diagram for a monitoring station from project working materials.</small></p>
 
 <h2>Station-Side Software</h2>
 <p>A station was not an abstract "API client", but a computer next to measurement equipment. Gas analyzers, weather sensors, radiation sensors, and service equipment were connected to it. A large part of the exchange used serial ports, so the documentation separately described MOXA boards for expanding the number of COM ports and mapping specific instruments to specific devices such as <code>/dev/ttyM0</code>, <code>/dev/ttyM3</code>, or <code>/dev/ttyS0</code>.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-outside.jpg">
+    <img src="/assets/posts/2026-05-31-outside.jpg" class="img-fluid" alt="Air monitoring station exterior">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 4.</strong> This is what a monitoring station looked like from the outside: a separate piece of city infrastructure visited by engineers for equipment and software maintenance.</small></p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-inside.jpg">
+    <img src="/assets/posts/2026-05-31-inside.jpg" class="img-fluid" alt="Equipment rack inside an air monitoring station">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 5.</strong> Inside the station: a rack with measurement and service equipment, next to which the station-side software was running.</small></p>
 
 <p>The working materials described different classes of instruments: ThermoElectron, Environnement, Horiba, Automet, WXT520, DKGRAD, and FDS. For them, measured parameters and units were recorded: NO, NO2, SO2, CO, O3, PM10/PM2.5, temperature, humidity, pressure, wind speed and direction, and radiation background. This shows the nature of the task: the software layer had to be a reliable intermediary between physical instruments and downstream data processing.</p>
 
@@ -69,9 +90,16 @@ service_tags: [data, legacy]
     <img src="/assets/posts/2026-05-31-air-monitoring-no-analyzer.jpg" class="img-fluid" alt="Gas analyzer screen with NO, NO2, and NOx readings">
   </a>
 </p>
-<p class="text-center"><small><strong>Figure 3.</strong> Instrument readings at a station: NO, NO2, and NOx in mg/m³.</small></p>
+<p class="text-center"><small><strong>Figure 6.</strong> Instrument readings at a station: NO, NO2, and NOx in mg/m³.</small></p>
 
 <p>Inside the station-side software, there were separate processes for data collection and control. Measurement results were written to working directories, and the center could collect prepared files. For an engineer at the station, reproducible commands mattered: what to run, where to view live readings, how to check a port, and how not to lose data after a reboot.</p>
+
+<p class="text-center">
+  <a href="/assets/posts/2026-05-31-auto.jpg">
+    <img src="/assets/posts/2026-05-31-auto.jpg" class="img-fluid" alt="Mobile air monitoring station">
+  </a>
+</p>
+<p class="text-center"><small><strong>Figure 7.</strong> Besides fixed stations, there was also a mobile station. It had a similar equipment rack inside, so the software maintenance requirements stayed just as practical: ports, instruments, configuration, data collection, and result transfer.</small></p>
 
 <h2>Tiny Core Linux</h2>
 <p>A separate part of the project was the station operating system based on Tiny Core Linux. It was a pragmatic choice for field conditions: the system booted from a flash drive, ran in RAM, and allowed the required configuration to be saved back to the drive. This simplified station maintenance and reduced dependence on local disk state.</p>
